@@ -27,6 +27,7 @@ body {
   font-weight: bold;
   color: #673fad;
   text-wrap: nowrap;
+  transition: 0.2s ease;
 }
 
 .navbar {
@@ -35,37 +36,102 @@ body {
 
 .navlinks {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
   list-style: none;
 }
 
+.navlink,
 .hamburger {
   font-family: monospace, sans-serif;
   font-size: 1.7rem;
-  color: #023792;
+  color: #673fad;
   font-weight: 500;
-  display: none;
-}
-.navlink {
-  font-family: monospace, sans-serif;
-  font-size: 1.7rem;
-  color: #023792;
-  font-weight: 500;
-  cursor: pointer;
   transition: 0.2s ease;
-  text-transform: capitalize;
   text-wrap: nowrap;
 }
 
 .navlink:hover {
-  color: #0142b1de;
-  border-bottom: 2px solid #0142b1de;
+  color: #4e3083;
   transition: 0.2s ease-in-out;
+}
+
+.hamburger {
+  display: none;
+  gap: 30px;
+  transition: 0.2s ease;
+}
+.sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 350px;
+  height: 100vh;
+  opacity: 95%;
+  display: none;
+  padding: 20px 40px;
+  gap: 1.5rem;
+  background-color: #d4c2f3;
+  justify-content: space-between;
+}
+.sidebar > .sidebar-icon-open {
+  display: none;
+  font-size: 2rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+.hamburger > .sidebar-icon-closed {
+  font-weight: 500;
+  cursor: pointer;
+  &:hover {
+    color: #4e3083;
+  }
+}
+
+.sidebar > .sidebar-list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  right: -350px;
+  display: flex;
+  margin-top: 50px;
+  gap: 1rem;
+  padding: 20px;
+  flex-direction: column;
+  list-style: none;
+  transition: 0.2s ease;
+  a {
+    text-decoration: none;
+    color: #673fad;
+    font-size: 2rem;
+    &:hover {
+      color: #4e3083;
+    }
+  }
+}
+
+#sidebar-toggle:checked ~ .sidebar-icon-closed {
+  display: none;
+}
+
+#sidebar-toggle:checked ~ .sidebar {
+  display: flex;
+}
+#sidebar-toggle:checked ~ .sidebar > .sidebar-icon-open {
+  display: block;
+  &:hover {
+    color: #4e3083;
+  }
+}
+
+#sidebar-toggle:checked ~ .sidebar > .sidebar-list {
+  display: flex;
+  flex-direction: column;
+  right: 0;
 }
 
 @media (max-width: 780px) {
   .hamburger {
-    display: block;
+    display: flex;
   }
 
   .navbar {
@@ -90,5 +156,9 @@ body {
 @media (max-width: 450px) {
   .header .icon {
     font-size: 1.8rem;
+  }
+
+  .hamburger {
+    font-size: 1.4rem;
   }
 }

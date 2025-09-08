@@ -13,11 +13,26 @@
         <ul class="navlinks">
           <li class="navlink">Home</li>
           <li class="navlink">About Us</li>
-          <li class="navlink">Contact</li>
-          <li class="navlink">Gallery</li>
+          <li class="navlink">Contact Us</li>
+          <!-- <li class="navlink">Gallery</li> -->
         </ul>
       </nav>
-      <div class="hamburger">&#9776;</div>
+
+      <aside class="hamburger">
+        <input type="checkbox" id="sidebar-toggle" hidden />
+        <label for="sidebar-toggle" class="sidebar-icon-closed">
+          &#9776;
+        </label>
+        <div class="sidebar">
+          <ul class="sidebar-list">
+            <li class="sidebar-item"><a href="#" class="active">Home</a></li>
+            <li class="sidebar-item"><a href="./projects.html">About Us</a></li>
+            <li class="sidebar-item"><a href="./skills.html">Contact US</a></li>
+            <!-- <li class="sidebar-item"><a href="./skills.html">Skills</a></li> -->
+          </ul>
+          <label for="sidebar-toggle" class="sidebar-icon-open"> X </label>
+        </div>
+      </aside>
     </header>
   </body>
 </html>
