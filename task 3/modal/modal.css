@@ -1,0 +1,169 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  width: 100vw;
+  min-height: 100vh;
+  margin: auto;
+}
+
+.main {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-direction: column;
+}
+.main-content {
+  width: 60vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.student-list {
+  list-style: none;
+  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  height: 55vh;
+}
+
+.student-list > .student-list-item {
+  width: 300px;
+}
+h3 {
+  font-size: 2rem;
+  color: mediumslateblue;
+}
+
+h4 {
+  font-size: 1.5rem;
+  color: mediumslateblue;
+}
+
+.modal-open {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  outline: none;
+  border: 1px solid #3599d3;
+  background: #48afeb;
+  color: #f8f1f8;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.modal-open:hover {
+  background: #44a6df;
+}
+
+#students {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.backdrop {
+  position: absolute;
+}
+
+.student-table {
+  width: 100%;
+  margin: 1.5rem auto;
+  border-collapse: collapse;
+}
+
+tr,
+td,
+th {
+  padding: 0.5rem;
+  border: 1px solid #ecd6ff;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.excellent {
+  color: rgb(20, 233, 20);
+}
+
+.fail {
+  color: red;
+}
+
+.normal {
+  color: rgb(193, 105, 245);
+}
+
+.backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.modal-box {
+  display: flex;
+  padding: 1rem;
+  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-height: 50%;
+  max-width: 60%;
+}
+
+.modal-close {
+  width: fit-content;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  outline: none;
+  border: 1px solid #3599d3;
+  background: #48afeb;
+  color: #f8f1f8;
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.content {
+  width: 100%;
+  height: 100%;
+  background-color: #9144b4de;
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem;
+  font-size: 1.3rem;
+  color: #f4f4f4;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.content > div {
+  min-width: 40%;
+}
+#modal:checked ~ .backdrop {
+  display: flex;
+}
+
+#modal:checked ~ .backdrop > .modal-box > .modal-close {
+  display: flex;
+}

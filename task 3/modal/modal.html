@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal</title>
+    <link rel="stylesheet" href="modal.css" />
+    <script type="module" src="modal.js" defer></script>
+  </head>
+  <body>
+    <div class="main">
+      <h3>Student Management System</h3>
+      <input type="checkbox" id="modal" hidden />
+      <div class="main-content" id="main-content">
+        <h4>Student Details</h4>
+        <table class="student-table" id="student-table">
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Name of Student</th>
+              <th>Age</th>
+              <th>Email</th>
+              <th>Major</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <label class="modal-open" for="modal">Overview</label>
+      <div class="backdrop">
+        <div class="modal-box">
+          <div class="content" id="content">hello</div>
+          <label for="modal" class="modal-close">Close</label>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
