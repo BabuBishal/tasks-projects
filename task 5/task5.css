@@ -1,0 +1,136 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.main {
+  height: 100vh;
+  width: 100vw;
+}
+
+.form-section {
+  padding: 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  gap: 3rem;
+  color: #007fd3;
+}
+
+.form {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  width: 500px;
+  justify-content: center;
+  align-items: start;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+.input {
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  justify-content: start;
+  align-items: center;
+}
+label {
+  font-size: 1.5rem;
+  color: #444;
+  min-width: 100px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #888;
+  width: 100%;
+  outline: none;
+  border-radius: 0.3rem;
+  caret-color: #00bcd4;
+  font-size: 1.2rem;
+  color: #444;
+  transition: 0.1s ease-in-out;
+
+  &:focus {
+    border-color: #00bcd4;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 5px rgba(0, 188, 212, 0.5);
+  }
+
+  &:user-invalid {
+    border-color: #d40047;
+    box-shadow: 0 0 0 2px #fff, 0 0 0 5px rgba(212, 0, 71, 0.5);
+  }
+}
+
+.button {
+  width: 150px;
+  padding: 0.6rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background-color: #04d3ee;
+  border: 1px solid #00bcd4;
+  color: #fafafa;
+  border-radius: 0.5rem;
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #00bcd4;
+  }
+}
+/* 
+hr {
+  width: 50%;
+} */
+.user-section {
+  width: 60vw;
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  color: #444;
+  font-size: 1.2rem;
+  color: #007fd3;
+}
+
+.userDetails {
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+}
+
+.user-item {
+  display: flex;
+  gap: 5rem;
+  justify-content: start;
+  align-items: center;
+}
+
+.edit {
+  width: fit-content;
+  background-color: rgb(0, 204, 255);
+  text-align: center;
+  padding: 0.3rem 1rem;
+  border-radius: 0.3rem;
+  color: #fff;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(0, 204, 255, 0.856);
+  }
+}
+
+.delete {
+  width: fit-content;
+  background-color: #e9016d;
+  text-align: center;
+  padding: 0.3rem 1rem;
+  border-radius: 0.3rem;
+  color: #fff;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(233, 1, 109, 0.856);
+  }
+}
