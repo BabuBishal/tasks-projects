@@ -52,16 +52,16 @@ h4 {
   padding: 1rem;
   border-radius: 0.5rem;
   outline: none;
-  border: 1px solid #3599d3;
-  background: #48afeb;
-  color: #f8f1f8;
+  border: 1px solid rgb(114, 94, 233);
+  background: mediumslateblue;
+  color: #fafafa;
   font-size: 1.2rem;
   font-weight: 500;
   cursor: pointer;
 }
 
 .modal-open:hover {
-  background: #44a6df;
+  background: #715edaee;
 }
 
 #students {
@@ -135,19 +135,22 @@ tr:nth-child(even) {
   padding: 1rem;
   border-radius: 0.5rem;
   outline: none;
-  border: 1px solid #3599d3;
-  background: #48afeb;
-  color: #f8f1f8;
+  border: 1px solid rgb(112, 91, 233);
+  background: mediumslateblue;
+  color: #fafafa;
   font-size: 1.2rem;
   font-weight: 500;
   cursor: pointer;
   z-index: 1;
 }
+.modal-close:hover {
+  background: rgba(124, 104, 238, 0.918);
+}
 
 .content {
   width: 100%;
   height: 100%;
-  background-color: #9144b4de;
+  background-color: rgba(103, 90, 168, 0.897);
   border-radius: 0.5rem;
   display: flex;
   gap: 2rem;
