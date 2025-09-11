@@ -7,6 +7,7 @@ const nameError = document.getElementById("nameError");
 const emailError = document.getElementById("emailError");
 const phoneError = document.getElementById("phoneError");
 
+// fetching users from localstorage if present otherwise initializing with empty array
 let users = JSON.parse(localStorage.getItem("users")) || [];
 let editUserId = null;
 users.forEach(showUser);
@@ -20,16 +21,19 @@ form.addEventListener("submit", function (e) {
 
   let isFormValid = true;
 
+  // setting initial error message to empty string
   nameError.textContent = "";
   emailError.textContent = "";
   phoneError.textContent = "";
 
+  // validation for user name - at least three characters
   if (name.length < 2) {
     nameError.textContent = "Please enter at least 3 characters.";
     isFormValid = false;
     nameInput.focus();
   }
 
+  // validation for email -at least one character not including @, followed by @ then again at least 1 character without @ followed by . and again at least 1 character that is not @
   const emailPattern = /^[^@\s]+@[^@\s]+.[^@\s]+$/;
   if (!emailPattern.test(email)) {
     emailError.textContent = "Please enter valid email address.";
@@ -37,6 +41,7 @@ form.addEventListener("submit", function (e) {
     emailInput.focus();
   }
 
+  // validation for phone - exactly 10 digits required
   const phonePattern = /^\d{10}$/;
   if (!phonePattern.test(phone)) {
     phoneError.textContent = "Please enter 10 digit phone number.";
@@ -54,9 +59,15 @@ form.addEventListener("submit", function (e) {
   };
 
   if (editUserId) {
+    // replacing the previous user with edituserid with new updated user data
     users = users.map((u) => (u.id === editUserId ? user : u));
+
+    // clearing edituserid
+
     editUserId = null;
     form.querySelector("button").textContent = "Add";
+
+    //clearing list so that it can rerender with new updated data
     userList.innerHTML = "";
     users.forEach(showUser);
     localStorage.setItem("users", JSON.stringify(users));
@@ -73,26 +84,35 @@ form.addEventListener("submit", function (e) {
 });
 
 function showUser(user) {
-  const div = document.createElement("div");
-  div.classList.add("user-item");
-  div.dataset.id = user.id;
+  const tr = document.createElement("tr");
+  tr.classList.add("user-item");
+  tr.dataset.id = user.id;
 
-  const li = document.createElement("li");
-  li.textContent = `${user.name} | ${user.email} | ${user.phone}`;
-  const editSpan = document.createElement("span");
-  editSpan.classList.add("edit");
-  editSpan.textContent = "Edit";
-  editSpan.addEventListener("click", () => editUser(user.id));
+  //adding table row along with its corresponding user data
+  tr.innerHTML = `
+  <td data-label="Name">${user.name}</td>
+      <td data-label="Email">${user.email}</td>
+      <td data-label="Phone">${user.phone}</td>
+      <td data-label="Edit"><button class="edit" onclick="editUser(${user.id})">Edit</button> </td>
+       <td data-label="Delete"> <button class="delete" onclick="deleteUser(${user.id})">Delete</button>
+      </td>`;
 
-  const deleteSpan = document.createElement("span");
-  deleteSpan.classList.add("delete");
-  deleteSpan.textContent = "Delete";
-  deleteSpan.addEventListener("click", () => deleteUser(user.id));
+  // const li = document.createElement("li");
+  // li.textContent = `${user.name} | ${user.email} | ${user.phone}`;
+  // const editSpan = document.createElement("span");
+  // editSpan.classList.add("edit");
+  // editSpan.textContent = "Edit";
+  // editSpan.addEventListener("click", () => editUser(user.id));
 
-  div.appendChild(li);
-  div.appendChild(editSpan);
-  div.appendChild(deleteSpan);
-  userList.appendChild(div);
+  // const deleteSpan = document.createElement("span");
+  // deleteSpan.classList.add("delete");
+  // deleteSpan.textContent = "Delete";
+  // deleteSpan.addEventListener("click", () => deleteUser(user.id));
+
+  // div.appendChild(li);
+  // div.appendChild(editSpan);
+  // div.appendChild(deleteSpan);
+  userList.appendChild(tr);
 }
 
 function editUser(id) {
@@ -100,17 +120,21 @@ function editUser(id) {
 
   if (!user) return;
 
+  // repopulate the form for editing
+
   nameInput.value = user.name;
   emailInput.value = user.email;
   phoneInput.value = user.phone;
 
+  // set edituserid with user id to flag which user to edit
   editUserId = id;
 
+  // change button text when editing
   form.querySelector("button").textContent = "Update";
 }
 
 function deleteUser(id) {
   users = users.filter((user) => user.id !== id);
   localStorage.setItem("users", JSON.stringify(users));
-  document.querySelector(`div[data-id='${id}']`).remove();
+  document.querySelector(`tr[data-id='${id}']`).remove();
 }

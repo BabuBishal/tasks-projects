@@ -23,10 +23,11 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   width: 500px;
   justify-content: center;
   align-items: start;
+  transition: 0.2s ease-in-out;
 }
 
 h3 {
@@ -101,41 +102,117 @@ hr {
   color: #007fd3;
 }
 
-.userDetails {
+.userTable {
+  width: 100%;
+  border-collapse: collapse;
+  transition: 0.2s ease-in-out;
+}
+
+tr,
+th,
+td {
+  border: 1px solid #777;
+  padding: 0.5rem;
+}
+
+thead {
+  background-color: #ddd;
+  color: #444;
+  font-weight: 600;
+}
+
+td {
+  color: #555;
+}
+
+/* .userDetails {
   display: flex;
   gap: 2rem;
   flex-direction: column;
-}
+} */
 
-.user-item {
+/* .user-item {
   display: flex;
   gap: 5rem;
   justify-content: start;
   align-items: center;
+} */
+
+.edit,
+.delete {
+  width: fit-content;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  color: #fff;
+  font: 1rem;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid #ccc;
 }
 
 .edit {
-  width: fit-content;
   background-color: rgb(0, 204, 255);
-  text-align: center;
-  padding: 0.3rem 1rem;
-  border-radius: 0.3rem;
-  color: #fff;
-  cursor: pointer;
+  border: 1px solid rgba(0, 204, 255, 0.863);
+
   &:hover {
     background-color: rgba(0, 204, 255, 0.856);
   }
 }
 
 .delete {
-  width: fit-content;
   background-color: #e9016d;
-  text-align: center;
-  padding: 0.3rem 1rem;
-  border-radius: 0.3rem;
-  color: #fff;
-  cursor: pointer;
+  border: 1px solid #e90162e1;
+
   &:hover {
     background-color: rgba(233, 1, 109, 0.856);
+  }
+}
+
+@media (max-width: 780px) {
+  .form {
+    width: 90%;
+  }
+  .input {
+    flex-direction: column;
+    align-items: start;
+    gap: 0.5rem;
+  }
+
+  .userTable,
+  thead,
+  tr,
+  td,
+  tbody {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+  tr {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background: #f9f9f9;
+  }
+  td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: capitalize;
   }
 }
