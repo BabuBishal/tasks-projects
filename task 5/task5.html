@@ -20,9 +20,9 @@
               id="name"
               placeholder=" Your Name"
               minlength="3"
-              required
             />
           </div>
+          <span class="error" id="nameError"></span>
           <div class="input">
             <label for="email">Email:</label>
             <input
@@ -31,9 +31,10 @@
               id="email"
               placeholder="Email"
               pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$"
-              required
             />
           </div>
+          <span class="error" id="emailError"></span>
+
           <div class="input">
             <label for="phone">Phone:</label>
             <input
@@ -42,9 +43,10 @@
               id="phone"
               placeholder="Phone"
               pattern="\d{10}"
-              required
             />
           </div>
+          <span class="error" id="phoneError"></span>
+
           <button type="submit" class="button">Add</button>
         </form>
         <!-- <hr /> -->

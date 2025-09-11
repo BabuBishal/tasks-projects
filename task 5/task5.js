@@ -3,6 +3,9 @@ const nameInput = document.getElementById("name");
 const emailInput = document.getElementById("email");
 const phoneInput = document.getElementById("phone");
 const userList = document.getElementById("userDetails");
+const nameError = document.getElementById("nameError");
+const emailError = document.getElementById("emailError");
+const phoneError = document.getElementById("phoneError");
 
 let users = JSON.parse(localStorage.getItem("users")) || [];
 let editUserId = null;
@@ -11,11 +14,43 @@ users.forEach(showUser);
 form.addEventListener("submit", function (e) {
   e.preventDefault();
 
+  const name = nameInput.value.trim();
+  const email = emailInput.value.trim();
+  const phone = phoneInput.value.trim();
+
+  let isFormValid = true;
+
+  nameError.textContent = "";
+  emailError.textContent = "";
+  phoneError.textContent = "";
+
+  if (name.length < 2) {
+    nameError.textContent = "Please enter at least 3 characters.";
+    isFormValid = false;
+    nameInput.focus();
+  }
+
+  const emailPattern = /^[^@\s]+@[^@\s]+.[^@\s]+$/;
+  if (!emailPattern.test(email)) {
+    emailError.textContent = "Please enter valid email address.";
+    isFormValid = false;
+    emailInput.focus();
+  }
+
+  const phonePattern = /^\d{10}$/;
+  if (!phonePattern.test(phone)) {
+    phoneError.textContent = "Please enter 10 digit phone number.";
+    isFormValid = false;
+    phoneInput.focus();
+  }
+
+  if (!isFormValid) return;
+
   const user = {
     id: editUserId || Date.now(),
-    name: nameInput.value.trim(),
-    email: emailInput.value.trim(),
-    phone: phoneInput.value.trim(),
+    name,
+    email,
+    phone,
   };
 
   if (editUserId) {
