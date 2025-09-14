@@ -29,8 +29,8 @@ form.addEventListener("submit", function (e) {
   phoneError.textContent = "";
 
   isFormValid = validateUser(name) && isFormValid;
-  isFormValid = validateEmail(email) && isFormValid;
-  isFormValid = validatePhone(phone) && isFormValid;
+  isFormValid = validateEmail(email, editUserId) && isFormValid;
+  isFormValid = validatePhone(phone, editUserId) && isFormValid;
 
   if (!isFormValid) return;
 
@@ -69,17 +69,19 @@ form.addEventListener("submit", function (e) {
 function showUser(user) {
   const tr = document.createElement("tr");
   tr.classList.add("user-item");
+
   tr.dataset.id = user.id;
 
   //adding table row along with its corresponding user data
   tr.innerHTML = `
   <td data-label="Name">${user.name}</td>
-      <td data-label="Email">${user.email}</td>
-      <td data-label="Phone">${user.phone}</td>
-      <td data-label="Edit"><button class="edit" onclick="editUser(${user.id})">Edit</button> </td>
-       <td data-label="Delete"> <button class="delete" onclick="openModal(${user.id})">Delete</button>
-      </td>`;
+  <td data-label="Email">${user.email}</td>
+  <td data-label="Phone">${user.phone}</td>
+  <td data-label="Edit"><button class="edit" onclick="editUser(${user.id})">Edit</button> </td>
+  <td data-label="Delete"> <button class="delete" onclick="openModal(${user.id})">Delete</button>
+  </td>`;
 
+  // tr.classList.add("adding");
   // const li = document.createElement("li");
   // li.textContent = `${user.name} | ${user.email} | ${user.phone}`;
   // const editSpan = document.createElement("span");
@@ -96,6 +98,10 @@ function showUser(user) {
   // div.appendChild(editSpan);
   // div.appendChild(deleteSpan);
   userList.appendChild(tr);
+  // void tr.offsetWidth;
+  // tr.classList.add("show");
+  // requestAnimationFrame(() => {
+  // });
 }
 
 function editUser(id) {
@@ -127,7 +133,7 @@ function openModal(id) {
   main.appendChild(modal);
 
   modal.querySelector(".yes").addEventListener("click", () => {
-    deleteUser(id); 
+    deleteUser(id);
     closeModal();
   });
 
@@ -146,7 +152,20 @@ function closeModal() {
 function deleteUser(id) {
   users = users.filter((user) => user.id !== id);
   localStorage.setItem("users", JSON.stringify(users));
-  document.querySelector(`tr[data-id='${id}']`).remove();
+  const removedItem = document.querySelector(`tr[data-id='${id}']`);
+  // removedItem.classList.add("removing");
+  // removedItem.classList.add("hide");
+
+  // Wait for animation to finish before removing
+  // removedItem.addEventListener("transitionend", () => {
+  //   removedItem.remove(), { once: true };
+  // });
+  // requestAnimationFrame(() => {
+  //   removedItem.classList.add("hide");
+  // });
+  removedItem.remove();
+  // Remove row after animation completes
+  // removedItem.addEventListener("transitionend", () => {});
   closeModal();
 }
 
@@ -170,7 +189,7 @@ function validateUser(name) {
 }
 
 // validation function  for email
-function validateEmail(email) {
+function validateEmail(email, editId) {
   const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   if (!emailPattern.test(email)) {
     emailError.textContent = "Please enter valid email address.";
@@ -180,7 +199,7 @@ function validateEmail(email) {
     emailInput.focus();
     return false;
   }
-  if (isEmailDuplicate(email)) {
+  if (isEmailDuplicate(email, editId)) {
     emailError.textContent =
       "This email already exists. Please try another email.";
     emailInput.style.border = "1px solid #d40047";
@@ -195,7 +214,7 @@ function validateEmail(email) {
   return true;
 }
 
-function validatePhone(phone) {
+function validatePhone(phone, editId) {
   const phonePattern = /^\d{10}$/;
   // validation for phone - exactly 10 digits required
   if (!phonePattern.test(phone)) {
@@ -206,7 +225,7 @@ function validatePhone(phone) {
       "0 0 0 2px #fff, 0 0 0 5px rgba(212, 0, 71, 0.5)";
     return false;
   }
-  if (isPhoneDuplicate(phone)) {
+  if (isPhoneDuplicate(phone, editId)) {
     phoneError.textContent =
       "This phone number already exists. Please try another.";
     phoneInput.focus();
@@ -221,11 +240,11 @@ function validatePhone(phone) {
 }
 
 //check for duplicate phone
-function isPhoneDuplicate(phone) {
-  return users.some((user) => user.phone === phone);
+function isPhoneDuplicate(phone, editUserId = null) {
+  return users.some((user) => user.phone === phone && user.id !== editUserId);
 }
 
 //check for duplicate email
-function isEmailDuplicate(email) {
-  return users.some((user) => user.email === email);
+function isEmailDuplicate(email, editUserId = null) {
+  return users.some((user) => user.email === email && user.id !== editUserId);
 }

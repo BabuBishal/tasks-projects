@@ -199,6 +199,33 @@ td {
     padding: 10px;
     background: #f9f9f9;
   }
+
+  /* initial state for the user row*/
+  /* tr.adding {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.5s ease;
+  } */
+
+  /* final state when the user row is added */
+  /* tr.adding.show {
+    opacity: 1;
+    transform: translateY(0);
+  } */
+
+  /* initial state of the animation for removing the user row */
+  /* tr.removing {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s ease;
+  } */
+
+  /* final state when the row is hidden */
+  /* tr.removing.hide {
+    opacity: 0;
+    transform: translateY(-20px);
+  } */
+
   td {
     display: flex;
     justify-content: space-between;
@@ -277,3 +304,25 @@ td {
     background-color: #bd1a58;
   }
 }
+
+/* @keyframes addItem {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes removeItem {
+  from {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+} */
