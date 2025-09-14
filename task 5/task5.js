@@ -1,3 +1,4 @@
+const main = document.getElementById("main");
 const form = document.getElementById("form");
 const nameInput = document.getElementById("name");
 const emailInput = document.getElementById("email");
@@ -76,7 +77,7 @@ function showUser(user) {
       <td data-label="Email">${user.email}</td>
       <td data-label="Phone">${user.phone}</td>
       <td data-label="Edit"><button class="edit" onclick="editUser(${user.id})">Edit</button> </td>
-       <td data-label="Delete"> <button class="delete" onclick="deleteUser(${user.id})">Delete</button>
+       <td data-label="Delete"> <button class="delete" onclick="openModal(${user.id})">Delete</button>
       </td>`;
 
   // const li = document.createElement("li");
@@ -115,11 +116,41 @@ function editUser(id) {
   form.querySelector("button").textContent = "Update";
 }
 
+function openModal(id) {
+  const modal = document.createElement("div");
+  modal.id = "modal";
+  modal.innerHTML = `<div class="modal-box">
+          <div class="content" id="content">Are you sure you want to delete this user?</div>
+         <div class="actions"> <button   class="yes">Yes</button>
+          <button  class="no" >No</button></div>
+        </div>`;
+  main.appendChild(modal);
+
+  modal.querySelector(".yes").addEventListener("click", () => {
+    deleteUser(id); 
+    closeModal();
+  });
+
+  modal.querySelector(".no").addEventListener("click", () => {
+    closeModal();
+  });
+}
+
+function closeModal() {
+  const modal = document.getElementById("modal");
+  if (modal) {
+    modal.remove();
+  }
+}
+
 function deleteUser(id) {
   users = users.filter((user) => user.id !== id);
   localStorage.setItem("users", JSON.stringify(users));
   document.querySelector(`tr[data-id='${id}']`).remove();
+  closeModal();
 }
+
+function cancelDeleteUser() {}
 
 // validation for user name - at least three characters
 

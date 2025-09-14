@@ -70,10 +70,6 @@ h4 {
   gap: 1rem;
 }
 
-.backdrop {
-  position: absolute;
-}
-
 .student-table {
   width: 100%;
   margin: 1.5rem auto;
