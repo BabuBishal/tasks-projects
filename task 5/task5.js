@@ -10,6 +10,7 @@ const phoneError = document.getElementById("phoneError");
 // fetching users from localstorage if present otherwise initializing with empty array
 let users = JSON.parse(localStorage.getItem("users")) || [];
 let editUserId = null;
+console.log(users);
 users.forEach(showUser);
 
 form.addEventListener("submit", function (e) {
@@ -26,28 +27,9 @@ form.addEventListener("submit", function (e) {
   emailError.textContent = "";
   phoneError.textContent = "";
 
-  // validation for user name - at least three characters
-  if (name.length < 2) {
-    nameError.textContent = "Please enter at least 3 characters.";
-    isFormValid = false;
-    nameInput.focus();
-  }
-
-  // validation for email -at least one character not including @, followed by @ then again at least 1 character without @ followed by . and again at least 1 character that is not @
-  const emailPattern = /^[^@\s]+@[^@\s]+.[^@\s]+$/;
-  if (!emailPattern.test(email)) {
-    emailError.textContent = "Please enter valid email address.";
-    isFormValid = false;
-    emailInput.focus();
-  }
-
-  // validation for phone - exactly 10 digits required
-  const phonePattern = /^\d{10}$/;
-  if (!phonePattern.test(phone)) {
-    phoneError.textContent = "Please enter 10 digit phone number.";
-    isFormValid = false;
-    phoneInput.focus();
-  }
+  isFormValid = validateUser(name) && isFormValid;
+  isFormValid = validateEmail(email) && isFormValid;
+  isFormValid = validatePhone(phone) && isFormValid;
 
   if (!isFormValid) return;
 
@@ -137,4 +119,61 @@ function deleteUser(id) {
   users = users.filter((user) => user.id !== id);
   localStorage.setItem("users", JSON.stringify(users));
   document.querySelector(`tr[data-id='${id}']`).remove();
+}
+
+// validation for user name - at least three characters
+
+function validateUser(name) {
+  if (name.length < 2) {
+    nameError.textContent = "Please enter at least 3 characters.";
+    isFormValid = false;
+    nameInput.focus();
+    return false;
+  }
+  return true;
+}
+
+// validation function  for email
+function validateEmail(email) {
+  const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  if (!emailPattern.test(email)) {
+    emailError.textContent = "Please enter valid email address.";
+    emailInput.focus();
+    return false;
+  }
+  if (isEmailDuplicate(email)) {
+    emailError.textContent =
+      "This email already exists. Please try another email.";
+    emailInput.focus();
+
+    return false;
+  }
+  return true;
+}
+//check for duplicate phone
+function isPhoneDuplicate(phone) {
+  return users.some((user) => user.phone === phone);
+}
+
+//check for duplicate email
+function isEmailDuplicate(email) {
+  return users.some((user) => user.email === email);
+}
+
+function validatePhone(phone) {
+  const phonePattern = /^\d{10}$/;
+  // validation for phone - exactly 10 digits required
+  if (!phonePattern.test(phone)) {
+    phoneError.textContent = "Please enter 10 digit phone number.";
+    phoneInput.focus();
+    return false;
+  }
+  if (isPhoneDuplicate(phone)) {
+    phoneError.textContent =
+      "This phone number already exists. Please try another.";
+    phoneInput.focus();
+
+    return false;
+  }
+  return true;
 }
