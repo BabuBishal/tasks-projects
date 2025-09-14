@@ -128,8 +128,13 @@ function validateUser(name) {
     nameError.textContent = "Please enter at least 3 characters.";
     isFormValid = false;
     nameInput.focus();
+    nameInput.style.border = "1px solid #d40047";
+    nameInput.style.boxShadow =
+      "0 0 0 2px #fff, 0 0 0 5px rgba(212, 0, 71, 0.5)";
     return false;
   }
+  nameInput.style.border = "";
+  nameInput.style.boxShadow = "";
   return true;
 }
 
@@ -138,26 +143,25 @@ function validateEmail(email) {
   const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   if (!emailPattern.test(email)) {
     emailError.textContent = "Please enter valid email address.";
+    emailInput.style.border = "1px solid #d40047";
+    emailInput.style.boxShadow =
+      "0 0 0 2px #fff, 0 0 0 5px rgba(212, 0, 71, 0.5)";
     emailInput.focus();
     return false;
   }
   if (isEmailDuplicate(email)) {
     emailError.textContent =
       "This email already exists. Please try another email.";
+    emailInput.style.border = "1px solid #d40047";
+    emailInput.style.boxShadow =
+      "0 0 0 2px #fff, 0 0 0 5px rgba(212, 0, 71, 0.5)";
     emailInput.focus();
 
     return false;
   }
+  emailInput.style.border = "";
+  emailInput.style.boxShadow = "";
   return true;
-}
-//check for duplicate phone
-function isPhoneDuplicate(phone) {
-  return users.some((user) => user.phone === phone);
-}
-
-//check for duplicate email
-function isEmailDuplicate(email) {
-  return users.some((user) => user.email === email);
 }
 
 function validatePhone(phone) {
@@ -166,14 +170,31 @@ function validatePhone(phone) {
   if (!phonePattern.test(phone)) {
     phoneError.textContent = "Please enter 10 digit phone number.";
     phoneInput.focus();
+    phoneInput.style.border = "1px solid #d40047";
+    phoneInput.style.boxShadow =
+      "0 0 0 2px #fff, 0 0 0 5px rgba(212, 0, 71, 0.5)";
     return false;
   }
   if (isPhoneDuplicate(phone)) {
     phoneError.textContent =
       "This phone number already exists. Please try another.";
     phoneInput.focus();
-
+    phoneInput.style.border = "1px solid #d40047";
+    phoneInput.style.boxShadow =
+      "0 0 0 2px #fff, 0 0 0 5px rgba(212, 0, 71, 0.5)";
     return false;
   }
+  phoneInput.style.border = "";
+  phoneInput.style.boxShadow = "";
   return true;
+}
+
+//check for duplicate phone
+function isPhoneDuplicate(phone) {
+  return users.some((user) => user.phone === phone);
+}
+
+//check for duplicate email
+function isEmailDuplicate(email) {
+  return users.some((user) => user.email === email);
 }
