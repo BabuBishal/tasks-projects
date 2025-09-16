@@ -126,17 +126,41 @@ td {
   color: #555;
 }
 
+/* initial state for the user row*/
+tr.adding {
+  opacity: 0;
+  /* max-height: 0px; */
+  transform: translateY(-20px);
+  transition: all 0.5s ease;
+}
+
+/* final state when the user row is added */
+tr.adding.show {
+  opacity: 1;
+  transform: translateY(0);
+  /* max-height: 100px; */
+}
+
+/* initial state of the animation for removing the user row */
+tr.removing {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s ease;
+  max-height: 100px;
+}
+
+/* final state when the row is hidden */
+tr.removing.hide {
+  opacity: 0;
+  transform: translateY(-20px);
+  border-color: transparent;
+  max-height: 0;
+}
+
 /* .userDetails {
   display: flex;
   gap: 2rem;
   flex-direction: column;
-} */
-
-/* .user-item {
-  display: flex;
-  gap: 5rem;
-  justify-content: start;
-  align-items: center;
 } */
 
 .edit,
@@ -198,33 +222,8 @@ td {
     border-radius: 8px;
     padding: 10px;
     background: #f9f9f9;
+    overflow-x: auto;
   }
-
-  /* initial state for the user row*/
-  /* tr.adding {
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: all 0.5s ease;
-  } */
-
-  /* final state when the user row is added */
-  /* tr.adding.show {
-    opacity: 1;
-    transform: translateY(0);
-  } */
-
-  /* initial state of the animation for removing the user row */
-  /* tr.removing {
-    opacity: 1;
-    transform: translateY(0);
-    transition: all 0.5s ease;
-  } */
-
-  /* final state when the row is hidden */
-  /* tr.removing.hide {
-    opacity: 0;
-    transform: translateY(-20px);
-  } */
 
   td {
     display: flex;
@@ -242,6 +241,7 @@ td {
     content: attr(data-label);
     font-weight: bold;
     text-transform: capitalize;
+    margin-right: 5px;
   }
 }
 

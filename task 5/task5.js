@@ -11,7 +11,7 @@ const phoneError = document.getElementById("phoneError");
 // fetching users from localstorage if present otherwise initializing with empty array
 let users = JSON.parse(localStorage.getItem("users")) || [];
 let editUserId = null;
-console.log(users);
+// console.log(users);
 users.forEach(showUser);
 
 form.addEventListener("submit", function (e) {
@@ -81,7 +81,7 @@ function showUser(user) {
   <td data-label="Delete"> <button class="delete" onclick="openModal(${user.id})">Delete</button>
   </td>`;
 
-  // tr.classList.add("adding");
+  tr.classList.add("adding");
   // const li = document.createElement("li");
   // li.textContent = `${user.name} | ${user.email} | ${user.phone}`;
   // const editSpan = document.createElement("span");
@@ -98,10 +98,9 @@ function showUser(user) {
   // div.appendChild(editSpan);
   // div.appendChild(deleteSpan);
   userList.appendChild(tr);
-  // void tr.offsetWidth;
-  // tr.classList.add("show");
-  // requestAnimationFrame(() => {
-  // });
+  void tr.offsetWidth;
+  tr.classList.add("show");
+  // requestAnimationFrame(() => {});
 }
 
 function editUser(id) {
@@ -153,20 +152,22 @@ function deleteUser(id) {
   users = users.filter((user) => user.id !== id);
   localStorage.setItem("users", JSON.stringify(users));
   const removedItem = document.querySelector(`tr[data-id='${id}']`);
-  // removedItem.classList.add("removing");
+  closeModal();
+  removedItem.classList.add("removing");
   // removedItem.classList.add("hide");
 
   // Wait for animation to finish before removing
   // removedItem.addEventListener("transitionend", () => {
   //   removedItem.remove(), { once: true };
   // });
-  // requestAnimationFrame(() => {
-  //   removedItem.classList.add("hide");
-  // });
-  removedItem.remove();
+  requestAnimationFrame(() => {
+    removedItem.classList.add("hide");
+  });
+  // removedItem.remove();
   // Remove row after animation completes
-  // removedItem.addEventListener("transitionend", () => {});
-  closeModal();
+  removedItem.addEventListener("transitionend", () => {
+    removedItem.remove();
+  });
 }
 
 function cancelDeleteUser() {}
