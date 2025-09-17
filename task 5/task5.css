@@ -105,13 +105,14 @@ hr {
 
 .userTable {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
   transition: 0.2s ease-in-out;
 }
 
 tr,
 th,
 td {
+  /* background-color: #fff; */
   border: 1px solid #777;
   padding: 0.5rem;
 }
@@ -121,6 +122,10 @@ thead {
   color: #444;
   font-weight: 600;
 }
+/* tr {
+  background-color: #fff;
+  border: 1px solid #ccc;
+} */
 
 td {
   color: #555;
@@ -131,7 +136,7 @@ tr.adding {
   opacity: 0;
   /* max-height: 0px; */
   transform: translateY(-20px);
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 }
 
 /* final state when the user row is added */
@@ -145,8 +150,12 @@ tr.adding.show {
 tr.removing {
   opacity: 1;
   transform: translateY(0);
-  transition: all 0.5s ease;
+  /* transition: all 0.5s ease; */
   max-height: 100px;
+  border-color: transparent;
+  overflow: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.3s ease,
+    border-color 0.3s ease;
 }
 
 /* final state when the row is hidden */
@@ -155,6 +164,8 @@ tr.removing.hide {
   transform: translateY(-20px);
   border-color: transparent;
   max-height: 0;
+  /* padding: 0;
+  border: 0; */
 }
 
 /* .userDetails {
