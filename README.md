@@ -5,7 +5,7 @@ Each task or assignment is organized in its own folder for better structure and 
 
 ## 📂 Repository Structure
 
-tasks-projects/
+tasks-projects/   
 │── Task-01/    
 │── Task-02/   
 │── Task-03/    
