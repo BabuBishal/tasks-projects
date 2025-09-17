@@ -27,7 +27,9 @@ function updateCarousel() {
   const center = container.offsetWidth / 2 - imgWidth / 2;
 
   function getDistance(index) {
-    let dist = index - currentIndex;
+    let dist = index - currentIndex; // calculating distance to determine the image positions
+
+    // calculating distance and setting distance accordingly for enabling infinite slide
     if (dist > images.length / 2) dist -= images.length;
     if (dist < -images.length / 2) dist += images.length;
     return dist;
@@ -50,14 +52,16 @@ function updateCarousel() {
       blur = "2px";
       opacity = 0.8;
     }
-
+// calculating offset distance so that we can translate according to the image position
     const xOffset = distance * (imgWidth * 0.6 + gap) - center;
+
+    // setting different styles to images according to their positions
     img.style.transform = `translateX(${xOffset}px) translateY(-50%) scale(${scale})`;
     img.style.zIndex = zIndex;
     img.style.opacity = opacity;
     img.style.filter = `blur(${blur})`;
   });
-
+// setting image background to the page
   bgOverlay.style.opacity = 0.9;
   setTimeout(() => {
     bgOverlay.style.backgroundImage = `url(${images[currentIndex].src})`;
@@ -68,7 +72,7 @@ function updateCarousel() {
 }
 
 nextBtn.addEventListener("click", () => {
-  if (isAnimating) return;
+  if (isAnimating) return; //prevent click while transition
   isAnimating = true;
   currentIndex = (currentIndex + 1) % images.length;
   updateCarousel();
