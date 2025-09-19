@@ -3,7 +3,7 @@ import React from "react";
 const ReusableInput = ({ label, placeholder = "Placeholder" }) => {
   return (
     <>
-      {!!label && (
+      {label && (
         <label className="label" htmlFor={`${label}`}>
           {label}
         </label>
