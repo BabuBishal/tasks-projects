@@ -1,0 +1,64 @@
+#root {
+  max-width: 1280px;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.app {
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.primary {
+  background-color: rgb(189, 0, 142);
+  border: 1px solid rgb(243, 48, 194);
+  transition: 0.3s ease;
+}
+
+.primary:hover {
+  background-color: rgb(255, 0, 191);
+  border: 1px solid rgb(243, 48, 194);
+}
+
+.secondary {
+  background-color: teal;
+  border: 1px solid rgb(2, 204, 204);
+  transition: 0.3s ease;
+}
+
+.secondary:hover {
+  background-color: rgb(1, 168, 168);
+  border: 1px solid rgb(2, 204, 204);
+}
+
+.label {
+  font-size: 1.5rem;
+}
+
+.input {
+  padding: 1rem;
+  border-radius: 1rem;
+  outline: none;
+  border: 1px solid #777;
+  font-size: 1rem;
+}
