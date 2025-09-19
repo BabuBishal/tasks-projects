@@ -19,7 +19,7 @@ function App() {
         label="Last Name"
         placeholder="Enter your last name here..."
       />
-      <ReusableButton variant="primary" />
+      <ReusableButton variant="primary" buttonText="Submit" />
       <ReusableButton variant="secondary" />
     </div>
   );
