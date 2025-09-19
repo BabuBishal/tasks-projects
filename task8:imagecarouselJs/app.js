@@ -21,6 +21,18 @@ let autoSlide = setInterval(() => {
   }, 500);
 }, 4000);
 
+//stop auto slide if hovered over the container
+container.addEventListener("mouseenter", () => clearInterval(autoSlide));
+container.addEventListener("mouseleave", () => {
+  autoSlide = setInterval(() => {
+    if (isAnimating) return;
+    isAnimating = true;
+    currentIndex = (currentIndex + 1) % images.length;
+    updateCarousel();
+    setTimeout(() => (isAnimating = false), 500);
+  }, 3000);
+});
+
 updateCarousel();
 
 function updateCarousel() {
@@ -52,7 +64,7 @@ function updateCarousel() {
       blur = "2px";
       opacity = 0.8;
     }
-// calculating offset distance so that we can translate according to the image position
+    // calculating offset distance so that we can translate according to the image position
     const xOffset = distance * (imgWidth * 0.6 + gap) - center;
 
     // setting different styles to images according to their positions
@@ -61,7 +73,7 @@ function updateCarousel() {
     img.style.opacity = opacity;
     img.style.filter = `blur(${blur})`;
   });
-// setting image background to the page
+  // setting image background to the page
   bgOverlay.style.opacity = 0.9;
   setTimeout(() => {
     bgOverlay.style.backgroundImage = `url(${images[currentIndex].src})`;
