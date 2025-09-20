@@ -1,27 +1,30 @@
-import HelloWorld from "./components/HelloWorld";
-import Counter from "./components/Counter";
-import "./App.css";
-import CounterClass from "./components/CounterClass";
-import ReusableButton from "./components/ReusableButton";
-import ReusableInput from "./components/ReusableInput";
+import { Routes, Route } from "react-router-dom";
+import HelloWorldPage from "./pages/task1/HelloWorldPage";
+import CounterPage from "./pages/task2/CounterPage";
+import FormPage from "./pages/task3/FormPage";
+import PropsLifting from "./pages/task4/PropsLifting";
+import Layout from "./pages/Layout";
+
+const routeList = [
+  { path: "/task1", label: "Task 1", element: <HelloWorldPage /> },
+  { path: "/task2", label: "Task 2", element: <CounterPage /> },
+  { path: "/task3", label: "Task 3", element: <FormPage /> },
+  { path: "/task4", label: "Task 4", element: <PropsLifting /> },
+];
 
 function App() {
   return (
-    <div className="app">
-      {/* <HelloWorld />
-      <Counter />
-      <CounterClass /> */}
-      <ReusableInput
-        label="First Name"
-        placeholder="Enter your first name here..."
-      />
-      <ReusableInput
-        label="Last Name"
-        placeholder="Enter your last name here..."
-      />
-      <ReusableButton variant="primary" buttonText="Submit" />
-      <ReusableButton variant="secondary" />
-    </div>
+    <Routes>
+      <Route path="/" element={<Layout routes={routeList} />}>
+        {routeList.map((route) => (
+          <Route
+            key={`key-${route.label}`}
+            path={route.path}
+            element={route.element}
+          />
+        ))}
+      </Route>
+    </Routes>
   );
 }
 

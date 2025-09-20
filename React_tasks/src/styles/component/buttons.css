@@ -1,0 +1,27 @@
+.buttons {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.primary {
+  background-color: rgb(189, 0, 142);
+  border: 1px solid rgb(243, 48, 194);
+  transition: 0.3s ease;
+}
+
+.primary:hover {
+  background-color: rgb(255, 0, 191);
+  border: 1px solid rgb(243, 48, 194);
+}
+
+.secondary {
+  background-color: teal;
+  border: 1px solid rgb(2, 204, 204);
+  transition: 0.3s ease;
+}
+
+.secondary:hover {
+  background-color: rgb(1, 168, 168);
+  border: 1px solid rgb(2, 204, 204);
+}

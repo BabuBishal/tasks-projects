@@ -1,4 +1,4 @@
-import React from "react";
+import "../styles/component/input.css";
 
 const ReusableInput = ({ label, placeholder = "Placeholder" }) => {
   return (

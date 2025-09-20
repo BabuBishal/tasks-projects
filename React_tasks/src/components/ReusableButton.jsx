@@ -1,7 +1,15 @@
-import React from "react";
+import "../styles/component/buttons.css";
 
-const ReusableButton = ({ buttonText = "Button", variant }) => {
-  return <button className={` button ${variant}`}>{buttonText}</button>;
+const ReusableButton = ({
+  buttonText = "Button",
+  variant = "",
+  onClick = () => {},
+}) => {
+  return (
+    <button className={` button ${variant}`} onClick={onClick}>
+      {buttonText}
+    </button>
+  );
 };
 
 export default ReusableButton;
