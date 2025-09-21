@@ -4,6 +4,7 @@ import CounterPage from "./pages/task2/CounterPage";
 import FormPage from "./pages/task3/FormPage";
 import PropsLifting from "./pages/task4/PropsLifting";
 import Layout from "./pages/Layout";
+import Homepage from "./pages/task4/Homepage";
 
 const routeList = [
   { path: "/task1", label: "Task 1", element: <HelloWorldPage /> },
@@ -16,6 +17,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout routes={routeList} />}>
+        <Route index element={<Homepage />} />
+
         {routeList.map((route) => (
           <Route
             key={`key-${route.label}`}

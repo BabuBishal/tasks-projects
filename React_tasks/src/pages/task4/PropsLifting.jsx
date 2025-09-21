@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ReusableButton from "../../components/ReusableButton";
+import HelloWorld from "../../components/HelloWorld";
 
 const PropsLifting = () => {
   const [count, setCount] = useState(0);
@@ -9,7 +10,7 @@ const PropsLifting = () => {
   };
   return (
     <>
-      <h3>Props lifting</h3>
+      <HelloWorld title="Task 4: Props lifting" description="" />
       <h4>Count: {count}</h4>
       <ReusableButton
         onClick={handleIncrease}
