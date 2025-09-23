@@ -1,5 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import "../styles/layout/layout.css";
+import PropTypes from "prop-types";
 
 const Layout = ({ routes }) => {
   return (
@@ -21,6 +22,16 @@ const Layout = ({ routes }) => {
       </main>
     </div>
   );
+};
+
+Layout.propTypes = {
+  routes: PropTypes.arrayOf(
+    PropTypes.shape({
+      path: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      element: PropTypes.element.isRequired,
+    })
+  ).isRequired,
 };
 
 export default Layout;

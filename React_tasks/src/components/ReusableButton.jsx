@@ -1,4 +1,5 @@
 import "../styles/component/buttons.css";
+import PropTypes from "prop-types";
 
 const ReusableButton = ({
   buttonText = "Button",
@@ -10,6 +11,12 @@ const ReusableButton = ({
       {buttonText}
     </button>
   );
+};
+
+ReusableButton.propTypes = {
+  buttonText: PropTypes.string,
+  variant: PropTypes.oneOf(["", "primary", "secondary"]),
+  onClick: PropTypes.func,
 };
 
 export default ReusableButton;

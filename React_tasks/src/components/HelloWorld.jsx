@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const HelloWorld = ({ title, subtitle, description = "Hello World!" }) => {
   return (
     <>
@@ -7,5 +9,12 @@ const HelloWorld = ({ title, subtitle, description = "Hello World!" }) => {
     </>
   );
 };
+
+HelloWorld.prototypes = {
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  description: PropTypes.string,
+};
+
 
 export default HelloWorld;
