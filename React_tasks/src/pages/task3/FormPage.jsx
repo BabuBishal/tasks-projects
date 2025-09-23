@@ -17,10 +17,10 @@ const FormPage = () => {
         label="Last Name"
         placeholder="Enter your last name here..."
       />
-      <ReusableInput placeholder="No label prop here..." />
+      {/* <ReusableInput placeholder="No label prop here..." /> */}
       <ReusableButton variant="primary" buttonText="variant = Primary" />
-      <ReusableButton variant="secondary" buttonText="variant = Secondary" />
-      <ReusableButton />
+      {/* <ReusableButton variant="secondary" buttonText="variant = Secondary" /> */}
+      {/* <ReusableButton /> */}
     </>
   );
 };
