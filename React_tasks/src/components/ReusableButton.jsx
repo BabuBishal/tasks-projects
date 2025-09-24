@@ -15,7 +15,7 @@ const ReusableButton = ({
 
 ReusableButton.propTypes = {
   buttonText: PropTypes.string,
-  variant: PropTypes.oneOf(["", "primary", "secondary"]),
+  variant: PropTypes.oneOf(["", "primary", "secondary", "danger"]),
   onClick: PropTypes.func,
 };
 

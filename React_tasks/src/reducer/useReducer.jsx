@@ -1,9 +1,4 @@
-import { useContext, useReducer, createContext } from "react";
-
-const CartStateContext = createContext();
-const CartDispatchContext = createContext();
-
-const reducer = (state, action) => {
+export const reducer = (state, action) => {
   switch (action.type) {
     case "add_to_cart": {
       const product = action.payload;
@@ -29,26 +24,22 @@ const reducer = (state, action) => {
         };
       }
     }
+    case "remove_from_cart": {
+      const id = action.payload.id;
+      // console.log("Removing", id, "from", state.cart);
+      const updatedCart = state.cart.filter((item) => item.id !== id);
+
+      return {
+        ...state,
+        cart: updatedCart,
+      };
+    }
 
     default:
       throw new Error(`Unknown action: ${action.type}`);
   }
 };
 
-const initialState = {
+export const initialState = {
   cart: [],
 };
-
-export const CartContextProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  return (
-    <CartDispatchContext.Provider value={dispatch}>
-      <CartStateContext.Provider value={state}>
-        {children}
-      </CartStateContext.Provider>
-    </CartDispatchContext.Provider>
-  );
-};
-
-export const useCartStateContext = () => useContext(CartStateContext);
-export const useCartDispatchContext = () => useContext(CartDispatchContext);

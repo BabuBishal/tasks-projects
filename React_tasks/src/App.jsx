@@ -6,7 +6,7 @@ import PropsLifting from "./pages/task4/PropsLifting";
 import Layout from "./pages/Layout";
 import Homepage from "./pages/Homepage";
 import Context from "./pages/task5/Context";
-import { CartContextProvider } from "./hooks/CartContextProvider";
+import { CartContextProvider } from "./context/CartContextProvider";
 
 const routeList = [
   { path: "/task1", label: "Task 1", element: <HelloWorldPage /> },

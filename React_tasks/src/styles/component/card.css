@@ -1,13 +1,28 @@
-.card {
+.product-card {
   border: 1px solid #ccc;
   border-radius: 0.5rem;
-  width: 200px;
-  height: 225px;
+  width: 300px;
+  height: 400px;
   /* box-shadow: 2px 4px 8px rgba(255, 255, 255, 0.15);  */
-  padding: 1rem;
+  padding: 0.5rem;
   text-align: center;
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   flex-direction: column;
   background-color: #2f2f2f;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+
+  .product-title {
+    overflow: hidden;
+    width: 100%;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+  }
 }
