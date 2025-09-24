@@ -5,7 +5,7 @@ import FormPage from "./pages/task3/FormPage";
 import PropsLifting from "./pages/task4/PropsLifting";
 import Layout from "./pages/Layout";
 import Homepage from "./pages/Homepage";
-import Context from "./pages/task5/Context";
+import Context from "./pages/task5/ContextPage";
 import { CartContextProvider } from "./context/CartContextProvider";
 
 const routeList = [

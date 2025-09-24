@@ -1,6 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import "../styles/layout/layout.css";
 import PropTypes from "prop-types";
+import Cart from "../components/Cart";
 
 const Layout = ({ routes }) => {
   return (
@@ -15,7 +16,10 @@ const Layout = ({ routes }) => {
         ))}
       </aside>
       <main className="main">
-        <header className="header">Amnil React Tasks</header>
+        <header className="header">
+          <span>Amnil Internship Tasks</span>
+          <Cart />
+        </header>
         <div className="content">
           <Outlet />
         </div>

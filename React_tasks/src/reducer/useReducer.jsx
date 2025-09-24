@@ -1,6 +1,8 @@
+import { ADD_TO_CART, REMOVE_FROM_CART } from "../@utils/constants";
+
 export const reducer = (state, action) => {
   switch (action.type) {
-    case "add_to_cart": {
+    case ADD_TO_CART: {
       const product = action.payload;
 
       // check if product already exists in cart
@@ -24,7 +26,7 @@ export const reducer = (state, action) => {
         };
       }
     }
-    case "remove_from_cart": {
+    case REMOVE_FROM_CART: {
       const id = action.payload.id;
       // console.log("Removing", id, "from", state.cart);
       const updatedCart = state.cart.filter((item) => item.id !== id);

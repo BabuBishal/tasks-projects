@@ -4,6 +4,12 @@
   align-items: center;
 }
 
+.small {
+  font-size: 0.8rem;
+  padding: 4px;
+  border-radius: 0.25rem;
+}
+
 .primary {
   background-color: rgb(189, 0, 142);
   border: 1px solid rgb(243, 48, 194);
@@ -27,7 +33,6 @@
 }
 
 .danger {
-  font-size: 0.8rem;
   background-color: rgb(204, 2, 36);
   border: 1px solid rgb(243, 48, 74);
   transition: 0.3s ease;

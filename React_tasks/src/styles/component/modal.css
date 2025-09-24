@@ -1,0 +1,32 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(66, 65, 65, 0.281);
+  z-index: 999;
+}
+.modal {
+  display: flex;
+  height: 150px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+  background-color: #888;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  z-index: 1000;
+}
+.confirm-delete {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: end;
+}

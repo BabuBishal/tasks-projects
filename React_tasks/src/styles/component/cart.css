@@ -1,0 +1,39 @@
+.cart-container {
+  position: relative;
+  display: inline-block;
+}
+
+.cart-logo {
+  position: relative;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.cart-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 250px;
+  background-color: #444;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  display: none;
+  z-index: 1000;
+}
+
+.cart-container:hover .cart-dropdown {
+  display: block;
+}
+.cart-count {
+  height: 2rem;
+  width: 2rem;
+  background-color: #dd0dba;
+  position: absolute;
+  border: 1px solid #333;
+  padding: 0.25rem;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  text-align: center;
+}

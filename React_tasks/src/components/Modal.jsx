@@ -1,17 +1,26 @@
-import ReusableInput from "./ReusableInput";
 import ReusableButton from "./ReusableButton";
+import "../styles/component/modal.css";
 
-const Modal = ({ title, subtitle, content }) => {
+const Modal = ({ onClose, onRemove }) => {
   return (
-    <div className="modal">
-      <div>
-        <h4>{title}</h4>
-        <h5>{subtitle}</h5>
-        <h5>{content}</h5>
+    <div className="modal-backdrop">
+      <div className="modal">
+        <span className="confirm-delete">
+          Are you sure you want to remove this item?
+        </span>
+        <div className="modal-actions">
+          <ReusableButton
+            variant="danger "
+            buttonText="Remove"
+            onClick={onRemove}
+          />
+          <ReusableButton
+            variant="secondary"
+            buttonText="Close"
+            onClick={onClose}
+          />
+        </div>
       </div>
-
-      <ReusableButton variant="secondary" buttonText="Add to Cart" />
-      {/* <ReusableButton variant="secondary" buttonText="Add to Cart" /> */}
     </div>
   );
 };
