@@ -1,0 +1,12 @@
+.theme-btn {
+  display: inline-block;
+  font-size: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: var(--card-bg);
+  box-shadow: var(--shadow);
+}

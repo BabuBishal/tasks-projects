@@ -14,33 +14,33 @@ const OrderItem = ({ item, onRemove }) => {
   return (
     <>
       <div className="order-item">
-        <img src={item.img}></img>
+        <img src={item.img} alt={item.title} />
         <div className="order-item-details">
           <span className="item-title">{item.title}</span>
           <div className="order-item-subdetails">
-            <span className="item-qty">{item.quantity} pcs.</span>
-            <span className="item-price">Rs {item.price}</span>
+            <span>{item.quantity} pcs.</span>
+            <span>Rs {item.price}</span>
           </div>
         </div>
-        <hr />
 
         <div className="order-item-total">
-          <span className="total-price">
-            <span className="total">Total</span>
-            <span className="price">Rs {totalPrice}</span>
-          </span>
           <ReusableButton
             buttonText="Remove"
             variant="danger small"
             onClick={() => setShowModal(true)}
-          />{" "}
+          />
+          <div className="total-price">
+            <span>Total</span>
+            <span className="price">Rs {totalPrice}</span>
+          </div>
         </div>
+
+        {showModal &&
+          createPortal(
+            <Modal onRemove={onRemove} onClose={() => setShowModal(false)} />,
+            modalRoot
+          )}
       </div>
-      {showModal &&
-        createPortal(
-          <Modal onRemove={onRemove} onClose={() => setShowModal(false)} />,
-          modalRoot
-        )}
     </>
   );
 };

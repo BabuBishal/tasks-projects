@@ -2,6 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import "../styles/layout/layout.css";
 import PropTypes from "prop-types";
 import Cart from "../components/Cart";
+import ThemeButton from "../components/ThemeButton";
 
 const Layout = ({ routes }) => {
   return (
@@ -17,8 +18,11 @@ const Layout = ({ routes }) => {
       </aside>
       <main className="main">
         <header className="header">
-          <span>Amnil Internship Tasks</span>
-          <Cart />
+          <span className="logo">Amnil Internship Tasks</span>
+          <div className="header-actions">
+            <ThemeButton />
+            <Cart />
+          </div>
         </header>
         <div className="content">
           <Outlet />

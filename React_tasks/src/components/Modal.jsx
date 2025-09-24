@@ -1,5 +1,6 @@
 import ReusableButton from "./ReusableButton";
 import "../styles/component/modal.css";
+import PropTypes from "prop-types";
 
 const Modal = ({ onClose, onRemove }) => {
   return (
@@ -23,6 +24,11 @@ const Modal = ({ onClose, onRemove }) => {
       </div>
     </div>
   );
+};
+
+Modal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onRemove: PropTypes.func.isRequired,
 };
 
 export default Modal;

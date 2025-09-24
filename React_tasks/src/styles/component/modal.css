@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(66, 65, 65, 0.281);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
 }
 .modal {
@@ -15,15 +15,16 @@
   align-items: center;
   padding: 1rem;
   gap: 1rem;
-  background-color: #888;
-  border: 1px solid #ccc;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-md);
   border-radius: 0.5rem;
   z-index: 1000;
 }
 .confirm-delete {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-color );
 }
 .modal-actions {
   display: flex;

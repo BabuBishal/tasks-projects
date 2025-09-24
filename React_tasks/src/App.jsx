@@ -7,6 +7,7 @@ import Layout from "./pages/Layout";
 import Homepage from "./pages/Homepage";
 import Context from "./pages/task5/ContextPage";
 import { CartContextProvider } from "./context/CartContextProvider";
+import ThemeProvider from "./context/ThemeProvider";
 
 const routeList = [
   { path: "/task1", label: "Task 1", element: <HelloWorldPage /> },
@@ -18,21 +19,23 @@ const routeList = [
 
 function App() {
   return (
-    <CartContextProvider>
-      <Routes>
-        <Route path="/" element={<Layout routes={routeList} />}>
-          <Route index element={<Homepage />} />
+    <ThemeProvider>
+      <CartContextProvider>
+        <Routes>
+          <Route path="/" element={<Layout routes={routeList} />}>
+            <Route index element={<Homepage />} />
 
-          {routeList.map((route) => (
-            <Route
-              key={`key-${route.label}`}
-              path={route.path}
-              element={route.element}
-            />
-          ))}
-        </Route>
-      </Routes>
-    </CartContextProvider>
+            {routeList.map((route) => (
+              <Route
+                key={`key-${route.label}`}
+                path={route.path}
+                element={route.element}
+              />
+            ))}
+          </Route>
+        </Routes>
+      </CartContextProvider>
+    </ThemeProvider>
   );
 }
 

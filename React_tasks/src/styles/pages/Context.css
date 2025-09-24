@@ -1,5 +1,5 @@
 .context {
-  margin-top: 7rem;
+  /* margin-top: 7rem; */
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -19,10 +19,7 @@
   flex-wrap: wrap;
 }
 
-
 .order-title {
   font-weight: 600;
   font-size: 2rem;
 }
-
-

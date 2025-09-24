@@ -27,7 +27,7 @@ const Cart = () => {
             />
           ))
         ) : (
-          <div className="emptu-cart">No items in cart</div>
+          <div className="empty-cart">No items in cart</div>
         )}
       </div>
     </div>

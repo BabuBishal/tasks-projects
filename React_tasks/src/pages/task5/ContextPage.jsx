@@ -3,7 +3,6 @@ import "../../styles/pages/Context.css";
 import { useCartContext } from "../../context/CartContextProvider";
 import useFetchData from "../../hooks/useFetchData";
 import ProductCard from "../../components/ProductCard";
-import OrderItem from "../../components/OrderItem";
 import { STORE_API_URL } from "../../@utils/constants";
 
 // const cardData = [

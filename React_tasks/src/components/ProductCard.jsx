@@ -1,4 +1,4 @@
-import "../styles/component/card.css";
+import "../styles/component/productCard.css";
 import ReusableButton from "./ReusableButton";
 import PropTypes from "prop-types";
 

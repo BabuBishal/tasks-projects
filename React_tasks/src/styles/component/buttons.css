@@ -3,6 +3,9 @@
   gap: 2rem;
   align-items: center;
 }
+button {
+  color: #fff;
+}
 
 .small {
   font-size: 0.8rem;
@@ -11,34 +14,34 @@
 }
 
 .primary {
-  background-color: rgb(189, 0, 142);
-  border: 1px solid rgb(243, 48, 194);
+  background-color: var(--primary-bg);
+  border: 1px solid var(--primary-border);
   transition: 0.3s ease;
 }
 
 .primary:hover {
-  background-color: rgb(255, 0, 191);
-  border: 1px solid rgb(243, 48, 194);
+  background-color: var(--primary-hover-bg);
+  border: 1px solid var(--primary-hover-border);
 }
 
 .secondary {
-  background-color: teal;
-  border: 1px solid rgb(2, 204, 204);
+  background-color: var(--secondary-bg);
+  border: 1px solid var(--secondary-border);
   transition: 0.3s ease;
 }
 
 .secondary:hover {
-  background-color: rgb(1, 168, 168);
-  border: 1px solid rgb(2, 204, 204);
+  background-color: var(--secondary-hover-bg);
+  border: 1px solid var(--secondary-hover-border);
 }
 
 .danger {
-  background-color: rgb(204, 2, 36);
-  border: 1px solid rgb(243, 48, 74);
+  background-color: var(--danger-bg);
+  border: 1px solid var(--danger-border);
   transition: 0.3s ease;
 }
 
 .danger:hover {
-  background-color: rgb(255, 0, 106);
-  border: 1px solid rgb(243, 48, 113);
+  background-color: var(--danger-hover-bg);
+  border: 1px solid var(--danger-hover-border);
 }
