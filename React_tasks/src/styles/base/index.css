@@ -27,6 +27,7 @@
   --dropdown-bg: #ffffff;
   --dropdown-border: #e0e0e0;
 
+  /* Card */
   --card-bg: #fcfcfc;
   --card-border: #e0e0e0;
 
@@ -71,6 +72,7 @@
   --dropdown-bg: #1a1a1a;
   --dropdown-border: #2a2a2a;
 
+  /* Card */
   --card-bg: #1e1e1e;
   --card-border: #2a2a2a;
 }

@@ -1,4 +1,4 @@
-import ReusableButton from "./ReusableButton";
+import Button from "./Button";
 import "../styles/component/modal.css";
 import PropTypes from "prop-types";
 
@@ -10,16 +10,8 @@ const Modal = ({ onClose, onRemove }) => {
           Are you sure you want to remove this item?
         </span>
         <div className="modal-actions">
-          <ReusableButton
-            variant="danger "
-            buttonText="Remove"
-            onClick={onRemove}
-          />
-          <ReusableButton
-            variant="secondary"
-            buttonText="Close"
-            onClick={onClose}
-          />
+          <Button variant="danger " buttonText="Ok" onClick={onRemove} />
+          <Button variant="secondary" buttonText="Close" onClick={onClose} />
         </div>
       </div>
     </div>

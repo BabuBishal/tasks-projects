@@ -1,6 +1,6 @@
 import "../styles/component/orderItem.css";
 import Modal from "./Modal";
-import ReusableButton from "./ReusableButton";
+import Button from "./Button";
 import PropTypes from "prop-types";
 import { createPortal } from "react-dom";
 import { useState } from "react";
@@ -24,7 +24,7 @@ const OrderItem = ({ item, onRemove }) => {
         </div>
 
         <div className="order-item-total">
-          <ReusableButton
+          <Button
             buttonText="Remove"
             variant="danger small"
             onClick={() => setShowModal(true)}

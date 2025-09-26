@@ -11,7 +11,10 @@ const ThemeProvider = ({ children }) => {
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    const th = theme === "light" ? "dark" : "light";
+    setTheme(th);
+    // document.documentElement.setAttribute("data-theme", th);
+    // localStorage.setItem("theme", th);
   };
 
   return <ThemeContext value={{ theme, toggleTheme }}>{children}</ThemeContext>;

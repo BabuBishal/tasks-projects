@@ -8,13 +8,15 @@ import Homepage from "./pages/Homepage";
 import Context from "./pages/task5/ContextPage";
 import { CartContextProvider } from "./context/CartContextProvider";
 import ThemeProvider from "./context/ThemeProvider";
+import FormValidationPage from "./pages/task8/FormValidationPage";
 
 const routeList = [
   { path: "/task1", label: "Task 1", element: <HelloWorldPage /> },
   { path: "/task2", label: "Task 2", element: <CounterPage /> },
   { path: "/task3", label: "Task 3", element: <FormPage /> },
   { path: "/task4", label: "Task 4", element: <PropsLifting /> },
-  { path: "/task5", label: "Task 5", element: <Context /> },
+  { path: "/task5", label: "Task 5/6/7", element: <Context /> },
+  { path: "/task8", label: "Task 8", element: <FormValidationPage /> },
 ];
 
 function App() {

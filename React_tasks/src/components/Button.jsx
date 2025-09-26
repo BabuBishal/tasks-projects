@@ -1,7 +1,7 @@
 import "../styles/component/buttons.css";
 import PropTypes from "prop-types";
 
-const ReusableButton = ({
+const Button = ({
   buttonText = "Button",
   variant = "",
   onClick = () => {},
@@ -13,10 +13,10 @@ const ReusableButton = ({
   );
 };
 
-ReusableButton.propTypes = {
+Button.propTypes = {
   buttonText: PropTypes.string,
   variant: PropTypes.oneOf(["", "primary", "small", "secondary", "danger"]),
   onClick: PropTypes.func,
 };
 
-export default ReusableButton;
+export default Button;

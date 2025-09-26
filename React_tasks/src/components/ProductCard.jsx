@@ -1,6 +1,6 @@
 import "../styles/component/productCard.css";
-import ReusableButton from "./ReusableButton";
 import PropTypes from "prop-types";
+import Button from "./Button";
 
 const ProductCard = ({ img, title, price, onAddToCart }) => {
   return (
@@ -9,7 +9,7 @@ const ProductCard = ({ img, title, price, onAddToCart }) => {
       <h4 className="product-title">{title}</h4>
       {/* <h5>{category}</h5> */}
       <h5>Rs. {price}</h5>
-      <ReusableButton
+      <Button
         variant="secondary"
         buttonText="Add to Cart"
         onClick={onAddToCart}

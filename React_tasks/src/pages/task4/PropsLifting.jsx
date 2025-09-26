@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ReusableButton from "../../components/ReusableButton";
+import Button from "../../components/Button";
 import HelloWorld from "../../components/HelloWorld";
 
 const PropsLifting = () => {
@@ -12,7 +12,7 @@ const PropsLifting = () => {
     <>
       <HelloWorld title="Task 4: Props lifting" description="" />
       <h4>Count: {count}</h4>
-      <ReusableButton
+      <Button
         onClick={handleIncrease}
         buttonText="Increase"
         variant="primary"
