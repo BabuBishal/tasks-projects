@@ -69,6 +69,7 @@ const Form = () => {
         dob: "",
         phone: "",
         gender: "",
+        dob: "",
       });
       setToast("Form submitted successfully!");
       setTimeout(() => setToast(""), 3000);
@@ -174,7 +175,7 @@ const Form = () => {
                 setFormData({ ...formData, phone: e.target.value })
               }
               className="input"
-              type="text"
+              type="tel"
               placeholder="Phone No. ..."
             />
           </div>

@@ -15,7 +15,7 @@
 }
 .toast {
   position: fixed;
-  bottom: 30px;
+  top: 180px;
   right: 20px;
   background: #4caf50;
   color: white;
@@ -39,7 +39,7 @@
 @keyframes fadein {
   from {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(-15px);
   }
   to {
     opacity: 1;
@@ -54,6 +54,6 @@
   }
   to {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(-15px);
   }
 }
