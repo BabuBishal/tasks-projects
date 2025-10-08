@@ -9,6 +9,7 @@ import Context from "./pages/task5/ContextPage";
 import { CartContextProvider } from "./context/CartContextProvider";
 import ThemeProvider from "./context/ThemeProvider";
 import FormValidationPage from "./pages/task8/FormValidationPage";
+import TabsPage from "./pages/TabsPage";
 
 const routeList = [
   { path: "/task1", label: "Task 1", element: <HelloWorldPage /> },
@@ -17,6 +18,7 @@ const routeList = [
   { path: "/task4", label: "Task 4", element: <PropsLifting /> },
   { path: "/task5", label: "Task 5/6/7", element: <Context /> },
   { path: "/task8", label: "Task 8", element: <FormValidationPage /> },
+  { path: "/task9", label: "Task 9", element: <TabsPage /> },
 ];
 
 function App() {

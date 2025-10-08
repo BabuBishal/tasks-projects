@@ -1,0 +1,6 @@
+.tabs-page {
+  display: flex;
+  gap: 2rem;
+  flex-direction: column;
+  justify-content: center;
+}
