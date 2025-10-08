@@ -10,15 +10,52 @@ import { CartContextProvider } from "./context/CartContextProvider";
 import ThemeProvider from "./context/ThemeProvider";
 import FormValidationPage from "./pages/task8/FormValidationPage";
 import TabsPage from "./pages/TabsPage";
+import Login from "./pages/login/Login";
+import ProtectedRoute from "./pages/ProtectedRoute";
 
 const routeList = [
-  { path: "/task1", label: "Task 1", element: <HelloWorldPage /> },
-  { path: "/task2", label: "Task 2", element: <CounterPage /> },
-  { path: "/task3", label: "Task 3", element: <FormPage /> },
-  { path: "/task4", label: "Task 4", element: <PropsLifting /> },
-  { path: "/task5", label: "Task 5/6/7", element: <Context /> },
-  { path: "/task8", label: "Task 8", element: <FormValidationPage /> },
-  { path: "/task9", label: "Task 9", element: <TabsPage /> },
+  {
+    path: "/tasks/task1",
+    label: "Task 1",
+    element: <HelloWorldPage />,
+    protected: true,
+  },
+  {
+    path: "/tasks/task2",
+    label: "Task 2",
+    element: <CounterPage />,
+    protected: true,
+  },
+  {
+    path: "/tasks/task3",
+    label: "Task 3",
+    element: <FormPage />,
+    protected: true,
+  },
+  {
+    path: "/tasks/task4",
+    label: "Task 4",
+    element: <PropsLifting />,
+    protected: true,
+  },
+  {
+    path: "/tasks/task5",
+    label: "Task 5/6/7",
+    element: <Context />,
+    protected: true,
+  },
+  {
+    path: "/tasks/task8",
+    label: "Task 8",
+    element: <FormValidationPage />,
+    protected: true,
+  },
+  {
+    path: "/tasks/task9",
+    label: "Task 9",
+    element: <TabsPage />,
+    protected: true,
+  },
 ];
 
 function App() {
@@ -26,14 +63,28 @@ function App() {
     <ThemeProvider>
       <CartContextProvider>
         <Routes>
-          <Route path="/" element={<Layout routes={routeList} />}>
+          <Route path="/" element={<Login />} />
+          <Route
+            path="/tasks"
+            element={
+              <ProtectedRoute>
+                <Layout routes={routeList} />
+              </ProtectedRoute>
+            }
+          >
             <Route index element={<Homepage />} />
 
             {routeList.map((route) => (
               <Route
                 key={`key-${route.label}`}
                 path={route.path}
-                element={route.element}
+                element={
+                  route.protected ? (
+                    <ProtectedRoute>{route.element}</ProtectedRoute>
+                  ) : (
+                    route.element
+                  )
+                }
               />
             ))}
           </Route>

@@ -3,7 +3,7 @@ export const REMOVE_FROM_CART = "remove_from_cart";
 
 export const STORE_API_URL = "https://fakestoreapi.com/products";
 
-export const validationSchema = {
+export const formSchema = {
   username: {
     required: true,
     minLength: 3,
@@ -26,4 +26,17 @@ export const validationSchema = {
     message: "Phone number must be 10 digits",
   },
   gender: { required: true },
+};
+
+export const loginSchema = {
+  username: {
+    required: true,
+    minLength: 3,
+    message: "Username must be at least 3 characters",
+  },
+  password: {
+    required: true,
+    minLength: 4,
+    message: "Password must be at least 4 characters",
+  },
 };

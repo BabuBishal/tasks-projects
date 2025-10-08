@@ -17,8 +17,7 @@ const Form = () => {
       dob: "",
       phone: "",
       gender: "",
-    },
-    validateForm,
+    }, validateForm
   });
 
   const onSubmit = (data) => {

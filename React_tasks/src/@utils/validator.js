@@ -1,6 +1,6 @@
-import { validationSchema } from "./constants";
+import { formSchema } from "./constants";
 
-export const validateForm = (values, schema = validationSchema) => {
+export const validateForm = (values, schema = formSchema) => {
   const errors = {};
 
   for (const field in schema) {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useForm = ({ initialValues = {}, validateForm }) => {
+const useForm = ({ initialValues = {}, validateForm, schema }) => {
   const [formData, setFormData] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
 
@@ -14,12 +14,13 @@ const useForm = ({ initialValues = {}, validateForm }) => {
 
   const handleSubmit = (e, onSubmit) => {
     e.preventDefault();
-    const errors = validateForm(formData);
+    const errors = validateForm(formData, schema);
     setFormErrors(errors);
-
+    console.log(formErrors);
     if (Object.keys(errors).length === 0) {
       setFormData(initialValues);
       onSubmit && onSubmit(formData);
+      console.log(formData);
     }
   };
 
