@@ -5,7 +5,7 @@
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 9999;
 }
 .modal {
   display: flex;
@@ -24,7 +24,7 @@
 .confirm-delete {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--text-color );
+  color: var(--text-color);
 }
 .modal-actions {
   display: flex;

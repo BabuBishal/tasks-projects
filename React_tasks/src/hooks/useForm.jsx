@@ -1,35 +1,31 @@
-import React, { useState } from "react";
-import { validateForm } from "../@utils/validator";
+import { useState } from "react";
 
-const useForm = ({ initialValues = {}, validate }) => {
+const useForm = ({ initialValues = {}, validateForm }) => {
   const [formData, setFormData] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
-  const [toast, setToast] = useState("");
 
   const handleChange = (e) => {
-    const { name, value, type } = e.target;
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "radio" ? value : value,
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, onSubmit) => {
     e.preventDefault();
     const errors = validateForm(formData);
     setFormErrors(errors);
 
     if (Object.keys(errors).length === 0) {
       setFormData(initialValues);
-      setToast("Form submitted successfully!");
-      setTimeout(() => setToast(""), 3000);
+      onSubmit && onSubmit(formData);
     }
   };
 
   return {
     formData,
     formErrors,
-    toast,
     handleChange,
     handleSubmit,
     setFormData,

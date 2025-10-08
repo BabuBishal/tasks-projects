@@ -60,7 +60,7 @@
   font-weight: 600;
   text-align: center;
   box-shadow: var(--shadow);
-  z-index: 10000;
+  z-index: 9000;
 }
 .logo {
   color: var(--primary-color);

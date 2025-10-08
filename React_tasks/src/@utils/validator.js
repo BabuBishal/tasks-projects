@@ -1,34 +1,24 @@
-export const validateForm = (values) => {
+import { validationSchema } from "./constants";
+
+export const validateForm = (values, schema = validationSchema) => {
   const errors = {};
 
-  if (!values.username) {
-    errors.username = "Username is required";
-  }
+  for (const field in schema) {
+    const rules = schema[field];
+    const value = values[field];
 
-  if (!values.password) {
-    errors.password = "Password is required";
-  } else if (values.password.length < 6) {
-    errors.password = "Password must be at least 6 characters";
-  }
+    if (rules.required && !value) {
+      errors[field] = `${field[0].toUpperCase() + field.slice(1)} is required`;
+      continue;
+    }
 
-  if (!values.email) {
-    errors.email = "Email is required";
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-    errors.email = "Invalid email address";
-  }
+    if (rules.minLength && value.length < rules.minLength) {
+      errors[field] = rules.message;
+    }
 
-  if (!values.dob) {
-    errors.dob = "Date of birth is required";
-  }
-
-  if (!values.phone) {
-    errors.phone = "Phone number is required";
-  } else if (!/^\d{10}$/.test(values.phone)) {
-    errors.phone = "Phone number must be 10 digits";
-  }
-
-  if (!values.gender) {
-    errors.gender = "Gender is required";
+    if (rules.pattern && !rules.pattern.test(value)) {
+      errors[field] = rules.message;
+    }
   }
 
   return errors;

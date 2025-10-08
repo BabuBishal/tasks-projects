@@ -7,9 +7,10 @@ import { validateForm } from "../../@utils/validator";
 
 const Form = () => {
   const [eye, setEye] = useState(false);
+  const [toast, setToast] = useState("");
 
-  const { formData, formErrors, toast, handleChange, handleSubmit } = useForm(
-    {
+  const { formData, formErrors, handleChange, handleSubmit } = useForm({
+    initialValues: {
       username: "",
       password: "",
       email: "",
@@ -17,14 +18,20 @@ const Form = () => {
       phone: "",
       gender: "",
     },
-    validateForm
-  );
+    validateForm,
+  });
+
+  const onSubmit = (data) => {
+    setToast("Form submitted successfully!");
+    setTimeout(() => setToast(""), 3000);
+    console.log("Form Data Submitted: ", data);
+  };
 
   return (
     <>
       {toast && <div className="toast">{toast}</div>}
 
-      <form className="form" onSubmit={handleSubmit}>
+      <form className="form" onSubmit={(e) => handleSubmit(e, onSubmit)}>
         <div className="input-container">
           <label className="label" htmlFor="username">
             Username
