@@ -2,79 +2,23 @@ import "../../styles/component/Form.css";
 import "../../styles/component/input.css";
 import { useState } from "react";
 import Button from "../Button";
+import useForm from "../../hooks/useForm";
+import { validateForm } from "../../@utils/validator";
 
 const Form = () => {
   const [eye, setEye] = useState(false);
-  const [toast, setToast] = useState("");
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    email: "",
-    phone: "",
-    gender: "",
-  });
 
-  const [formErrors, setFormErrors] = useState({
-    username: "",
-    password: "",
-    email: "",
-    dob: "",
-    phone: "",
-    gender: "",
-  });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    let errors = {};
-
-    if (!formData.username) {
-      errors.username = "Username is required";
-    }
-
-    if (!formData.password) {
-      errors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      errors.password = "Password must be at least 6 characters";
-    }
-
-    if (!formData.email) {
-      errors.email = "Email is required";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
-    ) {
-      errors.email = "Invalid email address";
-    }
-    if (!formData.dob) {
-      errors.dob = "Date of birth is required";
-    }
-
-    if (!formData.phone) {
-      errors.phone = "Phone number is required";
-    } else if (!/^\d{10}$/.test(formData.phone)) {
-      errors.phone = "Phone number must be 10 digits";
-    }
-
-    if (!formData.gender) {
-      errors.gender = "Gender is required";
-    }
-
-    setFormErrors(errors);
-
-    if (Object.keys(errors).length === 0) {
-      setFormData({
-        username: "",
-        password: "",
-        email: "",
-        dob: "",
-        phone: "",
-        gender: "",
-        dob: "",
-      });
-      setToast("Form submitted successfully!");
-      setTimeout(() => setToast(""), 3000);
-    }
-  };
+  const { formData, formErrors, toast, handleChange, handleSubmit } = useForm(
+    {
+      username: "",
+      password: "",
+      email: "",
+      dob: "",
+      phone: "",
+      gender: "",
+    },
+    validateForm
+  );
 
   return (
     <>
@@ -87,10 +31,9 @@ const Form = () => {
           </label>
           <div className="input-field">
             <input
+              name="username"
               value={formData.username}
-              onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
-              }
+              onChange={handleChange}
               id="username"
               className="input"
               type="text"
@@ -107,11 +50,10 @@ const Form = () => {
 
           <div className="input-field">
             <input
+              name="password"
               id="password"
               value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
+              onChange={handleChange}
               className="input"
               type={eye ? "text" : "password"}
               placeholder="Password ..."
@@ -130,12 +72,11 @@ const Form = () => {
 
           <div className="input-field">
             <input
+              name="email"
               id="email"
               className="input"
               value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
+              onChange={handleChange}
               type="email"
               placeholder="Email ..."
             />
@@ -150,12 +91,11 @@ const Form = () => {
 
           <div className="input-field">
             <input
+              name="dob"
               id="date"
               className="input"
               value={formData.dob}
-              onChange={(e) =>
-                setFormData({ ...formData, dob: e.target.value })
-              }
+              onChange={handleChange}
               type="date"
             />
           </div>
@@ -169,11 +109,10 @@ const Form = () => {
 
           <div className="input-field">
             <input
+              name="phone"
               id="phone"
               value={formData.phone}
-              onChange={(e) =>
-                setFormData({ ...formData, phone: e.target.value })
-              }
+              onChange={handleChange}
               className="input"
               type="tel"
               placeholder="Phone No. ..."
@@ -194,9 +133,7 @@ const Form = () => {
                 name="gender"
                 value="male"
                 checked={formData.gender === "male"}
-                onChange={(e) =>
-                  setFormData({ ...formData, gender: e.target.value })
-                }
+                onChange={handleChange}
               />
               Male
             </label>
@@ -207,9 +144,7 @@ const Form = () => {
                 name="gender"
                 value="female"
                 checked={formData.gender === "female"}
-                onChange={(e) =>
-                  setFormData({ ...formData, gender: e.target.value })
-                }
+                onChange={handleChange}
               />
               Female
             </label>
@@ -220,9 +155,7 @@ const Form = () => {
                 name="gender"
                 value="other"
                 checked={formData.gender === "other"}
-                onChange={(e) =>
-                  setFormData({ ...formData, gender: e.target.value })
-                }
+                onChange={handleChange}
               />
               Other
             </label>
