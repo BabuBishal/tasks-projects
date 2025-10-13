@@ -1,8 +1,8 @@
-import HelloWorld from "../components/HelloWorld";
-import Tab from "../components/Tab/Tab";
-import TabContent from "../components/Tab/TabContent";
-import Tabs from "../components/Tab/Tabs";
-import "../styles/pages/TabsPage.css";
+import HelloWorld from "../../components/HelloWorld";
+import Tab from "../../components/Tab/Tab";
+import TabContent from "../../components/Tab/TabContent";
+import Tabs from "../../components/Tab/Tabs";
+import "../../styles/pages/TabsPage.css";
 
 const TabsPage = () => {
   return (

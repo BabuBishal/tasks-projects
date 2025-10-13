@@ -1,3 +1,45 @@
-.app {
-  background-color: var(--background);
+.App {
+  position: relative;
+}
+.main {
+  max-width: 1300px;
+  margin: auto;
+  width: 100%;
+  min-height: 90vh;
+  display: flex;
+  gap: 2rem;
+}
+
+.homepage {
+  width: 100%;
+  padding-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  align-items: start;
+  justify-content: center;
+}
+
+.section {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+.intro-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.main-title {
+  font-size: 3rem;
+  color: var(--text-primary);
+}
+
+.main-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
 }

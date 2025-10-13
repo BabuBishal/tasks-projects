@@ -1,10 +1,12 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import "../styles/layout/layout.css";
 import PropTypes from "prop-types";
 import Cart from "../components/Cart";
 import ThemeButton from "../components/ThemeButton";
+import Button from "../components/Button";
 
 const Layout = ({ routes }) => {
+  const navigate = useNavigate();
   return (
     <div className="layout">
       <aside className="sidebar">
@@ -22,6 +24,14 @@ const Layout = ({ routes }) => {
           <div className="header-actions">
             <ThemeButton />
             <Cart />
+            <Button
+              onClick={() => {
+                localStorage.removeItem("isAuthenticated");
+                navigate("/");
+              }}
+              buttonText="Logout"
+              variant="secondary small"
+            ></Button>
           </div>
         </header>
         <div className="content">

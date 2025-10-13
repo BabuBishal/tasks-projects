@@ -5,13 +5,19 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme();
   return (
     <header className={styles.header}>
-      <h3>B3</h3>
-      <Toggle
-        checkedText="☀️"
-        uncheckedText="🌙"
-        checked={theme === "dark"}
-        onChange={() => toggleTheme()}
-      />
+      <nav className={styles.navbar}>
+        <h3 className={styles.headerIcon}>UI Library</h3>
+        <ul className={styles.navmenu}>
+          <li className={styles.navitem}>Components</li>
+          <li className={styles.navitem}>Documentation</li>
+        </ul>
+        <Toggle
+          checkedText="☀️"
+          uncheckedText="🌙"
+          checked={theme === "dark"}
+          onChange={() => toggleTheme()}
+        />
+      </nav>
     </header>
   );
 };

@@ -9,7 +9,7 @@ import Context from "./pages/task5/ContextPage";
 import { CartContextProvider } from "./context/CartContextProvider";
 import ThemeProvider from "./context/ThemeProvider";
 import FormValidationPage from "./pages/task8/FormValidationPage";
-import TabsPage from "./pages/TabsPage";
+import TabsPage from "./pages/task9/TabsPage";
 import Login from "./pages/login/Login";
 import ProtectedRoute from "./pages/ProtectedRoute";
 

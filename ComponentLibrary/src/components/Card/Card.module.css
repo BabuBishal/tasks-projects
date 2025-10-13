@@ -1,0 +1,12 @@
+.card {
+  width: 400px;
+  height: 200px;
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
+  background-color: var(--surface);
+  gap: 1.5rem;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 1rem;
+}

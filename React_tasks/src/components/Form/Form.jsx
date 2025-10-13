@@ -4,6 +4,7 @@ import { useState } from "react";
 import Button from "../Button";
 import useForm from "../../hooks/useForm";
 import { validateForm } from "../../@utils/validator";
+import Toast from "../Toast";
 
 const Form = () => {
   const [eye, setEye] = useState(false);
@@ -17,7 +18,8 @@ const Form = () => {
       dob: "",
       phone: "",
       gender: "",
-    }, validateForm
+    },
+    validateForm,
   });
 
   const onSubmit = (data) => {
@@ -28,7 +30,7 @@ const Form = () => {
 
   return (
     <>
-      {toast && <div className="toast">{toast}</div>}
+      {toast && <Toast toast={toast} />}
 
       <form className="form" onSubmit={(e) => handleSubmit(e, onSubmit)}>
         <div className="input-container">

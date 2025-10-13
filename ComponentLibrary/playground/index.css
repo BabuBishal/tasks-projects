@@ -8,25 +8,77 @@
   --primary-color: #1e3a8a;
   --accent-color: #14b8a6;
   --background: #fdfdfd;
-  --surface: #f3f4f6;
+  --surface: #f9f9f9;
 
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
+  --text-primary: #0a0a0a;
+  --text-secondary: #6b7280;
   --border: #e5e7eb;
   --shadow: 1px 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  /* Alerts */
+  --info-bg: #f0f9ff;
+  --info-border: #bae6fd;
+  --info-text: #0369a1;
+
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+  --error-text: #dc2626;
+
+  --success-bg: #f0fdf4;
+  --success-border: #bbf7d0;
+  --success-text: #16a34a;
+
+  --warning-bg: #fffbeb;
+  --warning-border: #fde68a;
+  --warning-text: #ca8a04;
+
+  /* Buttons & Badges */
+  --primary: #0a0a0a;
+  --secondary: #e5e7eb;
+  --outline: #f9fafb;
+  --destructive: #ef4444;
+  --success: #22c55e;
+  --warning: #facc15;
+  --info: #3b82f6;
 }
 
 [data-theme="dark"] {
   --primary-color: #38bdf8;
   --accent-color: #2dd4bf;
-  --background: #0f172a;
-  --surface: #1e293b;
+  --background: #121212;
+  --surface: #1e1e1e;
   --text-primary: #f9fafb;
-  --text-secondary: #4b5563;
-  --border: #334155;
+  --text-secondary: #9ca3af;
+  --border: #2e2e2e;
   --shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
   --shadow-md: 0 4px 8px rgba(255, 255, 255, 0.2);
+
+  /* Alerts */
+  --info-bg: #082f49;
+  --info-border: #0369a1;
+  --info-text: #38bdf8;
+
+  --error-bg: #450a0a;
+  --error-border: #b91c1c;
+  --error-text: #f87171;
+
+  --success-bg: #052e16;
+  --success-border: #15803d;
+  --success-text: #4ade80;
+
+  --warning-bg: #422006;
+  --warning-border: #ca8a04;
+  --warning-text: #facc15;
+
+  /* Buttons & Badges */
+  --primary: #f9fafb;
+  --secondary: #374151;
+  --outline: #1f2937;
+  --destructive: #dc2626;
+  --success: #16a34a;
+  --warning: #eab308;
+  --info: #2563eb;
 }
 
 body {
@@ -34,4 +86,5 @@ body {
   background-color: var(--background);
   color: var(--text-color);
   transition: background-color 0.3s, color 0.3s;
+  font-family: monospace;
 }

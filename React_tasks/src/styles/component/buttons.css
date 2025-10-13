@@ -4,6 +4,11 @@
   align-items: center;
 }
 button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 2rem;
+  font-size: 1rem;
   color: #fff;
 }
 

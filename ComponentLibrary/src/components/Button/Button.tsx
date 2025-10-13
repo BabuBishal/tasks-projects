@@ -4,12 +4,13 @@ import { cn } from "../../utils/cn";
 
 export const Button = ({
   variant = "primary",
+  size = "md",
   children,
   ...props
 }: ButtonProps) => {
   return (
     <button
-      className={cn(styles.button, variant && styles[variant])}
+      className={cn(styles.button, styles[variant], styles[size])}
       {...props}
     >
       {children}

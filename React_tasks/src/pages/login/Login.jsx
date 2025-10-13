@@ -22,8 +22,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = (data) => {
-    console.log(data);
-    if (data.username === "admin" && data.password === "123456") {
+    // console.log(data);
+    if (data.username === "user" && data.password === "123456") {
       localStorage.setItem("isAuthenticated", "true");
       navigate("/tasks");
     } else {
