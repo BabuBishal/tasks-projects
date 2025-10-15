@@ -5,13 +5,21 @@ const Sidebar = () => {
     <div className={styles.sidebar}>
       <div className={styles.sidebarSection}>
         <h4 className={styles.sidebarTitle}>Getting Started</h4>
-        <h5 className={styles.sidebarLink}>Introduction</h5>
-        <h5 className={styles.sidebarLink}>Installation</h5>
+        <a href="#intro-section" className={styles.sidebarLink}>
+          Introduction
+        </a>
+        <a href="#" className={styles.sidebarLink}>
+          Installation
+        </a>
       </div>
       <div className={styles.sidebarSection}>
         <h4 className={styles.sidebarTitle}>Components</h4>
-        <h5 className={styles.sidebarLink}>Buttons</h5>
-        <h5 className={styles.sidebarLink}>Cards</h5>
+        <a href="#button-section" className={styles.sidebarLink}>
+          Buttons
+        </a>
+        <a href="#form-section" className={styles.sidebarLink}>
+          Form Elements
+        </a>
       </div>
     </div>
   );
