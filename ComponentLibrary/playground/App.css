@@ -1,5 +1,6 @@
 .App {
   position: relative;
+  min-height: 100vh;
 }
 .main {
   max-width: 1300px;
@@ -12,7 +13,7 @@
 
 .homepage {
   width: 100%;
-  padding-top: 3rem;
+  padding: 3rem 0;
   display: flex;
   flex-direction: column;
   gap: 4rem;
@@ -41,5 +42,15 @@
 
 .main-desc {
   font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.section-heading {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+
+.section-desc {
+  font-size: 0.9rem;
   color: var(--text-secondary);
 }
