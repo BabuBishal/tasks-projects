@@ -54,3 +54,8 @@
   font-size: 0.9rem;
   color: var(--text-secondary);
 }
+
+.custom-style {
+  background-color: var(--primary-color);
+  color: #fff;
+}

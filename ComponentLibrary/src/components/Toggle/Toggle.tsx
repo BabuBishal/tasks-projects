@@ -5,6 +5,7 @@ import type { ToggleProps } from "./Toggle.types";
 
 const Toggle = ({
   checkedText,
+  label,
   uncheckedText,
   checked: checkedProp,
   onChange,
@@ -19,14 +20,17 @@ const Toggle = ({
     onChange?.(newToggleState);
   };
   return (
-    <div
-      className={cn(styles.toggle, checked && styles.toggleChecked)}
-      onClick={handleToggle}
-    >
-      {checkedText && <span>{checkedText}</span>}
-      {uncheckedText && <span>{uncheckedText}</span>}
-      <div className={cn(styles.knob, checked && styles.knobChecked)} />
-    </div>
+    <>
+      <div
+        className={cn(styles.toggle, checked && styles.toggleChecked)}
+        onClick={handleToggle}
+      >
+        {checkedText && <span>{checkedText}</span>}
+        {uncheckedText && <span>{uncheckedText}</span>}
+        <div className={cn(styles.knob, checked && styles.knobChecked)} />
+      </div>
+      {label && <span>{label}</span>}
+    </>
   );
 };
 

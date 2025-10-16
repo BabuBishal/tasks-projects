@@ -4,19 +4,20 @@ import Checkbox from "../../src/components/Form /Checkbox";
 import Input from "../../src/components/Form /Input";
 import Select from "../../src/components/Form /Select";
 import Textarea from "../../src/components/Form /Textarea";
+import Toggle from "../../src/components/Toggle/Toggle";
 import Container from "../components/Container/Container";
 
 const Homepage = () => {
   return (
     <div className="homepage">
-      <section id="intro-section" className="section intro-section">
+      <section id="introduction" className="section intro-section">
         <h2 className="main-title">UI Component Library</h2>
         <h4 className="main-desc">
           A comprehensive collection of beautiful, accessible, and customizable
           UI components built with React{" "}
         </h4>
       </section>
-      <section id="button-section" className="section button-section">
+      <section id="buttons" className="section button-section">
         <h2 className="section-heading">Buttons</h2>
         <h4 className="section-desc">
           Various button styles and sizes for different use cases
@@ -51,9 +52,15 @@ const Homepage = () => {
           desc="Different size options"
           content={
             <>
-              <Button size="lg">Large</Button>
-              <Button size="md">Medium</Button>
-              <Button size="sm">Small</Button>
+              <Button variant="primary" size="lg">
+                Large
+              </Button>
+              <Button variant="primary" size="md">
+                Medium
+              </Button>
+              <Button variant="primary" size="sm">
+                Small
+              </Button>
             </>
           }
           codeContent={
@@ -61,9 +68,49 @@ const Homepage = () => {
               title="Code Example"
               content={
                 <pre>
-                  <code>{`<Button size="lg">Large</Button>
-<Button size="md">Medium</Button>
-<Button size="sm">Small</Button>`}</code>
+                  <code>{`<Button variant="primary" size="lg">Large</Button>
+<Button variant="primary" size="md">Medium</Button>
+<Button variant="primary" size="sm">Small</Button>`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+        <Container
+          title="Button states"
+          desc="Different button states"
+          content={
+            <>
+              <Button variant="primary" disabled>
+                Disabled
+              </Button>
+            </>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<Button variant="primary" disabled>Large</Button>`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+        <Container
+          title="Custom Button Class"
+          desc="Custom button styling"
+          content={
+            <>
+              <Button className="custom-style">Custom</Button>
+            </>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<Button className="custom-style">Custom</Button>`}</code>
                 </pre>
               }
             />
@@ -71,7 +118,7 @@ const Homepage = () => {
         />
       </section>
 
-      <section id="form-section" className="section form-section">
+      <section id="form-elements" className="section form-section">
         <h2 className="section-heading">Form Elements</h2>
         <h4 className="section-desc">
           Input fields, selects, and other form controls
@@ -154,6 +201,27 @@ const Homepage = () => {
               content={
                 <pre>
                   <code>{`<Select label="Framework" optionList={["React", "Vue", "Angular"]} />`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+        <Container
+          title="Switch"
+          desc="Toggle switch"
+          content={
+            <>
+              <Toggle label="Enable Notifications" />
+              <Toggle checkedText="☀️" uncheckedText="🌙" />
+            </>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<Toggle label="Enable Notifications" />
+<Toggle checkedText="☀️" uncheckedText="🌙" />`}</code>
                 </pre>
               }
             />

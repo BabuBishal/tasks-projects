@@ -13,7 +13,7 @@ const Container = ({ title, desc, content, codeContent }: ContainerProps) => {
       <h5 className="container-desc">{desc}</h5>
       <div className="container-content">
         <div className="container-items">{content}</div>
-        <div>{codeContent}</div>
+        <div className="codeContent">{codeContent}</div>
       </div>
     </div>
   );

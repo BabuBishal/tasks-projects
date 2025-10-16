@@ -3,4 +3,5 @@ export interface ToggleProps {
   uncheckedText?: string;
   onChange?: (checked: boolean) => void;
   checked?: boolean;
+  label?: string;
 }

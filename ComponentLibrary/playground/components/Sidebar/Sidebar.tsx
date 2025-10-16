@@ -5,7 +5,7 @@ const Sidebar = () => {
     <div className={styles.sidebar}>
       <div className={styles.sidebarSection}>
         <h4 className={styles.sidebarTitle}>Getting Started</h4>
-        <a href="#intro-section" className={styles.sidebarLink}>
+        <a href="#introduction" className={styles.sidebarLink}>
           Introduction
         </a>
         <a href="#" className={styles.sidebarLink}>
@@ -14,10 +14,10 @@ const Sidebar = () => {
       </div>
       <div className={styles.sidebarSection}>
         <h4 className={styles.sidebarTitle}>Components</h4>
-        <a href="#button-section" className={styles.sidebarLink}>
+        <a href="#buttons" className={styles.sidebarLink}>
           Buttons
         </a>
-        <a href="#form-section" className={styles.sidebarLink}>
+        <a href="#form-elements" className={styles.sidebarLink}>
           Form Elements
         </a>
       </div>
