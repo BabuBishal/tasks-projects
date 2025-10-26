@@ -1,5 +1,5 @@
-import type { InputProps } from "./Form.types";
-import styles from "./Form.module.css";
+import type { InputProps } from "../Form.types";
+import styles from "./Input.module.css";
 
 const Input = ({ type, label, placeholder = "Placeholder" }: InputProps) => {
   return (

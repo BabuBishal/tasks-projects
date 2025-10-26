@@ -1,0 +1,26 @@
+.checkboxContainer {
+  display: flex;
+  flex-direction: row;
+
+  gap: 1rem;
+  align-items: start;
+  justify-content: start;
+  width: 100%;
+}
+
+.label {
+  color: var(--text-secondary);
+  font-size: 1.2 rem;
+  min-width: 180px;
+  width: 100%;
+  text-wrap: nowrap;
+}
+
+.input {
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border: none;
+}

@@ -35,3 +35,8 @@
 .knobChecked {
   transform: translateX(25px);
 }
+
+.toggleLabel {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}

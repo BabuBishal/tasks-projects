@@ -29,7 +29,7 @@ const Toggle = ({
         {uncheckedText && <span>{uncheckedText}</span>}
         <div className={cn(styles.knob, checked && styles.knobChecked)} />
       </div>
-      {label && <span>{label}</span>}
+      {label && <span className={styles.toggleLabel}>{label}</span>}
     </>
   );
 };

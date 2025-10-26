@@ -1,5 +1,5 @@
-import type { SelectProps } from "./Form.types";
-import styles from "./Form.module.css";
+import type { SelectProps } from "../Form.types";
+import styles from "./Select.module.css";
 
 const Select = ({ label, optionList }: SelectProps) => {
   return (
@@ -10,7 +10,7 @@ const Select = ({ label, optionList }: SelectProps) => {
         </label>
       )}
       <select id={label} className={styles.input}>
-        <option value="" disabled selected>
+        <option value="" disabled defaultValue={"Select an option"}>
           Select an option
         </option>
         {optionList?.map((option) => (

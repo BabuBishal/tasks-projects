@@ -1,39 +1,61 @@
-import React, { useState, type ReactElement, type ReactNode } from "react";
-// import Tab from "./Tab";
-import "../../styles/component/tabs.css";
-import { findActiveTab } from "../../utils/utils";
-export type TabsProps = {
-  children: ReactNode;
-  className?: string;
-}
-const Tabs = ({ children, className }: TabsProps ) => {
-  const tabsArray = React.Children.toArray(children) as ReactElement[];
-  const [activeTab, setActiveTab] = useState(findActiveTab(tabsArray));
+import { createContext, useContext, useState, type ReactNode } from "react";
+import type { TabsContextType, TabsProps } from "./Tabs.types";
+import styles from "./Tabs.module.css";
+import { cn } from "../../utils/cn";
+const TabsContext = createContext<TabsContextType | undefined>(undefined);
+const Tabs = ({ defaultValue, children, className }: TabsProps) => {
+  const [activeTab, setActiveTab] = useState(defaultValue);
   return (
-    <div className="tabs-component">
-      <div className={` tabs  ${className}`}>
-        {tabsArray.map((child, i) =>
-          React.cloneElement(child, {
-            key: `tab-${i}`,
-            currentTab: i,
-            activeTab,
-            setActiveTab,
-          })
-        )}
-       
-      </div>
-      <div className="py-5">
-        {tabsArray.map((child, i) => (
-          <div
-            key={`content-${i}`}
-            className={i === activeTab ? "visible" : "hidden"}
-          >
-            {child.props.children}
-          </div>
-        ))}
-      </div>
-    </div>
+    <TabsContext.Provider value={{ activeTab, setActiveTab }}>
+      <div className={className}>{children}</div>
+    </TabsContext.Provider>
   );
 };
+
+export const List = ({ children }: { children: ReactNode }) => (
+  <div className={styles.tabList}>{children}</div>
+);
+
+export const Trigger = ({
+  value,
+  children,
+}: {
+  value: string;
+  children: ReactNode;
+}) => {
+  const context = useContext(TabsContext);
+  if (!context) throw new Error("Trigger must be used inside Tabs");
+
+  const isActive = context.activeTab === value;
+
+  return (
+    <button
+      onClick={() => context.setActiveTab(value)}
+      className={cn(styles.tabTrigger, isActive && styles.active)}
+    >
+      {children}
+    </button>
+  );
+};
+
+export const Content = ({
+  value,
+  children,
+}: {
+  value: string;
+  children: ReactNode;
+}) => {
+  const context = useContext(TabsContext);
+  if (!context) throw new Error("Content must be used inside Tabs");
+
+  // const isActive = context.activeTab === value;
+  if (context.activeTab !== value) return null;
+
+  return <div className={cn(styles.tabContent)}>{children}</div>;
+};
+
+Tabs.List = List;
+Tabs.Trigger = Trigger;
+Tabs.Content = Content;
 
 export default Tabs;

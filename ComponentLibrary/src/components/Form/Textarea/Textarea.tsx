@@ -1,5 +1,5 @@
-import type { TextAreaProps } from "./Form.types";
-import styles from "./Form.module.css";
+import type { TextAreaProps } from "../Form.types";
+import styles from "./Textarea.module.css";
 
 const Textarea = ({
   rows = 4,

@@ -41,6 +41,11 @@
   --success: #22c55e;
   --warning: #facc15;
   --info: #3b82f6;
+
+  /* Tables */
+  --table-header-bg: #e1e1e1;
+  --table-hover-bg: #f7f9fb;
+  --table-alt-row-bg: #f5f6f8;
 }
 
 [data-theme="dark"] {
@@ -79,6 +84,13 @@
   --success: #16a34a;
   --warning: #eab308;
   --info: #2563eb;
+
+  /* Tables */
+  --table-header-bg: #1f2937;
+  /* --table-hover-bg: #434c4e;
+  --table-alt-row-bg: #1a1a1a; */
+  --table-hover-bg: rgb(43, 52, 63);
+  --table-alt-row-bg: #252a31;
 }
 
 body {

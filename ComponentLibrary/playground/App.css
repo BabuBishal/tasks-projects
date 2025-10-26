@@ -55,7 +55,12 @@
   color: var(--text-secondary);
 }
 
-.custom-style {
+.custom-style1 {
   background-color: var(--primary-color);
+  color: #fff;
+}
+
+.custom-style2 {
+  background-color: var(--accent-color);
   color: #fff;
 }

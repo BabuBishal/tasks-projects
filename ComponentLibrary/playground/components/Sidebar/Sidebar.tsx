@@ -20,6 +20,15 @@ const Sidebar = () => {
         <a href="#form-elements" className={styles.sidebarLink}>
           Form Elements
         </a>
+        <a href="#cards" className={styles.sidebarLink}>
+          Cards
+        </a>
+        <a href="#tables" className={styles.sidebarLink}>
+          Tables
+        </a>
+        <a href="#loading" className={styles.sidebarLink}>
+          Loading Elements
+        </a>
       </div>
     </div>
   );

@@ -1,9 +1,14 @@
 import { Button } from "../../src/components/Button/Button";
 import Card from "../../src/components/Card/Card";
-import Checkbox from "../../src/components/Form /Checkbox";
-import Input from "../../src/components/Form /Input";
-import Select from "../../src/components/Form /Select";
-import Textarea from "../../src/components/Form /Textarea";
+import Checkbox from "../../src/components/Form/Checkbox/Checkbox";
+import Select from "../../src/components/Form/Select/Select";
+import Textarea from "../../src/components/Form/Textarea/Textarea";
+import Input from "../../src/components/Form/TextInput/Input";
+import LoadingDots from "../../src/components/Loading/LoadingDots/LoadingDots";
+import Spinner from "../../src/components/Loading/Spinner/Spinner";
+import Tabs from "../../src/components/Tab/Tabs";
+import Table from "../../src/components/Table/Table";
+
 import Toggle from "../../src/components/Toggle/Toggle";
 import Container from "../components/Container/Container";
 
@@ -102,7 +107,8 @@ const Homepage = () => {
           desc="Custom button styling"
           content={
             <>
-              <Button className="custom-style">Custom</Button>
+              <Button className="custom-style1">Custom 1</Button>
+              <Button className="custom-style2">Custom 2</Button>
             </>
           }
           codeContent={
@@ -110,7 +116,8 @@ const Homepage = () => {
               title="Code Example"
               content={
                 <pre>
-                  <code>{`<Button className="custom-style">Custom</Button>`}</code>
+                  <code>{`<Button className="custom-style1">Custom</Button>
+<Button className="custom-style2">Custom</Button>`}</code>
                 </pre>
               }
             />
@@ -222,6 +229,148 @@ const Homepage = () => {
                 <pre>
                   <code>{`<Toggle label="Enable Notifications" />
 <Toggle checkedText="☀️" uncheckedText="🌙" />`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+      </section>
+
+      <section id="cards" className="section card-section">
+        <h2 className="section-heading">Cards</h2>
+        <h4 className="section-desc">Card elements for displaying content</h4>
+        <Container
+          title="Card"
+          desc="Simple card component"
+          content={
+            <>
+              <Card title="Card Title" content="This is a simple card." />
+            </>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<Card title="Card Title" content="This is a simple card." />`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+      </section>
+
+      <section id="tables" className="section table-section">
+        <h2 className="section-heading">Tables</h2>
+        <h4 className="section-desc">Table element for displaying content</h4>
+        <Container
+          title="Table"
+          desc="Table component for displaying data"
+          content={
+            <>
+              <Table
+                colData={["S.N", "Name", "Email"]}
+                rowData={[
+                  ["1", "Ram", "ram@gmail.com"],
+                  ["2", "Shyam", "shyam@gmail.com"],
+                  ["3", "Hari", "hari@gmail.com"],
+                ]}
+              />
+            </>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<Table 
+colData={["S.N", "Name", "Email"]} 
+rowData={[
+  ["1", "Ram", "ram@gmail.com"], 
+  ["2", "Shyam", "shyam@gmail.com"],
+  ["3", "Hari", "hari@gmail.com"],
+]}
+/>`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+      </section>
+
+      <section id="loading" className="section loading-section">
+        <h2 className="section-heading">Loading Elements</h2>
+        <h4 className="section-desc">Loading elements for loading states</h4>
+        <Container
+          title="Loading components"
+          desc="Loading components for loading state"
+          content={
+            <>
+              <LoadingDots />
+              <Spinner />
+            </>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<LoadingDots />
+<Spinner />`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+      </section>
+
+      <section id="tabs" className="section tab-section">
+        <h2 className="section-heading">Tabs</h2>
+        <h4 className="section-desc">
+          Tab component for displaying different tab contents
+        </h4>
+        <Container
+          title="Tab components"
+          desc="Tab components for different tab contents"
+          content={
+            <Tabs defaultValue="Recommended">
+              <Tabs.List>
+                <Tabs.Trigger value="Recommended">Recommended</Tabs.Trigger>
+                <Tabs.Trigger value="Popular">Popular</Tabs.Trigger>
+                <Tabs.Trigger value="New">New</Tabs.Trigger>
+              </Tabs.List>
+              <Tabs.Content value="Recommended">
+                <p>This is the Recommended tab content.</p>
+              </Tabs.Content>
+              <Tabs.Content value="Popular">
+                <p>This is the Popular tab content.</p>
+              </Tabs.Content>
+              <Tabs.Content value="New">
+                <p>This is the New tab content.</p>
+              </Tabs.Content>
+            </Tabs>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{` <Tabs defaultValue="Recommended">
+  <Tabs.List>
+    <Tabs.Trigger value="Recommended">Recommended</Tabs.Trigger>
+    <Tabs.Trigger value="Popular">Popular</Tabs.Trigger>
+    <Tabs.Trigger value="New">New</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Content value="Recommended">
+    <p>This is the Recommended tab content.</p>
+  </Tabs.Content>
+  <Tabs.Content value="Popular">
+    <p>This is the Popular tab content.</p>
+  </Tabs.Content>
+  <Tabs.Content value="New">
+    <p>This is the New tab content.</p>
+  </Tabs.Content>
+</Tabs>`}</code>
                 </pre>
               }
             />
