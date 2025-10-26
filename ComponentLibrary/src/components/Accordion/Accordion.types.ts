@@ -5,3 +5,10 @@ export type AccordionProps = {
   defaultOpen?: string;
   className?: string;
 };
+
+export type AccordionContextType = {
+  openItem: string | null;
+  toggleItem: (value: string) => void;
+};
+
+export type AccordionItemProps = { value: string; children: ReactNode };

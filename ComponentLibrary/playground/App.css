@@ -64,3 +64,13 @@
   background-color: var(--accent-color);
   color: #fff;
 }
+
+.custom1 {
+  color: blueviolet;
+  background-color: rgb(240, 234, 245);
+}
+
+.custom2 {
+  color: rgb(226, 43, 180);
+  background-color: rgb(241, 226, 238);
+}

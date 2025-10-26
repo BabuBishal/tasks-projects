@@ -1,34 +1,68 @@
 import styles from "./Sidebar.module.css";
-// const componentList = [];
+import {
+  componentList,
+  gettingStartedList,
+  customHooksList,
+} from "../../../src/utils/constants";
+import { useLocation } from "react-router";
+
 const Sidebar = () => {
+  const location = useLocation();
+  const currentPath = location.hash;
+  console.log(currentPath);
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarSection}>
         <h4 className={styles.sidebarTitle}>Getting Started</h4>
-        <a href="#introduction" className={styles.sidebarLink}>
-          Introduction
-        </a>
-        <a href="#" className={styles.sidebarLink}>
-          Installation
-        </a>
+        {gettingStartedList?.map((item) => {
+          const isActive = currentPath === item.href;
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              className={`${styles.sidebarLink} ${
+                isActive ? styles.active : ""
+              }`}
+            >
+              {item.title}
+            </a>
+          );
+        })}
       </div>
       <div className={styles.sidebarSection}>
         <h4 className={styles.sidebarTitle}>Components</h4>
-        <a href="#buttons" className={styles.sidebarLink}>
-          Buttons
-        </a>
-        <a href="#form-elements" className={styles.sidebarLink}>
-          Form Elements
-        </a>
-        <a href="#cards" className={styles.sidebarLink}>
-          Cards
-        </a>
-        <a href="#tables" className={styles.sidebarLink}>
-          Tables
-        </a>
-        <a href="#loading" className={styles.sidebarLink}>
-          Loading Elements
-        </a>
+        {componentList?.map((item) => {
+          const isActive = currentPath === item.href;
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              className={`${styles.sidebarLink} ${
+                isActive ? styles.active : ""
+              }`}
+            >
+              {item.component}
+            </a>
+          );
+        })}
+      </div>
+      <div className={styles.sidebarSection}>
+        <h4 className={styles.sidebarTitle}>Custom Hooks</h4>
+        {customHooksList?.map((item) => {
+          const isActive = currentPath === item.href;
+
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              className={`${styles.sidebarLink} ${
+                isActive ? styles.active : ""
+              }`}
+            >
+              {item.title}
+            </a>
+          );
+        })}
       </div>
     </div>
   );

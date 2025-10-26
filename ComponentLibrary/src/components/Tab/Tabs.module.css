@@ -9,6 +9,7 @@
   background: transparent;
   cursor: pointer;
   color: var(--text-secondary);
+  font-weight: 500;
   border-color: transparent;
 }
 
@@ -21,4 +22,5 @@
 
 .tabContent {
   padding: 1rem;
+  color: var(--text-secondary);
 }

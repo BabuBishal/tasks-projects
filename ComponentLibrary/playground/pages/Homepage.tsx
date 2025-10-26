@@ -1,3 +1,5 @@
+import Accordion from "../../src/components/Accordion/Accordion";
+import Badge from "../../src/components/Badges/Badges";
 import { Button } from "../../src/components/Button/Button";
 import Card from "../../src/components/Card/Card";
 import Checkbox from "../../src/components/Form/Checkbox/Checkbox";
@@ -118,6 +120,83 @@ const Homepage = () => {
                 <pre>
                   <code>{`<Button className="custom-style1">Custom</Button>
 <Button className="custom-style2">Custom</Button>`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+      </section>
+
+      <section id="badges" className="section badge-section">
+        <h2 className="section-heading">Badges</h2>
+        <h4 className="section-desc">
+          Various badges styles and sizes for different use cases
+        </h4>
+        <Container
+          title="Badges Variants"
+          desc="Different visual styles"
+          content={
+            <>
+              <Badge text="Success" variant="success" />
+              <Badge variant="warning" text="Warning" />
+              <Badge variant="info" text="Info" />
+              <Badge variant="danger" text="Danger" />
+            </>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<Badge text="Success" variant="success" />
+<Badge variant="warning" text="Warning" />
+<Badge variant="info" text="Info" />
+<Badge variant="danger" text="Danger" />`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+        <Container
+          title="Badge Sizes"
+          desc="Different size options"
+          content={
+            <>
+              <Badge text="Large" size="large" variant="success" />
+              <Badge text="Medium" size="medium" variant="success" />
+              <Badge text="Small" size="small" variant="success" />
+            </>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<Badge text="Large" size="large" variant="success" />
+<Badge text="Medium" size="medium" variant="success" />
+<Badge text="Small" size="small" variant="success" />`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+
+        <Container
+          title="Custom Badge "
+          desc="Custom badge styling"
+          content={
+            <>
+              <Badge text="Custom 1" className="custom1" />
+              <Badge text="Custom 2" className="custom2" />
+            </>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<Badge text="Custom 1" className="custom1" />
+<Badge text="Custom 2" className="custom2" />`}</code>
                 </pre>
               }
             />
@@ -302,21 +381,30 @@ rowData={[
         <h2 className="section-heading">Loading Elements</h2>
         <h4 className="section-desc">Loading elements for loading states</h4>
         <Container
-          title="Loading components"
-          desc="Loading components for loading state"
-          content={
-            <>
-              <LoadingDots />
-              <Spinner />
-            </>
-          }
+          title="Loading Dots"
+          desc="Animated loading dots for loading state"
+          content={<LoadingDots />}
           codeContent={
             <Card
               title="Code Example"
               content={
                 <pre>
-                  <code>{`<LoadingDots />
-<Spinner />`}</code>
+                  <code>{`<LoadingDots />`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+        <Container
+          title="Spinner"
+          desc="Animated spinner for loading state"
+          content={<Spinner />}
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{`<Spinner />`}</code>
                 </pre>
               }
             />
@@ -377,6 +465,74 @@ rowData={[
           }
         />
       </section>
+
+      <section id="accordion" className="section accordion-section">
+        <h2 className="section-heading">Accordion</h2>
+        <h4 className="section-desc">
+          Accordion component for displaying information
+        </h4>
+        <Container
+          title="Accordion"
+          desc="Accordions display information in collapsible sections. Click a header
+        to expand or collapse its content."
+          content={
+            <Accordion defaultOpen="item1">
+              <Accordion.Item value="item1">
+                <Accordion.Header>What is your return policy?</Accordion.Header>
+                <Accordion.Content>
+                  You can return any item within 30 days of purchase if it's
+                  unused and in its original packaging.
+                </Accordion.Content>
+              </Accordion.Item>
+
+              <Accordion.Item value="item2">
+                <Accordion.Header>
+                  Do you offer international shipping?
+                </Accordion.Header>
+                <Accordion.Content>
+                  Yes, we ship worldwide! Shipping costs will vary depending on
+                  your location and will be calculated at checkout.
+                </Accordion.Content>
+              </Accordion.Item>
+
+              <Accordion.Item value="item3">
+                <Accordion.Header>How can I track my order?</Accordion.Header>
+                <Accordion.Content>
+                  Once your order has been shipped, you’ll receive an email with
+                  a tracking number and link.
+                </Accordion.Content>
+              </Accordion.Item>
+            </Accordion>
+          }
+          codeContent={
+            <Card
+              title="Code Example"
+              content={
+                <pre>
+                  <code>{` <Tabs defaultValue="Recommended">
+  <Tabs.List>
+    <Tabs.Trigger value="Recommended">Recommended</Tabs.Trigger>
+    <Tabs.Trigger value="Popular">Popular</Tabs.Trigger>
+    <Tabs.Trigger value="New">New</Tabs.Trigger>
+  </Tabs.List>
+  <Tabs.Content value="Recommended">
+    <p>This is the Recommended tab content.</p>
+  </Tabs.Content>
+  <Tabs.Content value="Popular">
+    <p>This is the Popular tab content.</p>
+  </Tabs.Content>
+  <Tabs.Content value="New">
+    <p>This is the New tab content.</p>
+  </Tabs.Content>
+</Tabs>`}</code>
+                </pre>
+              }
+            />
+          }
+        />
+      </section>
+
+      <section></section>
     </div>
   );
 };

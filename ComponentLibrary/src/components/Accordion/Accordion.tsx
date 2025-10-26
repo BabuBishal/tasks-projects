@@ -1,14 +1,21 @@
-import  { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
+import type {
+  AccordionContextType,
+  AccordionItemProps,
+  AccordionProps,
+} from "./Accordion.types";
+import styles from "./Accordion.module.css";
+import { cn } from "../../utils/cn";
 
-type AccordionContextType = {
-  openItem: string | null;
-  toggleItem: (value: string) => void;
-};
+const AccordionContext = createContext<AccordionContextType | undefined>(
+  undefined
+);
 
-const AccordionContext = createContext<AccordionContextType | undefined>(undefined);
-
-
-export const Accordion = ({ children, defaultOpen, className }: AccordionProps) => {
+export const Accordion = ({
+  children,
+  defaultOpen,
+  className,
+}: AccordionProps) => {
   const [openItem, setOpenItem] = useState<string | null>(defaultOpen ?? null);
 
   const toggleItem = (value: string) => {
@@ -22,53 +29,46 @@ export const Accordion = ({ children, defaultOpen, className }: AccordionProps) 
   );
 };
 
-// ------------------ Item ------------------
-type ItemProps = { value: string; children: ReactNode };
-
-const ItemContext = createContext<{ value: string } | undefined>(undefined);
-
-const Item = ({ value, children }: ItemProps) => (
-  <ItemContext.Provider value={{ value }}>
-    <div className="border-b border-gray-300">{children}</div>
-  </ItemContext.Provider>
+const AccordionItemContext = createContext<{ value: string } | undefined>(
+  undefined
 );
 
-// ------------------ Header ------------------
+const Item = ({ value, children }: AccordionItemProps) => (
+  <AccordionItemContext.Provider value={{ value }}>
+    <div className={styles.accordionItem}>{children}</div>
+  </AccordionItemContext.Provider>
+);
+
 const Header = ({ children }: { children: ReactNode }) => {
   const accordion = useContext(AccordionContext);
-  const item = useContext(ItemContext);
-  if (!accordion || !item) throw new Error("Header must be used within Accordion.Item");
+  const item = useContext(AccordionItemContext);
+  if (!accordion || !item)
+    throw new Error("Header must be used within Accordion.Item");
 
   const isOpen = accordion.openItem === item.value;
 
   return (
     <button
       onClick={() => accordion.toggleItem(item.value)}
-      className="w-full flex justify-between items-center py-3 text-left font-medium"
+      className={styles.accordionHeader}
     >
       <span>{children}</span>
-      <span className={`transition-transform ${isOpen ? "rotate-180" : ""}`}>
-        ▼
-      </span>
+      <span className={cn(styles.accordionIcon, isOpen && styles.open)}>▼</span>
     </button>
   );
 };
 
-// ------------------ Content ------------------
 const Content = ({ children }: { children: ReactNode }) => {
   const accordion = useContext(AccordionContext);
-  const item = useContext(ItemContext);
-  if (!accordion || !item) throw new Error("Content must be used within Accordion.Item");
+  const item = useContext(AccordionItemContext);
+  if (!accordion || !item)
+    throw new Error("Content must be used within Accordion.Item");
 
   const isOpen = accordion.openItem === item.value;
 
   return (
-    <div
-      className={`overflow-hidden transition-all duration-300 ${
-        isOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-      }`}
-    >
-      <div className="pb-3 text-gray-600">{children}</div>
+    <div className={cn(styles.accordionContent, isOpen && styles.open)}>
+      <div className={styles.accordionBody}>{children}</div>
     </div>
   );
 };
