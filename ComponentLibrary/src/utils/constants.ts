@@ -57,8 +57,8 @@ export const customHooksList = [
     title: "useFetch",
     href: "#useFetch",
   },
-  {
-    title: "useLocalStorage",
-    href: "#useLocalStorage",
-  },
+  // {
+  //   title: "useLocalStorage",
+  //   href: "#useLocalStorage",
+  // },
 ];

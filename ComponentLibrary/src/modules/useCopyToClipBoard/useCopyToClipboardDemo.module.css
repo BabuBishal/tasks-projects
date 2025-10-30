@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  padding: 1rem;
+  border-radius: 8px;
+  width: fit-content;
+}
+
+.input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.input:focus {
+  border-color: var(--accent-color);
+}

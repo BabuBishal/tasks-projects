@@ -10,9 +10,12 @@ import LoadingDots from "../../src/components/Loading/LoadingDots/LoadingDots";
 import Spinner from "../../src/components/Loading/Spinner/Spinner";
 import Tabs from "../../src/components/Tab/Tabs";
 import Table from "../../src/components/Table/Table";
-
 import Toggle from "../../src/components/Toggle/Toggle";
 import Container from "../components/Container/Container";
+import CodeBlock from "../components/CodeBlock/CodeBlock";
+import UseToggleDemo from "../../src/modules/useToggle/useToggleDemo";
+import UseFetchDemo from "../../src/modules/useFetch/useFetchDemo";
+import UseCopyToClipboardDemo from "../../src/modules/useCopyToClipBoard/useCopyToClipboardDemo";
 
 const Homepage = () => {
   return (
@@ -23,6 +26,19 @@ const Homepage = () => {
           A comprehensive collection of beautiful, accessible, and customizable
           UI components built with React{" "}
         </h4>
+      </section>
+      <section id="installation" className="section installation-section">
+        <h2 className="section-heading">Installation</h2>
+        <h4 className="section-desc">
+          A guide to install and use the components from this UI library
+        </h4>
+        <Container
+          title="Installation guide"
+          desc="Step by step guide to use the different components of the UI library"
+          content={
+            "This feature is not complete yet. Please wait for future updates..."
+          }
+        />
       </section>
       <section id="buttons" className="section button-section">
         <h2 className="section-heading">Buttons</h2>
@@ -473,7 +489,7 @@ rowData={[
         </h4>
         <Container
           title="Accordion"
-          desc="Accordions display information in collapsible sections. Click a header
+          desc="Displays information in collapsible sections. Click a header
         to expand or collapse its content."
           content={
             <Accordion defaultOpen="item1">
@@ -509,22 +525,33 @@ rowData={[
               title="Code Example"
               content={
                 <pre>
-                  <code>{` <Tabs defaultValue="Recommended">
-  <Tabs.List>
-    <Tabs.Trigger value="Recommended">Recommended</Tabs.Trigger>
-    <Tabs.Trigger value="Popular">Popular</Tabs.Trigger>
-    <Tabs.Trigger value="New">New</Tabs.Trigger>
-  </Tabs.List>
-  <Tabs.Content value="Recommended">
-    <p>This is the Recommended tab content.</p>
-  </Tabs.Content>
-  <Tabs.Content value="Popular">
-    <p>This is the Popular tab content.</p>
-  </Tabs.Content>
-  <Tabs.Content value="New">
-    <p>This is the New tab content.</p>
-  </Tabs.Content>
-</Tabs>`}</code>
+                  <code>{`<Accordion defaultOpen="item1">
+  <Accordion.Item value="item1">
+    <Accordion.Header>What is your return policy?</Accordion.Header>
+    <Accordion.Content>
+      You can return any item within 30 days of purchase if it's
+      unused and in its original packaging.
+    </Accordion.Content>
+  </Accordion.Item>
+
+  <Accordion.Item value="item2">
+    <Accordion.Header>
+      Do you offer international shipping?
+    </Accordion.Header>
+    <Accordion.Content>
+      Yes, we ship worldwide! Shipping costs will vary depending on
+      your location and will be calculated at checkout.
+    </Accordion.Content>
+  </Accordion.Item>
+
+  <Accordion.Item value="item3">
+    <Accordion.Header>How can I track my order?</Accordion.Header>
+    <Accordion.Content>
+      Once your order has been shipped, you’ll receive an email with
+      a tracking number and link.
+    </Accordion.Content>
+  </Accordion.Item>
+</Accordion>`}</code>
                 </pre>
               }
             />
@@ -532,7 +559,88 @@ rowData={[
         />
       </section>
 
-      <section></section>
+      <section className="section hooks-section">
+        <h1 className="section-heading">Custom Hooks</h1>
+        <h4 className="section-desc">Common Reusable custom hooks</h4>
+      </section>
+      <section id="useToggle" className="section useToggle-section">
+        <h2 className="section-heading">UseToggle hook</h2>
+        <Container
+          title="useToggle"
+          desc="Simple toggle component using useToggle hook"
+          content={<UseToggleDemo />}
+          codeContent={
+            <CodeBlock
+              code={`const [isOn, toggle] = useToggle(false);
+
+return (
+  <div>
+    <p>Toggle state: {isOn ? "ON" : "OFF"}</p>
+    <button onClick={toggle}>Toggle</button>
+  </div>
+);`}
+            />
+          }
+        />
+      </section>
+      <section
+        id="useCopyToClipboard"
+        className="section copyToClipboard-section"
+      >
+        <h2 className="section-heading">UseCopyToClipboard hook</h2>
+        <Container
+          title="useCopyToClipboard"
+          desc="Hook to copy text to clipboard"
+          content={<UseCopyToClipboardDemo />}
+          codeContent={
+            <CodeBlock
+              code={` const [text, setText] = useState("Copy this text!");
+  const { copiedText, copy } = useCopyToClipboard();
+
+  return (
+    <div className={styles.container}>
+      <input
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        className={styles.input}
+      />
+
+      <Button variant="primary" onClick={() => copy(text)}>
+        {copiedText === text ? "Copied!" : "Copy"}
+      </Button>
+    </div>
+  );`}
+            />
+          }
+        />
+      </section>
+      <section id="useFetch" className="section useFetch-section">
+        <h2 className="section-heading">UseFetch hook</h2>
+        <Container
+          title="useFetch"
+          desc="Custom hook for fetching data from an API"
+          content={<UseFetchDemo />}
+          codeContent={
+            <CodeBlock
+              code={`  const { data, loading, error } = useFetch<any>("https://jsonplaceholder.typicode.com/posts/1");
+
+  return (
+    <div className={styles.hookDemo}>
+      <h3 className={styles.title}>useFetch Demo</h3>
+      {loading && <p className={styles.loading}>Loading...</p>}
+      {error && <p className={styles.error}>{error.message}</p>}
+      {data && (
+        <div className={styles.dataContainer}>
+          <h4>{data.title}</h4>
+          <p>{data.body}</p>
+        </div>
+      )}
+    </div>
+  );`}
+            />
+          }
+        />
+      </section>
     </div>
   );
 };

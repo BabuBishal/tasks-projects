@@ -1,0 +1,39 @@
+.hookDemo {
+  display: flex;
+  gap: 0.5rem;
+  align-items: start;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  width: fit-content;
+}
+.title {
+  margin-top: 0;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+h4 {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.dataContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--background);
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+.error {
+  color: var(--destructive);
+}

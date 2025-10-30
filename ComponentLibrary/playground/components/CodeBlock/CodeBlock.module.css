@@ -1,0 +1,21 @@
+.codeBlock {
+  background: var(--surface);
+  color: var(--text-secondary);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.code-block code {
+  display: block;
+  white-space: pre;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+  padding-bottom: 1rem;
+}

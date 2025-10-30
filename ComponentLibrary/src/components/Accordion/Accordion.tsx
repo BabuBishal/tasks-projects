@@ -73,7 +73,6 @@ const Content = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// attach subcomponents
 Accordion.Item = Item;
 Accordion.Header = Header;
 Accordion.Content = Content;

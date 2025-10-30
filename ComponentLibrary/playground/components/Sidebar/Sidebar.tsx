@@ -5,13 +5,42 @@ import {
   customHooksList,
 } from "../../../src/utils/constants";
 import { useLocation } from "react-router";
+import { useEffect } from "react";
 
 const Sidebar = () => {
   const location = useLocation();
   const currentPath = location.hash;
-  console.log(currentPath);
+  // console.log(currentPath);
+
+  useEffect(() => {
+    const sections = document.querySelectorAll("section[id]");
+    // const navLinks = document.querySelectorAll(`.${styles.sidebarLink}`);
+    const navLinks = document.querySelectorAll("[data-sidebar-link]");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // console.log(entry.target.id);
+            navLinks.forEach((link) => {
+              link.classList.toggle(
+                `${styles.active}`,
+                link.getAttribute("href") === `#${entry.target.id}`
+              );
+            });
+          }
+        });
+      },
+      {
+        threshold: 0.6,
+      }
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className={styles.sidebar}>
+    <aside className={styles.sidebar}>
       <div className={styles.sidebarSection}>
         <h4 className={styles.sidebarTitle}>Getting Started</h4>
         {gettingStartedList?.map((item) => {
@@ -20,6 +49,7 @@ const Sidebar = () => {
             <a
               key={item.href}
               href={item.href}
+              data-sidebar-link
               className={`${styles.sidebarLink} ${
                 isActive ? styles.active : ""
               }`}
@@ -37,6 +67,7 @@ const Sidebar = () => {
             <a
               key={item.href}
               href={item.href}
+              data-sidebar-link
               className={`${styles.sidebarLink} ${
                 isActive ? styles.active : ""
               }`}
@@ -55,6 +86,7 @@ const Sidebar = () => {
             <a
               key={item.href}
               href={item.href}
+              data-sidebar-link
               className={`${styles.sidebarLink} ${
                 isActive ? styles.active : ""
               }`}
@@ -64,7 +96,7 @@ const Sidebar = () => {
           );
         })}
       </div>
-    </div>
+    </aside>
   );
 };
 
