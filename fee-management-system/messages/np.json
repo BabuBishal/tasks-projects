@@ -1,0 +1,13 @@
+{
+  "HomePage": {
+    "title": "swaagat!"
+  },
+
+  "Sidebar": {
+    "appTitle": "शुल्क भुक्तानी प्रणाली",
+    "dashboard": "ड्यासबोर्ड",
+    "students": "विद्यार्थी विवरण",
+    "payments": "भुक्तानी",
+    "settings": "सेटिङ्स"
+  }
+}

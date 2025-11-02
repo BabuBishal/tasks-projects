@@ -1,0 +1,12 @@
+{
+  "HomePage": {
+    "title": "Welcome!"
+  },
+  "Sidebar": {
+    "appTitle": "Fee Payment System",
+    "dashboard": "Dashboard",
+    "students": "Students",
+    "payments": "Payments",
+    "settings": "Settings"
+  }
+}
