@@ -1,16 +1,140 @@
 {
   "users": [
     {
-      "id": "2025-11-04T18:02:33.338Z",
-      "email": "bishal@yopmail.com",
-      "password": "123asd",
-      "name": "Bis"
-    },
-    {
       "id": "2025-11-04T18:31:25.791Z",
       "email": "bishal@gmail.com",
       "password": "123456",
       "name": "Bishal"
+    }
+  ],
+
+  "students": [
+    {
+      "id": 1,
+      "name": "Aarav Shrestha",
+      "rollNo": "S101",
+      "class": "10",
+      "section": "A",
+      "email": "aarav.shrestha@example.com",
+      "phone": "9812345678",
+      "address": "Balkumari, Lalitpur",
+      "fees": {
+        "total": 25000,
+        "paid": 15000,
+        "balance": 10000,
+        "dueDate": "2025-12-15",
+        "status": "Partially Paid"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Sita Lama",
+      "rollNo": "S102",
+      "class": "10",
+      "section": "A",
+      "email": "sita.lama@example.com",
+      "phone": "9845123456",
+      "address": "Jawalakhel, Lalitpur",
+      "fees": {
+        "total": 25000,
+        "paid": 25000,
+        "balance": 0,
+        "dueDate": "2025-12-15",
+        "status": "Paid"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Bibek Gurung",
+      "rollNo": "S103",
+      "class": "9",
+      "section": "B",
+      "email": "bibek.gurung@example.com",
+      "phone": "9808765432",
+      "address": "Koteshwor, Kathmandu",
+      "fees": {
+        "total": 23000,
+        "paid": 10000,
+        "balance": 13000,
+        "dueDate": "2025-11-30",
+        "status": "Partially Paid"
+      }
+    },
+    {
+      "id": 4,
+      "name": "Nisha Koirala",
+      "rollNo": "S104",
+      "class": "9",
+      "section": "C",
+      "email": "nisha.koirala@example.com",
+      "phone": "9811002233",
+      "address": "Baneshwor, Kathmandu",
+      "fees": {
+        "total": 23000,
+        "paid": 0,
+        "balance": 23000,
+        "dueDate": "2025-11-25",
+        "status": "Unpaid"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Pratik KC",
+      "rollNo": "S105",
+      "class": "8",
+      "section": "A",
+      "email": "pratik.kc@example.com",
+      "phone": "9867543210",
+      "address": "Imadol, Lalitpur",
+      "fees": {
+        "total": 20000,
+        "paid": 20000,
+        "balance": 0,
+        "dueDate": "2025-10-30",
+        "status": "Paid"
+      }
+    }
+  ],
+  "payments": [
+    {
+      "id": 1,
+      "studentId": 1,
+      "amount": 10000,
+      "date": "2025-09-15",
+      "method": "Cash",
+      "receiptNo": "R1001"
+    },
+    {
+      "id": 2,
+      "studentId": 1,
+      "amount": 5000,
+      "date": "2025-10-10",
+      "method": "Bank Transfer",
+      "receiptNo": "R1002"
+    },
+    {
+      "id": 3,
+      "studentId": 2,
+      "amount": 25000,
+      "date": "2025-09-05",
+      "method": "Online",
+      "receiptNo": "R1003"
+    },
+    {
+      "id": 4,
+      "studentId": 3,
+      "amount": 10000,
+      "date": "2025-10-12",
+      "method": "Cash",
+      "receiptNo": "R1004"
+    },
+    {
+      "id": 5,
+      "studentId": 5,
+      "amount": 20000,
+      "date": "2025-09-01",
+      "method": "Online",
+      "receiptNo": "R1005"
     }
   ]
 }
