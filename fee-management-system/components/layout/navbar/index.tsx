@@ -1,5 +1,5 @@
-import LanguageSwitcher from "@/components/ui/language-switcher/LanguageSwitcher";
-import ThemeToggle from "@/components/ui/theme-toggle/ThemeToggle";
+import LanguageSwitcher from "@/components/shared/language-switcher/LanguageSwitcher";
+import ThemeToggle from "@/components/shared/theme-toggle/ThemeToggle";
 import { Bell, Menu } from "lucide-react";
 
 const Navbar = () => {

@@ -1,4 +1,4 @@
-import Card from "../ui/stats-card/StatsCard";
+import Card from "../shared/stats-card/StatsCard";
 
 const StatsOverview = ({ stats }: any) => {
   return (

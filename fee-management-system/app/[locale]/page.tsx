@@ -1,7 +1,11 @@
 import { redirect } from "next/navigation";
 
-export default function Home({ params }: { params: { locale: string } }) {
-  const { locale } = params;
+type Params = {
+  locale?: string;
+};
+
+export default function Home({ params }: { params: Params }) {
+  const locale = params?.locale ?? "en";
 
   redirect(`/${locale}/dashboard`);
 }

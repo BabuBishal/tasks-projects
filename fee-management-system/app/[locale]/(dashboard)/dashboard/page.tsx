@@ -2,7 +2,7 @@ import PaymentHistory from "@/components/dashboard/PaymentHistory";
 import PaymentStatusOverview from "@/components/dashboard/PaymentStatusOverview";
 import QuickActions from "@/components/dashboard/QuickActions";
 import StatsOverview from "@/components/dashboard/StatsOverview";
-import Card from "@/components/ui/stats-card/StatsCard";
+import Card from "@/components/shared/stats-card/StatsCard";
 import { User } from "lucide-react";
 
 const Dashboard = () => {

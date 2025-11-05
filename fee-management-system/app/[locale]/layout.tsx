@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/navbar";
-import Sidebar from "@/components/layout/sidebar";
 import { NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
@@ -63,11 +61,7 @@ export default async function RootLayout({
       >
         <ThemeProvider>
           <NextIntlClientProvider locale={locale} messages={messages}>
-            <Sidebar />
-            <div className="w-full  flex flex-col gap-1 flex-1 ml-0 sm:ml-58 transition-transform ease duration-200">
-              <Navbar />
-              <main className="w-full h-full p-5">{children}</main>
-            </div>
+            {children}
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

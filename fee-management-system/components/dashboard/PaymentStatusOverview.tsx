@@ -3,7 +3,7 @@ import { CheckCircle, CircleAlert, CircleAlertIcon, Clock } from "lucide-react";
 
 const PaymentStatusOverview = ({ paymentStatus }: any) => {
   return (
-    <div className="w-full   h-72 flex flex-col gap-4 p-4 rounded-lg border border-border">
+    <div className="w-full   h-76 flex flex-col gap-4 p-4 rounded-lg border border-border">
       <div>
         <h5 className="text-secondary text-md font-semibold">
           Payment Status Overview
