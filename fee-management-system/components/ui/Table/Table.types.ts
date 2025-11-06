@@ -1,5 +1,11 @@
 import type { ReactNode } from "react";
 
+export interface TableProps {
+  rowData: string[][];
+  colData: string[];
+  className?: string;
+}
+
 export type TableRootProps = {
   children: ReactNode;
   className?: string;
@@ -20,3 +26,4 @@ export type TableRowProps = {
 export type TableCellProps = {
   children: ReactNode;
 };
+

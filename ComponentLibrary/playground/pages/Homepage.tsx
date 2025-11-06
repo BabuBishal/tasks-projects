@@ -16,6 +16,7 @@ import CodeBlock from "../components/CodeBlock/CodeBlock";
 import UseToggleDemo from "../../src/modules/useToggle/useToggleDemo";
 import UseFetchDemo from "../../src/modules/useFetch/useFetchDemo";
 import UseCopyToClipboardDemo from "../../src/modules/useCopyToClipBoard/useCopyToClipboardDemo";
+import { column, row } from "../../src/utils/constants";
 
 const Homepage = () => {
   return (
@@ -358,34 +359,49 @@ const Homepage = () => {
       <section id="tables" className="section table-section">
         <h2 className="section-heading">Tables</h2>
         <h4 className="section-desc">Table element for displaying content</h4>
+
         <Container
           title="Table"
           desc="Table component for displaying data"
           content={
-            <>
-              <Table
-                colData={["S.N", "Name", "Email"]}
-                rowData={[
-                  ["1", "Ram", "ram@gmail.com"],
-                  ["2", "Shyam", "shyam@gmail.com"],
-                  ["3", "Hari", "hari@gmail.com"],
-                ]}
-              />
-            </>
+            <Table>
+              <Table.Header>
+                {column.map((col, i) => (
+                  <Table.HeaderCell key={i}>{col}</Table.HeaderCell>
+                ))}
+              </Table.Header>
+              <Table.Body>
+                {row.map((row, rowIndex) => (
+                  <Table.Row key={rowIndex}>
+                    {row.map((cell, cellIndex) => (
+                      <Table.Cell key={cellIndex}>{cell}</Table.Cell>
+                    ))}
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
           }
           codeContent={
             <Card
               title="Code Example"
               content={
                 <pre>
-                  <code>{`<Table 
-colData={["S.N", "Name", "Email"]} 
-rowData={[
-  ["1", "Ram", "ram@gmail.com"], 
-  ["2", "Shyam", "shyam@gmail.com"],
-  ["3", "Hari", "hari@gmail.com"],
-]}
-/>`}</code>
+                  <code>{` <Table>
+  <Table.Header>
+    {column.map((col, i) => (
+      <Table.HeaderCell key={i}>{col}</Table.HeaderCell>
+    ))}
+  </Table.Header>
+  <Table.Body>
+    {row.map((row, rowIndex) => (
+      <Table.Row key={rowIndex}>
+        {row.map((cell, cellIndex) => (
+          <Table.Cell key={cellIndex}>{cell}</Table.Cell>
+        ))}
+      </Table.Row>
+    ))}
+  </Table.Body>
+</Table>`}</code>
                 </pre>
               }
             />

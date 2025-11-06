@@ -8,7 +8,9 @@ import type {
 } from "./Table.types";
 
 const TableRoot = ({ children, className }: TableRootProps) => {
-  return <table className={className ?? ""}>{children}</table>;
+  return (
+    <table className={`${styles.table} ${className ?? ""}`}>{children}</table>
+  );
 };
 
 const TableHeader = ({ children }: TableHeaderProps) => {

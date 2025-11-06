@@ -1,4 +1,3 @@
-import { LucideIcon } from "lucide-react";
 import { ChangeEvent, FormEvent } from "react";
 
 export type StatsProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -6,8 +5,7 @@ export type StatsProps = React.HTMLAttributes<HTMLDivElement> & {
     title: string;
     value: string;
     desc: string;
-    icon: LucideIcon;
-    analysis: string;
+    analysis?: string;
   };
 };
 
@@ -81,3 +79,22 @@ export type FormProps = {
   ) => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
+
+export interface Student {
+  id: number;
+  name: string;
+  rollNo: string;
+  program: "BBA" | "BBM" | "BIM" | "BSc CSIT";
+  year: number;
+  semester: number;
+  email: string;
+  phone: string;
+  address: string;
+  fees: {
+    total: number;
+    paid: number;
+    balance: number;
+    dueDate: string;
+    status: "Paid" | "Partially Paid" | "Unpaid";
+  };
+}

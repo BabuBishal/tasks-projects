@@ -1,7 +1,21 @@
 import ProgressBar from "@/components/ui/progress-bar/ProgressBar";
 import { CheckCircle, CircleAlert, CircleAlertIcon, Clock } from "lucide-react";
+type PaymentStatus = {
+  paid: number;
+  overdue: number;
+  pending: number;
+  total: number;
+};
+const PaymentStatusOverview = ({
+  paymentStatus,
+}: {
+  paymentStatus: PaymentStatus;
+}) => {
+  const { paid, overdue, pending, total } = paymentStatus;
+  const paidPercent = Math.floor((paid / total) * 100);
+  const overduePercent = Math.floor((overdue / total) * 100);
+  const pendingPercent = Math.floor((pending / total) * 100);
 
-const PaymentStatusOverview = ({ paymentStatus }: any) => {
   return (
     <div className="w-full   h-76 flex flex-col gap-4 p-4 rounded-lg border border-border">
       <div>
@@ -19,9 +33,9 @@ const PaymentStatusOverview = ({ paymentStatus }: any) => {
               <CheckCircle className="w-4 h-4 text-green-500" />
               <span className="text-secondary text-md ">Paid</span>
             </span>
-            <span className="text-secondary">{`${7} payments`}</span>
+            <span className="text-secondary">{`${paid ?? "-"} payments`}</span>
           </div>
-          <ProgressBar progress={35} />
+          <ProgressBar progress={paidPercent}></ProgressBar>
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex gap-2 justify-between items-center">
@@ -29,9 +43,11 @@ const PaymentStatusOverview = ({ paymentStatus }: any) => {
               <Clock className="w-4 h-4 text-amber-500" />
               <span className="text-secondary text-md ">Pending</span>
             </span>
-            <span className="text-secondary">{`${10} payments`}</span>
+            <span className="text-secondary">{`${
+              pending ?? "-"
+            } payments`}</span>
           </div>{" "}
-          <ProgressBar progress={50} />
+          <ProgressBar progress={pendingPercent} />
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex gap-2 justify-between items-center">
@@ -39,16 +55,18 @@ const PaymentStatusOverview = ({ paymentStatus }: any) => {
               <CircleAlertIcon className="w-4 h-4 text-red-500" />
               <span className="text-secondary text-md ">Overdue</span>
             </span>
-            <span className="text-secondary">{`${3} payments`}</span>
+            <span className="text-secondary">{`${
+              overdue ?? "-"
+            } payments`}</span>
           </div>{" "}
-          <ProgressBar progress={15} />
+          <ProgressBar progress={overduePercent} />
         </div>
       </div>
       <div className="flex gap-2 justify-between items-center">
         <span className="text-secondary text-md font-semibold">
           Total Payments
         </span>
-        <span className="text-primary text-lg font-bold">{20}</span>
+        <span className="text-primary text-lg font-bold">{total ?? "-"}</span>
       </div>
     </div>
   );

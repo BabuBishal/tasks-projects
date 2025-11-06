@@ -14,7 +14,7 @@ export const authOptions: NextAuthOptions = {
 
         const res = await fetch("http://localhost:4000/users");
         const users = await res.json();
-        console.log("first", users);
+        // console.log("user", users);
         // Check for matching user
         const user = users.find(
           (u: any) => u.email === email && u.password === password
@@ -35,11 +35,7 @@ export const authOptions: NextAuthOptions = {
         }
         return null;
 
-        // return {
-        //   id: user.id,
-        //   name: user.name,
-        //   email: user.email,
-        // };
+       
       },
     }),
     // GoogleProvider({

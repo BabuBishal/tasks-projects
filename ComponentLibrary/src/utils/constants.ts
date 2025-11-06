@@ -62,3 +62,10 @@ export const customHooksList = [
   //   href: "#useLocalStorage",
   // },
 ];
+
+export const column = ["S.N", "Name", "Email"];
+export const row = [
+  ["1", "Ram", "ram@gmail.com"],
+  ["2", "Shyam", "shyam@gmail.com"],
+  ["3", "Hari", "hari@gmail.com"],
+];
