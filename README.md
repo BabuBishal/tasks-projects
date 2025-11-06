@@ -5,14 +5,24 @@ Each task or assignment is organized in its own folder for better structure and 
 
 ## 📂 Repository Structure
 
-tasks-projects/  
-│── React-tasks/  
- │── Task-01/  
- │── Task-02/  
- │── Task-03/  
- │── ...  
-│── React-project/  
-│── NextJS-project/  
+tasks-projects/
+
+│── React-tasks/
+-│── src/
+--│── pages/
+--│── Task-01/  
+--│── Task-02/  
+--│── Task-03/  
+--│── ...
+
+│── js-Task-01/  
+│── js-Task-02/  
+│── js-Task-03/  
+│── ...
+
+│── React-project/(component library)  
+│── NextJS-project/(fee payment system)
+│── NextJS-project/(simple dashboard)dai
 │── ...  
 │── README.md
 

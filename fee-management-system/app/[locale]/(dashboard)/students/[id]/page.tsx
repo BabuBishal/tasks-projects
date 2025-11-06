@@ -1,33 +1,35 @@
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-}
+// interface Params {
+//   locale: string;
+//   id: string;
+// }
 
-export const revalidate = 60;
+import StudentCard from "@/components/students/StudentCard";
 
-export async function generateStaticParams() {
-  const posts: Post[] = await fetch("https://api.vercel.app/blog").then((res) =>
-    res.json()
-  );
-  return posts.map((post) => ({
-    id: String(post.id),
-  }));
-}
+const StudentDetail = async ({ params }: { params: any }) => {
+  console.log("Params:", params);
+  const { id } = params;
+  console.log("id", id);
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  const post: Post = await fetch(`https://api.vercel.app/blog/${id}`).then(
-    (res) => res.json()
-  );
+  const res = await fetch(`http://localhost:3000/api/students/${id}`, {
+    cache: "no-store",
+  });
+  const student = await res.json();
+  console.log(student);
+  if (!student || student.error) {
+    return <p>Error fetching student details.</p>;
+  }
+  console.log("first", student);
   return (
-    <main>
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
-    </main>
+    <div className="w-full h-full flex flex-col gap-10">
+      <div className=" ">
+        <h1 className="text-primary text-2xl font-bold">Student Details</h1>
+        <h4 className="text-muted text-sm">View student details</h4>
+      </div>
+      <div>
+        <StudentCard />
+      </div>
+    </div>
   );
-}
+};
+
+export default StudentDetail;

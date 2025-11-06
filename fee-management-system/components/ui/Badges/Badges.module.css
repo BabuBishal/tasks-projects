@@ -9,6 +9,7 @@
   cursor: default;
   font-size: 0.75rem;
   padding: 4px 8px;
+  border: 1px solid var(--border);
   /* background-color: var(--surface);
   color: var(--text-secondary); */
   box-shadow: var(--shadow);
@@ -32,23 +33,31 @@
 
 /* variants */
 .badge.success {
-  background-color: var(--success-bg);
+  background-color: #f0fdf4;
+  border: 1px solid var(--success);
+
   color: var(--success);
 }
 
 .badge.warning {
-  background-color: var(--warning-bg);
+  border: 1px solid var(--warning);
+
+  background-color: #fffbeb;
   color: var(--warning);
 }
 
 .badge.info {
-  background-color: var(--info-bg);
+  border-color: #f0f9ff;
+  border: 1px solid var(--info);
+
   color: var(--info);
 }
 
 .badge.danger {
-  background-color: var(--error-bg);
-  color: var(--destructive);
+  background-color: #fef2f2;
+  border: 1px solid var(--error);
+
+  color: var(--error);
 }
 
 /* .badge:hover {

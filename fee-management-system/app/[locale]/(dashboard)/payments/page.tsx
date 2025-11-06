@@ -1,6 +1,62 @@
+import Badge from "@/components/ui/Badges/Badges";
+import Table from "@/components/ui/Table/Table";
+import { PaymentHistory } from "@/lib/@types/types";
+import { paymentHeaders } from "@/lib/constants";
 
-const page = () => {
-  return <div>page</div>;
+const page = async () => {
+  const res = await fetch("http://localhost:3000/api/payment/history");
+  const data = await res.json();
+  console.log("pay", data);
+  return (
+    <div>
+      <div className="w-full flex flex-col gap-5 p-4 border border-border rounded-lg">
+        <div className="flex justify-between items-center">
+          <div className="flex flex-col ">
+            <span className="text-secondary text-sm">Payment Management</span>
+            <span className="text-xs text-muted">
+              Manage and view all payment records
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-col gap-3">
+          <div className="text-md font-semibold text-secondary">
+            Payment History
+          </div>
+          <Table className="rounded-md text-xs text-secondary">
+            <Table.Header>
+              {paymentHeaders?.map((head, index) => (
+                <Table.HeaderCell key={index}>{head}</Table.HeaderCell>
+              ))}
+            </Table.Header>
+            <Table.Body>
+              {data.map((payment: PaymentHistory) => (
+                <Table.Row key={payment.id}>
+                  <Table.Cell>{payment.id}</Table.Cell>
+                  <Table.Cell>{payment.studentName}</Table.Cell>
+                  <Table.Cell>{payment.program}</Table.Cell>
+                  <Table.Cell>{payment.amount}</Table.Cell>
+                  <Table.Cell>{payment.date}</Table.Cell>
+                  <Table.Cell>{payment.method}</Table.Cell>
+
+                  <Table.Cell>
+                    <Badge
+                      size="small"
+                      variant={
+                        payment.status === "Partial" ? "info" : "success"
+                      }
+                    >
+                      {payment.status ?? "-"}
+                    </Badge>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </div>
+      </div>
+    </div>
+  );
+  ("hello");
 };
 
 export default page;

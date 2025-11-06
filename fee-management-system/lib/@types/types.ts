@@ -81,7 +81,7 @@ export type FormProps = {
 };
 
 export interface Student {
-  id: number;
+  id: string;
   name: string;
   rollNo: string;
   program: "BBA" | "BBM" | "BIM" | "BSc CSIT";
@@ -95,6 +95,27 @@ export interface Student {
     paid: number;
     balance: number;
     dueDate: string;
-    status: "Paid" | "Partially Paid" | "Unpaid";
+    status: "Paid" | "Partial" | "Overdue";
   };
 }
+
+export type Payment = {
+  id: string;
+  studentId: string;
+  amount: number;
+  date: string;
+  method: string;
+  status: "Pending" | "Paid" | "Overdue";
+};
+
+export type PaymentHistory = {
+  id: string;
+  studentId: string;
+  studentName: string;
+  rollNo: string;
+  program: string;
+  amount: number;
+  date: string;
+  method: string;
+  status: "Partial" | "Full";
+};

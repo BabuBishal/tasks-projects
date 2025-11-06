@@ -1,9 +1,9 @@
 import { type FC } from "react";
 import type { BadgeProps } from "./Badges.types";
-import { cn } from "../../utils/cn";
 import styles from "./Badges.module.css";
+import { cn } from "@/lib/utils";
 
-const Badge: FC<BadgeProps> = ({ text, variant, size, className }) => {
+const Badge: FC<BadgeProps> = ({ children, variant, size, className }) => {
   return (
     <span
       className={cn(
@@ -13,7 +13,7 @@ const Badge: FC<BadgeProps> = ({ text, variant, size, className }) => {
         className && className
       )}
     >
-      {text}
+      {children}
     </span>
   );
 };

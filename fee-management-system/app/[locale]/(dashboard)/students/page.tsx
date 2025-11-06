@@ -1,11 +1,16 @@
-import StatsOverview from "@/components/layout/StatsOverview";
+// import StatsOverview from "@/components/layout/StatsOverview";
 import { Button } from "@/components/ui/Button/Button";
 import Table from "@/components/ui/Table/Table";
-import { Plus, Search, User } from "lucide-react";
+import { Eye, Phone, Plus, Search, User } from "lucide-react";
+import { studentHeaders } from "@/lib/constants";
+import { Student } from "@/lib/@types/types";
+import Link from "next/link";
+import Badge from "@/components/ui/Badges/Badges";
 
 const Students = async () => {
-  const res = await fetch("http://localhost:4000/students");
-  const data = res.json();
+  const res = await fetch("http://localhost:3000/api/students");
+  const data = await res.json();
+  // console.log("data", data);
 
   return (
     <div className="w-full h-full flex flex-col gap-10">
@@ -42,19 +47,54 @@ const Students = async () => {
             />
           </div>
         </div>
-        <div className="">
-          <Table>
+        <div className="flex flex-col gap-3">
+          <div className="text-md font-semibold text-secondary">
+            All Students
+          </div>
+          <Table className="rounded-md text-xs text-secondary">
             <Table.Header>
-              <Table.HeaderCell>""</Table.HeaderCell>
+              {studentHeaders?.map((head, index: number) => (
+                <Table.HeaderCell key={index}>{head}</Table.HeaderCell>
+              ))}
             </Table.Header>
             <Table.Body>
-              <Table.Row>
-                <Table.Cell>""</Table.Cell>
-              </Table.Row>
+              {data?.map((student: Student) => (
+                <Table.Row key={student.id}>
+                  <Table.Cell>{student.name}</Table.Cell>
+                  <Table.Cell>{student.rollNo}</Table.Cell>
+                  <Table.Cell>{student.program}</Table.Cell>
+                  <Table.Cell>{student.semester}</Table.Cell>
+                  <Table.Cell>
+                    <div className="flex gap-2 items-center">
+                      {" "}
+                      <Phone className="w-4 h-4" /> {student.phone}
+                    </div>{" "}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Badge
+                      size="small"
+                      variant={
+                        student?.fees?.status === "Partial"
+                          ? "info"
+                          : student?.fees.status === "Overdue"
+                          ? "danger"
+                          : "success"
+                      }
+                    >
+                      {student.fees.status ?? "-"}
+                    </Badge>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link href={`/students/${student.id}`}>
+                      <Eye className="w-4 h-4 " />
+                    </Link>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
             </Table.Body>
           </Table>
         </div>
-      </div>{" "}
+      </div>
     </div>
   );
 };

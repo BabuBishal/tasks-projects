@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 export type BadgeProps = {
-  text: string;
+  children: ReactNode;
   variant?: "success" | "danger" | "info" | "warning";
   size?: "small" | "medium" | "large";
   className?: string;

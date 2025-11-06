@@ -9,7 +9,7 @@ const Dashboard = async () => {
   const data = await res.json();
   // console.log("first", studentsData);
   const { dashboardStats, paymentStats } = data;
-  console.log("data", data?.paymentStats);
+  // console.log("data", data?.paymentStats);
   const icons = [DollarSign, Users, Wallet2, TrendingUp];
 
   return (

@@ -8,6 +8,7 @@ import {
   WalletIcon,
   WalletMinimal,
 } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 const QuickActions = () => {
@@ -24,10 +25,13 @@ const QuickActions = () => {
           <WalletCardsIcon className="w-4 h-4" />
           <span className="text-secondary text-sm ">Make Payment</span>
         </div>
-        <div className="flex  gap-2 justify-start items-center border border-border hover:bg-accent rounded-md p-1.5 transition duration-200 cursor-pointer">
+        <Link
+          href="/students"
+          className="flex  gap-2 justify-start items-center border border-border hover:bg-accent rounded-md p-1.5 transition duration-200 cursor-pointer"
+        >
           <Users className="w-4 h-4" />
           <span className="text-secondary text-sm ">View all Students</span>
-        </div>
+        </Link>
         <div className="flex  gap-2 justify-start items-center border border-border hover:bg-accent rounded-md p-1.5 transition duration-200 cursor-pointer">
           <DollarSignIcon className="w-4 h-4" />
           <span className="text-secondary text-sm ">Generate Reports</span>

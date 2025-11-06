@@ -10,7 +10,7 @@
 
   "students": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Aarav Shrestha",
       "rollNo": "BBA-2021-001",
       "program": "BBA",
@@ -24,11 +24,11 @@
         "paid": 50000,
         "balance": 25000,
         "dueDate": "2025-12-10",
-        "status": "Partially Paid"
+        "status": "Partial"
       }
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Sita Lama",
       "rollNo": "BScCSIT-2022-012",
       "program": "BSc CSIT",
@@ -46,7 +46,7 @@
       }
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Bibek Gurung",
       "rollNo": "BIM-2023-007",
       "program": "BIM",
@@ -60,11 +60,11 @@
         "paid": 30000,
         "balance": 42000,
         "dueDate": "2025-11-25",
-        "status": "Partially Paid"
+        "status": "Partial"
       }
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Nisha Koirala",
       "rollNo": "BBM-2024-003",
       "program": "BBM",
@@ -78,11 +78,11 @@
         "paid": 0,
         "balance": 70000,
         "dueDate": "2025-11-30",
-        "status": "Unpaid"
+        "status": "Overdue"
       }
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Pratik KC",
       "rollNo": "BScCSIT-2021-021",
       "program": "BSc CSIT",
@@ -100,7 +100,7 @@
       }
     },
     {
-      "id": 6,
+      "id": "6",
       "name": "Smriti Pandey",
       "rollNo": "BBA-2023-014",
       "program": "BBA",
@@ -118,7 +118,7 @@
       }
     },
     {
-      "id": 7,
+      "id": "7",
       "name": "Rajan Thapa",
       "rollNo": "BBM-2022-009",
       "program": "BBM",
@@ -132,11 +132,11 @@
         "paid": 50000,
         "balance": 20000,
         "dueDate": "2025-12-05",
-        "status": "Partially Paid"
+        "status": "Partial"
       }
     },
     {
-      "id": 8,
+      "id": "8",
       "name": "Anisha Maharjan",
       "rollNo": "BScCSIT-2024-005",
       "program": "BSc CSIT",
@@ -150,11 +150,11 @@
         "paid": 0,
         "balance": 78000,
         "dueDate": "2025-11-30",
-        "status": "Unpaid"
+        "status": "Overdue"
       }
     },
     {
-      "id": 9,
+      "id": "9",
       "name": "Kritesh Manandhar",
       "rollNo": "BIM-2021-004",
       "program": "BIM",
@@ -168,11 +168,11 @@
         "paid": 60000,
         "balance": 15000,
         "dueDate": "2025-12-01",
-        "status": "Partially Paid"
+        "status": "Partial"
       }
     },
     {
-      "id": 10,
+      "id": "10",
       "name": "Ritika Sharma",
       "rollNo": "BBA-2022-011",
       "program": "BBA",
@@ -192,72 +192,72 @@
   ],
   "payments": [
     {
-      "id": 1,
-      "studentId": 1,
+      "id": "1",
+      "studentId": "1",
       "amount": 30000,
       "date": "2025-09-15",
       "method": "Cash",
       "receiptNo": "R2001"
     },
     {
-      "id": 2,
-      "studentId": 1,
+      "id": "2",
+      "studentId": "1",
       "amount": 20000,
       "date": "2025-10-20",
       "method": "Bank Transfer",
       "receiptNo": "R2002"
     },
     {
-      "id": 3,
-      "studentId": 2,
+      "id": "3",
+      "studentId": "2",
       "amount": 80000,
       "date": "2025-09-05",
       "method": "Online",
       "receiptNo": "R2003"
     },
     {
-      "id": 4,
-      "studentId": 3,
+      "id": "4",
+      "studentId": "3",
       "amount": 30000,
       "date": "2025-10-12",
       "method": "Cash",
       "receiptNo": "R2004"
     },
     {
-      "id": 5,
-      "studentId": 5,
+      "id": "5",
+      "studentId": "5",
       "amount": 85000,
       "date": "2025-09-01",
       "method": "Online",
       "receiptNo": "R2005"
     },
     {
-      "id": 6,
-      "studentId": 6,
+      "id": "6",
+      "studentId": "6",
       "amount": 72000,
       "date": "2025-08-20",
       "method": "Bank Transfer",
       "receiptNo": "R2006"
     },
     {
-      "id": 7,
-      "studentId": 7,
+      "id": "7",
+      "studentId": "7",
       "amount": 50000,
       "date": "2025-10-25",
       "method": "Online",
       "receiptNo": "R2007"
     },
     {
-      "id": 8,
-      "studentId": 9,
+      "id": "8",
+      "studentId": "9",
       "amount": 60000,
       "date": "2025-09-10",
       "method": "Cash",
       "receiptNo": "R2008"
     },
     {
-      "id": 9,
-      "studentId": 10,
+      "id": "9",
+      "studentId": "10",
       "amount": 73000,
       "date": "2025-09-22",
       "method": "Online",

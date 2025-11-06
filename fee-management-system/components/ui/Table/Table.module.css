@@ -3,7 +3,6 @@
   border-collapse: collapse;
   border-spacing: 0;
   overflow-x: auto;
-  display: block;
   border: 1px solid var(--border);
   border-radius: 1rem;
 }
@@ -21,12 +20,10 @@
 
 .tableRow {
   width: 100%;
-  display: inline-block;
   border-bottom: 1px solid var(--border);
 }
 .tr {
   width: 100%;
-  display: inline-block;
   border-bottom: 1px solid var(--border);
 }
 .tr:last-child {
@@ -39,7 +36,6 @@
 }
 
 .th {
-  display: inline-block;
   text-align: left;
   padding: 0.75rem 1rem;
   font-weight: 600;
@@ -48,7 +44,6 @@
 }
 
 .td {
-  display: inline-block;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
   color: var(--text-secondary);

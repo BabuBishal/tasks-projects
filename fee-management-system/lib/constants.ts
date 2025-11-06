@@ -29,3 +29,22 @@ export const registerSchema = {
     message: "Password must be at least 4 characters",
   },
 };
+
+export const studentHeaders = [
+  "Name",
+  "Roll No",
+  "Program",
+  "Semester",
+  "Contacts",
+  "Fee Status",
+  "Actions",
+];
+export const paymentHeaders = [
+  "PaymentID",
+  "Student",
+  "Program",
+  "Amount",
+  "Date",
+  "Method",
+  "Status",
+];
