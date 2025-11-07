@@ -7,261 +7,94 @@
       "name": "Bishal"
     }
   ],
-
   "students": [
     {
-      "id": "1",
-      "name": "Aarav Shrestha",
-      "rollNo": "BBA-2021-001",
+      "id": "STU-1762492501745-292",
+      "name": "Rahim Tucker",
+      "email": "vecin@mailinator.com",
+      "rollNo": "BBA-123",
       "program": "BBA",
-      "year": 4,
-      "semester": 8,
-      "email": "aarav.shrestha@example.com",
-      "phone": "9812345678",
-      "address": "Balkumari, Lalitpur",
+      "semester": "2",
+      "phone": "9865332155",
+      "address": "Kathmandu",
+      "year": 1,
       "fees": {
         "total": 75000,
-        "paid": 50000,
-        "balance": 25000,
-        "dueDate": "2025-12-10",
+        "paid": 35000,
+        "balance": 40000,
+        "dueDate": "2026-12-30",
         "status": "Partial"
       }
     },
     {
-      "id": "2",
-      "name": "Sita Lama",
-      "rollNo": "BScCSIT-2022-012",
-      "program": "BSc CSIT",
-      "year": 3,
-      "semester": 6,
-      "email": "sita.lama@example.com",
-      "phone": "9845123456",
-      "address": "Jawalakhel, Lalitpur",
-      "fees": {
-        "total": 80000,
-        "paid": 80000,
-        "balance": 0,
-        "dueDate": "2025-12-15",
-        "status": "Paid"
-      }
-    },
-    {
-      "id": "3",
-      "name": "Bibek Gurung",
-      "rollNo": "BIM-2023-007",
-      "program": "BIM",
-      "year": 2,
-      "semester": 4,
-      "email": "bibek.gurung@example.com",
-      "phone": "9808765432",
-      "address": "Koteshwor, Kathmandu",
-      "fees": {
-        "total": 72000,
-        "paid": 30000,
-        "balance": 42000,
-        "dueDate": "2025-11-25",
-        "status": "Partial"
-      }
-    },
-    {
-      "id": "4",
-      "name": "Nisha Koirala",
-      "rollNo": "BBM-2024-003",
+      "id": "STU-1762492613522-473",
+      "name": "Sebastian Collier",
+      "email": "feryjaf@mailinator.com",
+      "rollNo": "BBM-3223",
       "program": "BBM",
-      "year": 1,
-      "semester": 2,
-      "email": "nisha.koirala@example.com",
-      "phone": "9811002233",
-      "address": "Baneshwor, Kathmandu",
+      "semester": "3",
+      "phone": "9860215485",
+      "address": "Reprehenderit minus",
+      "year": 2,
       "fees": {
         "total": 70000,
-        "paid": 0,
-        "balance": 70000,
-        "dueDate": "2025-11-30",
-        "status": "Overdue"
+        "paid": 20010,
+        "balance": 49990,
+        "dueDate": "2026-12-30",
+        "status": "Partial"
       }
     },
     {
-      "id": "5",
-      "name": "Pratik KC",
-      "rollNo": "BScCSIT-2021-021",
+      "id": "STU-1762492996690-286",
+      "name": "Paki Tran",
+      "email": "xuzylix@mailinator.com",
+      "rollNo": "BSc-CSIT-2342",
       "program": "BSc CSIT",
-      "year": 4,
-      "semester": 8,
-      "email": "pratik.kc@example.com",
-      "phone": "9867543210",
-      "address": "Imadol, Lalitpur",
-      "fees": {
-        "total": 85000,
-        "paid": 85000,
-        "balance": 0,
-        "dueDate": "2025-12-20",
-        "status": "Paid"
-      }
-    },
-    {
-      "id": "6",
-      "name": "Smriti Pandey",
-      "rollNo": "BBA-2023-014",
-      "program": "BBA",
+      "semester": "4",
+      "phone": "9866457813",
+      "address": "Lalitpur",
       "year": 2,
-      "semester": 3,
-      "email": "smriti.pandey@example.com",
-      "phone": "9811456723",
-      "address": "Pulchowk, Lalitpur",
       "fees": {
-        "total": 72000,
-        "paid": 72000,
-        "balance": 0,
-        "dueDate": "2025-10-15",
-        "status": "Paid"
-      }
-    },
-    {
-      "id": "7",
-      "name": "Rajan Thapa",
-      "rollNo": "BBM-2022-009",
-      "program": "BBM",
-      "year": 3,
-      "semester": 5,
-      "email": "rajan.thapa@example.com",
-      "phone": "9845671234",
-      "address": "Satdobato, Lalitpur",
-      "fees": {
-        "total": 70000,
-        "paid": 50000,
-        "balance": 20000,
-        "dueDate": "2025-12-05",
+        "total": 95000,
+        "paid": 15000,
+        "balance": 80000,
+        "dueDate": "2026-12-30",
         "status": "Partial"
-      }
-    },
-    {
-      "id": "8",
-      "name": "Anisha Maharjan",
-      "rollNo": "BScCSIT-2024-005",
-      "program": "BSc CSIT",
-      "year": 1,
-      "semester": 1,
-      "email": "anisha.maharjan@example.com",
-      "phone": "9801112233",
-      "address": "Patan, Lalitpur",
-      "fees": {
-        "total": 78000,
-        "paid": 0,
-        "balance": 78000,
-        "dueDate": "2025-11-30",
-        "status": "Overdue"
-      }
-    },
-    {
-      "id": "9",
-      "name": "Kritesh Manandhar",
-      "rollNo": "BIM-2021-004",
-      "program": "BIM",
-      "year": 4,
-      "semester": 7,
-      "email": "kritesh.manandhar@example.com",
-      "phone": "9819988776",
-      "address": "Maitidevi, Kathmandu",
-      "fees": {
-        "total": 75000,
-        "paid": 60000,
-        "balance": 15000,
-        "dueDate": "2025-12-01",
-        "status": "Partial"
-      }
-    },
-    {
-      "id": "10",
-      "name": "Ritika Sharma",
-      "rollNo": "BBA-2022-011",
-      "program": "BBA",
-      "year": 3,
-      "semester": 6,
-      "email": "ritika.sharma@example.com",
-      "phone": "9847009988",
-      "address": "Kalanki, Kathmandu",
-      "fees": {
-        "total": 73000,
-        "paid": 73000,
-        "balance": 0,
-        "dueDate": "2025-11-10",
-        "status": "Paid"
       }
     }
   ],
   "payments": [
     {
-      "id": "1",
-      "studentId": "1",
-      "amount": 30000,
-      "date": "2025-09-15",
+      "id": "P-79",
+      "studentId": "STU-1762492501745-292",
       "method": "Cash",
-      "receiptNo": "R2001"
+      "amount": 25000,
+      "date": "2025-11-07",
+      "reeiptNo": "Txn-1762492749479-611"
     },
     {
-      "id": "2",
-      "studentId": "1",
-      "amount": 20000,
-      "date": "2025-10-20",
+      "id": "P-84",
+      "studentId": "STU-1762492501745-292",
       "method": "Bank Transfer",
-      "receiptNo": "R2002"
+      "amount": 10000,
+      "date": "2025-11-07",
+      "reeiptNo": "Txn-1762493099375-157"
     },
     {
-      "id": "3",
-      "studentId": "2",
-      "amount": 80000,
-      "date": "2025-09-05",
-      "method": "Online",
-      "receiptNo": "R2003"
-    },
-    {
-      "id": "4",
-      "studentId": "3",
-      "amount": 30000,
-      "date": "2025-10-12",
+      "id": "P-686",
+      "studentId": "STU-1762492613522-473",
       "method": "Cash",
-      "receiptNo": "R2004"
+      "amount": 20010,
+      "date": "2025-11-07",
+      "reeiptNo": "Txn-1762493146049-173"
     },
     {
-      "id": "5",
-      "studentId": "5",
-      "amount": 85000,
-      "date": "2025-09-01",
+      "id": "P-946",
+      "studentId": "STU-1762492996690-286",
       "method": "Online",
-      "receiptNo": "R2005"
-    },
-    {
-      "id": "6",
-      "studentId": "6",
-      "amount": 72000,
-      "date": "2025-08-20",
-      "method": "Bank Transfer",
-      "receiptNo": "R2006"
-    },
-    {
-      "id": "7",
-      "studentId": "7",
-      "amount": 50000,
-      "date": "2025-10-25",
-      "method": "Online",
-      "receiptNo": "R2007"
-    },
-    {
-      "id": "8",
-      "studentId": "9",
-      "amount": 60000,
-      "date": "2025-09-10",
-      "method": "Cash",
-      "receiptNo": "R2008"
-    },
-    {
-      "id": "9",
-      "studentId": "10",
-      "amount": 73000,
-      "date": "2025-09-22",
-      "method": "Online",
-      "receiptNo": "R2009"
+      "amount": 15000,
+      "date": "2025-11-07",
+      "reeiptNo": "Txn-1762493170696-817"
     }
   ]
 }
