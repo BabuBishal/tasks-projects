@@ -35,7 +35,7 @@ export type UseFormReturn<T extends Record<string, any>> = {
   formData: T;
   formErrors: ValidationErrors<T>;
   handleChange: (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => void;
   handleSubmit: (
     e: FormEvent<HTMLFormElement>,
@@ -58,10 +58,27 @@ export type FormInputs = {
 };
 export type LoginFormInputs = Omit<FormInputs, "name">;
 
+export type StudentFormInputs = {
+  name: string;
+  rollNo: string;
+  program: "BBA" | "BBM" | "BIM" | "BSc CSIT";
+  year?: number;
+  semester: number;
+  email: string;
+  phone: string;
+  address: string;
+};
+
+export type PaymentFormInputs = {
+  id: string;
+  amount: string;
+  method: "Cash" | "Online" | "Bank Transfer";
+};
+
 export type LoginFormProps = {
-  onSubmit: (data: LoginFormInputs) => void; // function called on submit
-  formData: LoginFormInputs; // current form values
-  formErrors: Partial<Record<keyof LoginFormInputs, string>>; // form validation errors
+  onSubmit: (data: LoginFormInputs) => void;
+  formData: LoginFormInputs;
+  formErrors: Partial<Record<keyof LoginFormInputs, string>>;
   handleSubmit: (
     e: FormEvent<HTMLFormElement>,
     callback: (data: LoginFormInputs) => void
@@ -70,14 +87,40 @@ export type LoginFormProps = {
 };
 
 export type FormProps = {
-  onSubmit: (data: FormInputs) => void; // function called on submit
-  formData: FormInputs; // current form values
-  formErrors: Partial<Record<keyof FormInputs, string>>; // form validation errors
+  onSubmit: (data: FormInputs) => void;
+  formData: FormInputs;
+  formErrors: Partial<Record<keyof FormInputs, string>>;
   handleSubmit: (
     e: FormEvent<HTMLFormElement>,
     callback: (data: FormInputs) => void
   ) => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+export type AddStudentFormProps = {
+  onSubmit: (data: StudentFormInputs) => void;
+  formData: StudentFormInputs;
+  formErrors: Partial<Record<keyof StudentFormInputs, string>>;
+  handleSubmit: (
+    e: FormEvent<HTMLFormElement>,
+    callback: (data: StudentFormInputs) => void
+  ) => void;
+  handleChange: (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => void;
+};
+
+export type PaymentFormProps = {
+  onSubmit: (data: PaymentFormInputs) => void;
+  formData: PaymentFormInputs;
+  formErrors: Partial<Record<keyof PaymentFormInputs, string>>;
+  handleSubmit: (
+    e: FormEvent<HTMLFormElement>,
+    callback: (data: PaymentFormInputs) => void
+  ) => void;
+  handleChange: (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => void;
 };
 
 export interface Student {

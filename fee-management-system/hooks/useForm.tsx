@@ -10,7 +10,7 @@ const useForm = <T extends Record<string, any>>({
   const [formErrors, setFormErrors] = useState({});
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -30,7 +30,7 @@ const useForm = <T extends Record<string, any>>({
     if (Object.keys(errors).length === 0) {
       onSubmit && onSubmit(formData);
       setFormData(initialValues);
-      console.log(formData);
+      // console.log(formData);
     }
   };
 

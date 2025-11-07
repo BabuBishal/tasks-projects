@@ -1,15 +1,19 @@
 import { Student } from "@/lib/@types/types";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
-  console.log(id);
+interface RouteContext {
+  params: {
+    studentId: string;
+  };
+}
 
+export async function GET(req: NextRequest, context: RouteContext) {
+  const { params } = context;
+  const { studentId } = params;
+console.log("studentId", studentId);
+  console.log("params", params);
   try {
-    const res = await fetch(`http://localhost:4000/students/${id}`);
+    const res = await fetch(`http://localhost:4000/students/${studentId}`);
     if (!res.ok) {
       return NextResponse.json(
         { error: res.statusText },

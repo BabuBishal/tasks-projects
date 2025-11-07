@@ -6,9 +6,10 @@ import { studentHeaders } from "@/lib/constants";
 import { Student } from "@/lib/@types/types";
 import Link from "next/link";
 import Badge from "@/components/ui/Badges/Badges";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const Students = async () => {
-  const res = await fetch("http://localhost:3000/api/students");
+  const res = await fetch(`${baseUrl}/api/students`);
   const data = await res.json();
   // console.log("data", data);
 
@@ -21,9 +22,11 @@ const Students = async () => {
           <h4 className="text-muted text-sm">Manage students, fees, ...</h4>
         </div>
         <div>
-          <Button variant="primary" size="sm">
-            <Plus className="w-4 h-4" /> Add Student
-          </Button>
+          <Link href={"/students/add"}>
+            <Button variant="primary" size="sm">
+              <Plus className="w-4 h-4" /> Add Student
+            </Button>
+          </Link>
         </div>
       </div>
       <div className="w-full flex flex-col gap-5 p-4 border border-border rounded-lg">
@@ -70,6 +73,8 @@ const Students = async () => {
                       <Phone className="w-4 h-4" /> {student.phone}
                     </div>{" "}
                   </Table.Cell>
+                  <Table.Cell>$ {student.fees.balance}</Table.Cell>
+
                   <Table.Cell>
                     <Badge
                       size="small"

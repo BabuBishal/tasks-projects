@@ -1,16 +1,17 @@
-// interface Params {
-//   locale: string;
-//   id: string;
-// }
+interface Params {
+  locale?: string;
+  studentId: string;
+}
 
 import StudentCard from "@/components/students/StudentCard";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
-const StudentDetail = async ({ params }: { params: any }) => {
+const StudentDetail = async ({ params }: { params: Params }) => {
   console.log("Params:", params);
-  const { id } = params;
-  console.log("id", id);
+  const { studentId } = params;
+  console.log("id", studentId);
 
-  const res = await fetch(`http://localhost:3000/api/students/${id}`, {
+  const res = await fetch(`${baseUrl}/api/students/${studentId}`, {
     cache: "no-store",
   });
   const student = await res.json();

@@ -3,9 +3,10 @@ import PaymentStatusOverview from "@/components/dashboard/PaymentStatusOverview"
 import QuickActions from "@/components/dashboard/QuickActions";
 import StatsOverview from "@/components/layout/StatsOverview";
 import { Users, DollarSign, Wallet2, TrendingUp } from "lucide-react";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const Dashboard = async () => {
-  const res = await fetch("http://localhost:3000/api/dashboard-stats");
+  const res = await fetch(`${baseUrl}/api/dashboard-stats`);
   const data = await res.json();
   // console.log("first", studentsData);
   const { dashboardStats, paymentStats } = data;
