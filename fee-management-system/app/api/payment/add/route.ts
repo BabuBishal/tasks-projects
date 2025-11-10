@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
       method,
       amount: Number(amount),
       date: new Date().toISOString().split("T")[0],
-      reeiptNo: receiptId,
+      receiptNo: receiptId,
     };
 
     const res = await fetch("http://localhost:4000/payments/", {

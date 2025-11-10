@@ -8,8 +8,8 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const Dashboard = async () => {
   const res = await fetch(`${baseUrl}/api/dashboard-stats`);
   const data = await res.json();
-  // console.log("first", studentsData);
   const { dashboardStats, paymentStats } = data;
+  console.log("first", dashboardStats);
   // console.log("data", data?.paymentStats);
   const icons = [DollarSign, Users, Wallet2, TrendingUp];
 

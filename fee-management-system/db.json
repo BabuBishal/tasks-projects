@@ -20,10 +20,10 @@
       "year": 1,
       "fees": {
         "total": 75000,
-        "paid": 35000,
-        "balance": 40000,
+        "paid": 75000,
+        "balance": 0,
         "dueDate": "2026-12-30",
-        "status": "Partial"
+        "status": "Paid"
       }
     },
     {
@@ -56,10 +56,82 @@
       "year": 2,
       "fees": {
         "total": 95000,
-        "paid": 15000,
-        "balance": 80000,
+        "paid": 40000,
+        "balance": 55000,
         "dueDate": "2026-12-30",
         "status": "Partial"
+      }
+    },
+    {
+      "id": "STU-1762493999560-175",
+      "name": "Tallulah Potter",
+      "email": "leqi@mailinator.com",
+      "rollNo": "Nostrud totam ipsum ",
+      "program": "BIM",
+      "semester": "7",
+      "phone": "9855489255",
+      "address": "Ktm",
+      "year": 4,
+      "fees": {
+        "total": 65000,
+        "paid": 0,
+        "balance": 65000,
+        "dueDate": "2026-12-30",
+        "status": "Overdue"
+      }
+    },
+    {
+      "id": "STU-1762494031203-106",
+      "name": "Cassady Gillespie",
+      "email": "mujy@mailinator.com",
+      "rollNo": "Bsc-csit-345",
+      "program": "BSc CSIT",
+      "semester": "5",
+      "phone": "9887654848",
+      "address": "Aliqua Eos est do",
+      "year": 3,
+      "fees": {
+        "total": 95000,
+        "paid": 95000,
+        "balance": 0,
+        "dueDate": "2026-12-30",
+        "status": "Paid"
+      }
+    },
+    {
+      "id": "STU-1762494569447-364",
+      "name": "Russell Avery",
+      "email": "vejuvop@mailinator.com",
+      "rollNo": "Excepteur expedita l",
+      "program": "BBA",
+      "semester": "5",
+      "phone": "9865445785",
+      "address": "Iste assumenda nobis",
+      "year": 3,
+      "fees": {
+        "total": 75000,
+        "paid": 0,
+        "balance": 75000,
+        "dueDate": "2026-12-30",
+        "status": "Overdue"
+      }
+    },
+    {
+      "id": "STU-1762495238351-70",
+      "name": "Nerea Ingram",
+      "email": "xywob@mailinator.com",
+      "rollNo": "BBA-23423",
+      "program": "BBA",
+      "semester": "6",
+      "phone": "9965847852",
+      "address": "Kathmandu",
+      "year": 3,
+      "fees": {
+        "total": 75000,
+        "paid": 0,
+        "balance": 75000,
+        "dueDate": "2026-12-30",
+        "status": "Overdue"
       }
     }
   ],
@@ -70,7 +142,7 @@
       "method": "Cash",
       "amount": 25000,
       "date": "2025-11-07",
-      "reeiptNo": "Txn-1762492749479-611"
+      "receiptNo": "Txn-1762492749479-611"
     },
     {
       "id": "P-84",
@@ -78,7 +150,7 @@
       "method": "Bank Transfer",
       "amount": 10000,
       "date": "2025-11-07",
-      "reeiptNo": "Txn-1762493099375-157"
+      "receiptNo": "Txn-1762493099375-157"
     },
     {
       "id": "P-686",
@@ -86,7 +158,7 @@
       "method": "Cash",
       "amount": 20010,
       "date": "2025-11-07",
-      "reeiptNo": "Txn-1762493146049-173"
+      "receiptNo": "Txn-1762493146049-173"
     },
     {
       "id": "P-946",
@@ -94,7 +166,31 @@
       "method": "Online",
       "amount": 15000,
       "date": "2025-11-07",
-      "reeiptNo": "Txn-1762493170696-817"
+      "receiptNo": "Txn-1762493170696-817"
+    },
+    {
+      "id": "P-670",
+      "studentId": "STU-1762492996690-286",
+      "method": "Bank Transfer",
+      "amount": 25000,
+      "date": "2025-11-07",
+      "receiptNo": "Txn-1762494601601-70"
+    },
+    {
+      "id": "P-418",
+      "studentId": "STU-1762494031203-106",
+      "method": "Bank Transfer",
+      "amount": 95000,
+      "date": "2025-11-07",
+      "receiptNo": "Txn-1762495068786-759"
+    },
+    {
+      "id": "P-218",
+      "studentId": "STU-1762492501745-292",
+      "method": "Online",
+      "amount": 40000,
+      "date": "2025-11-07",
+      "receiptNo": "Txn-1762495108381-707"
     }
   ]
 }

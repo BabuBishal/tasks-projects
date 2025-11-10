@@ -127,7 +127,7 @@ export interface Student {
   id: string;
   name: string;
   rollNo: string;
-  program: "BBA" | "BBM" | "BIM" | "BSc CSIT";
+  program: "BBA" | "BBM" | "BIM" | "BSc CSIT" | "N/A";
   year: number;
   semester: number;
   email: string;
@@ -138,8 +138,28 @@ export interface Student {
     paid: number;
     balance: number;
     dueDate: string;
-    status: "Paid" | "Partial" | "Overdue";
+    status: "Paid" | "Partial" | "Overdue" | "N/A";
   };
+}
+
+export interface StudentDetail {
+  id: string;
+  name: string;
+  rollNo: string;
+  program: "BBA" | "BBM" | "BIM" | "BSc CSIT" | "N/A";
+  year: number;
+  semester: number;
+  email: string;
+  phone: string;
+  address: string;
+  fees: {
+    total: number;
+    paid: number;
+    balance: number;
+    dueDate: string;
+    status: "Paid" | "Partial" | "Overdue" | "N/A";
+  };
+  paymentHistory: Payment[];
 }
 
 export type Payment = {
@@ -148,6 +168,7 @@ export type Payment = {
   amount: number;
   date: string;
   method: string;
+  receiptNo: string;
   status: "Pending" | "Paid" | "Overdue";
 };
 

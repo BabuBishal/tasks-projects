@@ -19,7 +19,7 @@ const Students = async () => {
         <div>
           {" "}
           <h1 className="text-primary text-2xl font-bold">Students Panel</h1>
-          <h4 className="text-muted text-sm">Manage students, fees, ...</h4>
+          <h4 className="text-muted text-sm">Manage students, fees, etc</h4>
         </div>
         <div>
           <Link href={"/students/add"}>
@@ -37,7 +37,7 @@ const Students = async () => {
               Manage and view all student records
             </span>
           </div>
-          <div className="flex gap-2 items-center border border-border rounded-md px-2 py-1">
+          {/* <div className="flex gap-2 items-center border border-border rounded-md px-2 py-1">
             <label htmlFor="student-search">
               <Search className="w-4 h-4 text-muted" />
             </label>
@@ -48,7 +48,7 @@ const Students = async () => {
               placeholder="Search students..."
               className="text-xs text-secondary outline-none caret-secondary"
             />
-          </div>
+          </div> */}
         </div>
         <div className="flex flex-col gap-3">
           <div className="text-md font-semibold text-secondary">
