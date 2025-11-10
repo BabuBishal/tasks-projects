@@ -51,11 +51,11 @@ const StudentDetail = async ({ params }: Props) => {
     }
     const { name, email, program, semester, phone } = studentDetails;
 
-    const progressBar = (
-      <ProgressBar
-        progress={studentDetails.fees.paid / studentDetails.fees.total / 100}
-      />
-    );
+    // const progressBar = (
+    //   <ProgressBar
+    //     progress={studentDetails.fees.paid / studentDetails.fees.total / 100}
+    //   />
+    // );
     const studentStats = [
       {
         title: "Total Paid",
