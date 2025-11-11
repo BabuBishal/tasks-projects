@@ -4,8 +4,8 @@ import {
   gettingStartedList,
   customHooksList,
 } from "../../../src/utils/constants";
-import { useLocation } from "react-router";
 import { useEffect } from "react";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -13,33 +13,28 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isOpen = false, onClose }: SidebarProps) => {
-  const location = useLocation();
-  const currentPath = location.hash;
 
+  const entries = useIntersectionObserver({
+    selector: "section[id]",
+    threshold: 0.1, 
+  });
+
+  // Only highlight the topmost visible section to avoid multiple highlights
   useEffect(() => {
-    const sections = document.querySelectorAll("section[id]");
     const navLinks = document.querySelectorAll("[data-sidebar-link]");
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            navLinks.forEach((link) => {
-              link.classList.toggle(
-                `${styles.active}`,
-                link.getAttribute("href") === `#${entry.target.id}`
-              );
-            });
-          }
-        });
-      },
-      {
-        threshold: 0.6,
-      }
-    );
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
+    // Find the topmost (first) intersecting section
+    const intersectingEntries = entries.filter((entry) => entry.isIntersecting);
+    const topmostEntry =
+      intersectingEntries.length > 0 ? intersectingEntries[0] : null;
+
+    navLinks.forEach((link) => {
+      const linkHref = link.getAttribute("href");
+      const isLinkActive =
+        topmostEntry && linkHref === `#${topmostEntry.target.id}`;
+      link.classList.toggle(`${styles.active}`, !!isLinkActive);
+    });
+  }, [entries]);
 
   const handleLinkClick = () => {
     if (onClose) {
@@ -53,61 +48,45 @@ const Sidebar = ({ isOpen = false, onClose }: SidebarProps) => {
       <aside className={`${styles.sidebar} ${isOpen ? styles.open : ""}`}>
         <div className={styles.sidebarSection}>
           <h4 className={styles.sidebarTitle}>Getting Started</h4>
-          {gettingStartedList?.map((item) => {
-            const isActive = currentPath === item.href;
-            return (
-              <a
-                key={item.href}
-                href={item.href}
-                data-sidebar-link
-                onClick={handleLinkClick}
-                className={`${styles.sidebarLink} ${
-                  isActive ? styles.active : ""
-                }`}
-              >
-                {item.title}
-              </a>
-            );
-          })}
+          {gettingStartedList?.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              data-sidebar-link
+              onClick={handleLinkClick}
+              className={styles.sidebarLink}
+            >
+              {item.title}
+            </a>
+          ))}
         </div>
         <div className={styles.sidebarSection}>
           <h4 className={styles.sidebarTitle}>Components</h4>
-          {componentList?.map((item) => {
-            const isActive = currentPath === item.href;
-            return (
-              <a
-                key={item.href}
-                href={item.href}
-                data-sidebar-link
-                onClick={handleLinkClick}
-                className={`${styles.sidebarLink} ${
-                  isActive ? styles.active : ""
-                }`}
-              >
-                {item.component}
-              </a>
-            );
-          })}
+          {componentList?.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              data-sidebar-link
+              onClick={handleLinkClick}
+              className={styles.sidebarLink}
+            >
+              {item.component}
+            </a>
+          ))}
         </div>
         <div className={styles.sidebarSection}>
           <h4 className={styles.sidebarTitle}>Custom Hooks</h4>
-          {customHooksList?.map((item) => {
-            const isActive = currentPath === item.href;
-
-            return (
-              <a
-                key={item.href}
-                href={item.href}
-                data-sidebar-link
-                onClick={handleLinkClick}
-                className={`${styles.sidebarLink} ${
-                  isActive ? styles.active : ""
-                }`}
-              >
-                {item.title}
-              </a>
-            );
-          })}
+          {customHooksList?.map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              data-sidebar-link
+              onClick={handleLinkClick}
+              className={styles.sidebarLink}
+            >
+              {item.title}
+            </a>
+          ))}
         </div>
       </aside>
     </>
