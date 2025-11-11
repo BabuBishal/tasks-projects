@@ -39,30 +39,32 @@
   padding: 0.6rem 1.25rem;
 }
 
-/* Variants */
 .primary {
-  background-color: var(--primary);
-  color: var(--background);
+  /* Prefer new namespaced tokens, fall back to legacy tokens, then to defaults */
+  background-color: var(--ui-button-bg, var(--primary, #1f6feb));
+  color: var(--ui-button-color, var(--background, #ffffff));
+  border: 1px solid var(--ui-button-border, transparent);
 }
 
 .secondary {
-  background-color: var(--secondary);
-  color: var(--text-primary);
+  background-color: var(--ui-secondary-bg, var(--secondary, #f3f4f6));
+  color: var(--ui-secondary-color, var(--text-primary, #0f172a));
+  border: 1px solid var(--ui-secondary-border, var(--border, #e6e6e6));
 }
 
 .outline {
   background-color: transparent;
-  border: 2px solid var(--border);
-  color: var(--text-primary);
+  border: 2px solid var(--ui-border, var(--border, #e6e6e6));
+  color: var(--ui-outline-color, var(--text-primary, #0f172a));
 }
 
 .danger {
-  background-color: var(--destructive);
-  color: #fff;
+  background-color: var(--ui-destructive, var(--destructive, #ef4444));
+  color: var(--ui-destructive-contrast, #ffffff);
 }
 
 .outline:hover {
-  background-color: var(--secondary);
+  background-color: var(--ui-outline-hover-bg, var(--secondary, #f3f4f6));
 }
 
 .button:disabled {

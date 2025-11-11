@@ -7,14 +7,16 @@ export const Button = ({
   variant,
   size,
   children,
+  unstyled,
   ...props
 }: ButtonProps) => {
   return (
     <button
       className={cn(
-        styles.button,
-        variant && styles[variant],
-        size && styles[size],
+        // include module styles unless consumer requests unstyled
+        !unstyled && styles.button,
+        !unstyled && variant && styles[variant],
+        !unstyled && size && styles[size],
         className && className
       )}
       {...props}

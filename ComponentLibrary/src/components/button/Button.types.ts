@@ -11,4 +11,5 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   disabled?: boolean;
   className?: string;
+  unstyled?: boolean;
 }

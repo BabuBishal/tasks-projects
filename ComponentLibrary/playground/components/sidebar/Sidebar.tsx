@@ -13,17 +13,16 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isOpen = false, onClose }: SidebarProps) => {
-
   const entries = useIntersectionObserver({
     selector: "section[id]",
-    threshold: 0.1, 
+    threshold: 0.1,
   });
 
   // Only highlight the topmost visible section to avoid multiple highlights
   useEffect(() => {
     const navLinks = document.querySelectorAll("[data-sidebar-link]");
 
-    // Find the topmost (first) intersecting section
+    // Find the topmost intersecting section
     const intersectingEntries = entries.filter((entry) => entry.isIntersecting);
     const topmostEntry =
       intersectingEntries.length > 0 ? intersectingEntries[0] : null;

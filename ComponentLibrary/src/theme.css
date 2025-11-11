@@ -1,0 +1,82 @@
+/* Default theme tokens for the UI library
+   Consumers can import this file to get sensible defaults and dark mode support.
+   Tokens are namespaced with --ui- to reduce collisions. Legacy tokens are aliased
+   for backward compatibility. */
+:root {
+  /* Core tokens */
+  --ui-background: #ffffff;
+  --ui-text-primary: #0f172a;
+  --ui-border: #e6e6e6;
+  --ui-surface: #ffffff;
+
+  /* Button tokens */
+  --ui-button-bg: #1f6feb;
+  --ui-button-color: #ffffff;
+  --ui-button-border: transparent;
+  --ui-button-hover-bg: #1558d6;
+
+  --ui-secondary-bg: #f3f4f6;
+  --ui-secondary-color: #0f172a;
+  --ui-secondary-border: #e6e6e6;
+
+  --ui-destructive: #ef4444;
+  --ui-destructive-contrast: #ffffff;
+
+  /* Aliases for legacy variable names used in the project */
+  --primary: var(--ui-button-bg);
+  --background: var(--ui-button-color);
+  --secondary: var(--ui-secondary-bg);
+  --text-primary: var(--ui-text-primary);
+  --border: var(--ui-border);
+  --destructive: var(--ui-destructive);
+  --surface: var(--ui-surface);
+}
+
+/* Dark theme (applied when consumer sets data-theme="dark" on <html> or <body>) */
+:root[data-theme="dark"] {
+  --ui-background: #071226;
+  --ui-text-primary: #e6eef8;
+  --ui-border: #132033;
+  --ui-surface: #071226;
+
+  --ui-button-bg: #2563eb;
+  --ui-button-color: #ffffff;
+  --ui-button-border: transparent;
+  --ui-button-hover-bg: #1e4acb;
+
+  --ui-secondary-bg: #0f172a;
+  --ui-secondary-color: #cfe7ff;
+  --ui-secondary-border: #213147;
+
+  --ui-destructive: #ef4444;
+  --ui-destructive-contrast: #ffffff;
+
+  /* Legacy aliases for dark */
+  --primary: var(--ui-button-bg);
+  --background: var(--ui-button-color);
+  --secondary: var(--ui-secondary-bg);
+  --text-primary: var(--ui-text-primary);
+  --border: var(--ui-border);
+  --destructive: var(--ui-destructive);
+  --surface: var(--ui-surface);
+}
+
+/* Auto-detect user preference if consumer hasn't explicitly set a theme */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --ui-background: #071226;
+    --ui-text-primary: #e6eef8;
+    --ui-border: #132033;
+    --ui-surface: #071226;
+
+    --ui-button-bg: #2563eb;
+    --ui-button-color: #ffffff;
+
+    --primary: var(--ui-button-bg);
+    --background: var(--ui-button-color);
+    --secondary: var(--ui-secondary-bg);
+    --text-primary: var(--ui-text-primary);
+    --border: var(--ui-border);
+    --destructive: var(--ui-destructive);
+  }
+}
