@@ -3,6 +3,7 @@ import type { TabsContextType, TabsProps } from "./Tabs.types";
 import styles from "./Tabs.module.css";
 import { cn } from "../../utils/cn";
 const TabsContext = createContext<TabsContextType | undefined>(undefined);
+
 const Tabs = ({ defaultValue, children, className }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(defaultValue);
   return (
