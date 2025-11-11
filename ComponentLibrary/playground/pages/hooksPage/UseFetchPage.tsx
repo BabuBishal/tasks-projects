@@ -1,6 +1,6 @@
 import UseFetchDemo from "../../../src/modules/useFetch/useFetchDemo";
-import CodeBlock from "../../components/CodeBlock/CodeBlock";
-import Container from "../../components/Container/Container";
+import CodeBlock from "../../components/codeBlock/CodeBlock";
+import Container from "../../components/container/Container";
 
 const UseFetchPage = () => {
   return (

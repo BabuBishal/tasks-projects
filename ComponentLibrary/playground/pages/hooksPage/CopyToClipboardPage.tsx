@@ -1,6 +1,6 @@
-import Container from "../../components/Container/Container";
+import Container from "../../components/container/Container";
 import UseCopyToClipboardDemo from "../../../src/modules/useCopyToClipBoard/useCopyToClipboardDemo";
-import CodeBlock from "../../components/CodeBlock/CodeBlock";
+import CodeBlock from "../../components/codeBlock/CodeBlock";
 
 const CopyToClipboardPage = () => {
   return (

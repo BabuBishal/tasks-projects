@@ -21,7 +21,6 @@ const Sidebar = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // console.log(entry.target.id);
             navLinks.forEach((link) => {
               link.classList.toggle(
                 `${styles.active}`,

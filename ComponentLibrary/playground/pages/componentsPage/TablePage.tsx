@@ -1,6 +1,23 @@
-import Card from "../../../src/components/Card/Card";
-import Table from "../../../src/components/Table/Table";
-import Container from "../../components/Container/Container";
+import Table from "../../../src/components/table/Table";
+import CodeBlock from "../../components/codeBlock/CodeBlock";
+import Container from "../../components/container/Container";
+
+const TableCode = `<Table>
+  <Table.Header>
+    {column.map((col, i) => (
+      <Table.HeaderCell key={i}>{col}</Table.HeaderCell>
+    ))}
+  </Table.Header>
+  <Table.Body>
+    {row.map((row, rowIndex) => (
+      <Table.Row key={rowIndex}>
+        {row.map((cell, cellIndex) => (
+          <Table.Cell key={cellIndex}>{cell}</Table.Cell>
+        ))}
+      </Table.Row>
+    ))}
+  </Table.Body>
+</Table>`;
 
 const TablePage = ({ column, row }: any) => {
   return (
@@ -29,31 +46,7 @@ const TablePage = ({ column, row }: any) => {
             </Table.Body>
           </Table>
         }
-        codeContent={
-          <Card
-            title="Code Example"
-            content={
-              <pre>
-                <code>{` <Table>
-  <Table.Header>
-    {column.map((col, i) => (
-      <Table.HeaderCell key={i}>{col}</Table.HeaderCell>
-    ))}
-  </Table.Header>
-  <Table.Body>
-    {row.map((row, rowIndex) => (
-      <Table.Row key={rowIndex}>
-        {row.map((cell, cellIndex) => (
-          <Table.Cell key={cellIndex}>{cell}</Table.Cell>
-        ))}
-      </Table.Row>
-    ))}
-  </Table.Body>
-</Table>`}</code>
-              </pre>
-            }
-          />
-        }
+        codeContent={<CodeBlock code={TableCode} />}
       />
     </section>
   );

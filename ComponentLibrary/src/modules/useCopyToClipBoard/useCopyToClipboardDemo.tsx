@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useCopyToClipboard } from "../../../playground/hooks/useCopyToClipboard";
 import styles from "./useCopyToClipboardDemo.module.css";
-import { Button } from "../../components/Button/Button";
+import { Button } from "../../components/button/Button";
 
 export default function UseCopyToClipboardDemo() {
   const [text, setText] = useState("Copy this text!");

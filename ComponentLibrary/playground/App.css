@@ -1,12 +1,21 @@
 .App {
   position: relative;
   min-height: 100vh;
+  max-width: 1300px;
+  margin: auto;
+}
+
+.outlet-container {
+  margin-left: 250px;
+  padding: 1rem;
+  transition: all 0.3s ease;
 }
 .main {
-  max-width: 1300px;
+  max-width: 100vw;
   margin: auto;
   width: 100%;
   min-height: 90vh;
+  height: 100%;
   display: flex;
   gap: 2rem;
 }
@@ -73,4 +82,14 @@
 .custom2 {
   color: rgb(226, 43, 180);
   background-color: rgb(241, 226, 238);
+}
+
+@media (max-width: 780px) {
+  .outlet-container {
+    margin-left: 0;
+    max-width: 100vw;
+  }
+  main {
+    max-width: 100vw;
+  }
 }

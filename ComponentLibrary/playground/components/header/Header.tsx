@@ -1,5 +1,5 @@
-import Toggle from "../../../src/components/Toggle/Toggle";
-import { useTheme } from "../../context/ThemeContext";
+import Toggle from "../../../src/components/toggle/Toggle";
+import { useTheme } from "../../context/themeContext";
 import styles from "./Header.module.css";
 const Header = () => {
   const { theme, toggleTheme } = useTheme();

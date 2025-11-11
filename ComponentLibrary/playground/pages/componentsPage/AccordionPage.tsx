@@ -1,6 +1,34 @@
-import Accordion from "../../../src/components/Accordion/Accordion";
-import Card from "../../../src/components/Card/Card";
-import Container from "../../components/Container/Container";
+import Accordion from "../../../src/components/accordion/Accordion";
+import CodeBlock from "../../components/codeBlock/CodeBlock";
+import Container from "../../components/container/Container";
+
+const AccordionCode = `<Accordion defaultOpen="item1">
+  <Accordion.Item value="item1">
+    <Accordion.Header>What is your return policy?</Accordion.Header>
+    <Accordion.Content>
+      You can return any item within 30 days of purchase if it's
+      unused and in its original packaging.
+    </Accordion.Content>
+  </Accordion.Item>
+
+  <Accordion.Item value="item2">
+    <Accordion.Header>
+      Do you offer international shipping?
+    </Accordion.Header>
+    <Accordion.Content>
+      Yes, we ship worldwide! Shipping costs will vary depending on
+      your location and will be calculated at checkout.
+    </Accordion.Content>
+  </Accordion.Item>
+
+  <Accordion.Item value="item3">
+    <Accordion.Header>How can I track my order?</Accordion.Header>
+    <Accordion.Content>
+      Once your order has been shipped, you’ll receive an email with
+      a tracking number and link.
+    </Accordion.Content>
+  </Accordion.Item>
+</Accordion>`;
 
 const AccordionPage = () => {
   return (
@@ -42,42 +70,7 @@ const AccordionPage = () => {
             </Accordion.Item>
           </Accordion>
         }
-        codeContent={
-          <Card
-            title="Code Example"
-            content={
-              <pre>
-                <code>{`<Accordion defaultOpen="item1">
-  <Accordion.Item value="item1">
-    <Accordion.Header>What is your return policy?</Accordion.Header>
-    <Accordion.Content>
-      You can return any item within 30 days of purchase if it's
-      unused and in its original packaging.
-    </Accordion.Content>
-  </Accordion.Item>
-
-  <Accordion.Item value="item2">
-    <Accordion.Header>
-      Do you offer international shipping?
-    </Accordion.Header>
-    <Accordion.Content>
-      Yes, we ship worldwide! Shipping costs will vary depending on
-      your location and will be calculated at checkout.
-    </Accordion.Content>
-  </Accordion.Item>
-
-  <Accordion.Item value="item3">
-    <Accordion.Header>How can I track my order?</Accordion.Header>
-    <Accordion.Content>
-      Once your order has been shipped, you’ll receive an email with
-      a tracking number and link.
-    </Accordion.Content>
-  </Accordion.Item>
-</Accordion>`}</code>
-              </pre>
-            }
-          />
-        }
+        codeContent={<CodeBlock code={AccordionCode} />}
       />
     </section>
   );

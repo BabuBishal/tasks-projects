@@ -1,5 +1,8 @@
-import Card from "../../../src/components/Card/Card";
-import Container from "../../components/Container/Container";
+import Card from "../../../src/components/card/Card";
+import CodeBlock from "../../components/codeBlock/CodeBlock";
+import Container from "../../components/container/Container";
+
+const CardCode = `<Card title="Card Title" content="This is a simple card." />`;
 
 const CardsPage = () => {
   return (
@@ -14,16 +17,7 @@ const CardsPage = () => {
             <Card title="Card Title" content="This is a simple card." />
           </>
         }
-        codeContent={
-          <Card
-            title="Code Example"
-            content={
-              <pre>
-                <code>{`<Card title="Card Title" content="This is a simple card." />`}</code>
-              </pre>
-            }
-          />
-        }
+        codeContent={<CodeBlock code={CardCode} />}
       />
     </section>
   );

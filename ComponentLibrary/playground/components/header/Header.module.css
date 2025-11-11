@@ -7,6 +7,7 @@
   color: var(--text-primary);
 }
 .navbar {
+  padding: 0 1rem;
   max-width: 1300px;
   margin: auto;
   width: 100%;

@@ -1,7 +1,14 @@
-import React from "react";
-import Container from "../../components/Container/Container";
+import Container from "../../components/container/Container";
 import UseToggleDemo from "../../../src/modules/useToggle/useToggleDemo";
-import CodeBlock from "../../components/CodeBlock/CodeBlock";
+import CodeBlock from "../../components/codeBlock/CodeBlock";
+const UseToggleCode = `const [isOn, toggle] = useToggle(false);
+
+return (
+  <div>
+    <p>Toggle state: {isOn ? "ON" : "OFF"}</p>
+    <button onClick={toggle}>Toggle</button>
+  </div>
+);`;
 
 const UseTogglePage = () => {
   return (
@@ -11,18 +18,7 @@ const UseTogglePage = () => {
         title="useToggle"
         desc="Simple toggle component using useToggle hook"
         content={<UseToggleDemo />}
-        codeContent={
-          <CodeBlock
-            code={`const [isOn, toggle] = useToggle(false);
-
-return (
-  <div>
-    <p>Toggle state: {isOn ? "ON" : "OFF"}</p>
-    <button onClick={toggle}>Toggle</button>
-  </div>
-);`}
-          />
-        }
+        codeContent={<CodeBlock code={UseToggleCode} />}
       />
     </section>
   );

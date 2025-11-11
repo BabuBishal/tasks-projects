@@ -1,5 +1,5 @@
 import { useToggle } from "../../../playground/hooks/useToggle";
-import { Button } from "../../components/Button/Button";
+import { Button } from "../../components/button/Button";
 import styles from "./useToggleDemo.module.css";
 
 const UseToggleDemo = () => {
