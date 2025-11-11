@@ -1,4 +1,9 @@
 .header {
+  position: fixed;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,4 +40,38 @@
     color: var(--text-secondary);
   }
   cursor: pointer;
+}
+
+.menuButton {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  padding: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.menuButton:hover {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 1034px) {
+  .menuButton {
+    display: block;
+  }
+
+  .navmenu {
+    display: none;
+  }
+  .headerIcon {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerIcon {
+    font-size: 1.1rem;
+  }
 }
