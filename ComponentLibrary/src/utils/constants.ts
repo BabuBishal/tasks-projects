@@ -57,10 +57,14 @@ export const customHooksList = [
     title: "useFetch",
     href: "#useFetch",
   },
-  // {
-  //   title: "useLocalStorage",
-  //   href: "#useLocalStorage",
-  // },
+  {
+    title: "useLocalStorage",
+    href: "#useLocalStorage",
+  },
+  {
+    title: "useIntersectionObserver",
+    href: "#useIntersectionObserver",
+  },
 ];
 
 export const column = ["S.N", "Name", "Email"];

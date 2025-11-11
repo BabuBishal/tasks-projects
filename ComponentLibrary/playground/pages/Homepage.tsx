@@ -1,4 +1,3 @@
-
 import { column, row } from "../../src/utils/constants";
 import ButtonPage from "./componentsPage/ButtonPage";
 import BadgePage from "./componentsPage/BadgePage";
@@ -12,6 +11,8 @@ import UseTogglePage from "./hooksPage/UseTogglePage";
 import CopyToClipboardPage from "./hooksPage/CopyToClipboardPage";
 import UseFetchPage from "./hooksPage/UseFetchPage";
 import InstallationPage from "./componentsPage/InstallationPage";
+import UseLocalStoragePage from "./hooksPage/UseLocalStoragePage";
+import UseIntersectionObserverPage from "./hooksPage/UseIntersectionObserverPage";
 
 const Homepage = () => {
   return (
@@ -47,6 +48,8 @@ const Homepage = () => {
 
       <CopyToClipboardPage />
       <UseFetchPage />
+      <UseLocalStoragePage />
+      <UseIntersectionObserverPage />
     </div>
   );
 };

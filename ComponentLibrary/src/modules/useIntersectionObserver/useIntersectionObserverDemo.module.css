@@ -1,0 +1,25 @@
+.demoCard {
+  padding: 2rem;
+  border-radius: 1rem;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.7s ease;
+  border: 1px solid var(--border);
+}
+
+.visible.demoCard {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.demoContainer {
+  display: grid;
+  gap: 18px;
+}
+
+.title {
+  color: var(--text-primary);
+}
+.desc {
+  color: var(--text-secondary);
+}
