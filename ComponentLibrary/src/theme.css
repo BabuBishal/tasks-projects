@@ -1,7 +1,4 @@
-/* Default theme tokens for the UI library
-   Consumers can import this file to get sensible defaults and dark mode support.
-   Tokens are namespaced with --ui- to reduce collisions. Legacy tokens are aliased
-   for backward compatibility. */
+/* Default theme tokens for the UI library */
 :root {
   /* Core tokens */
   --ui-background: #ffffff;
@@ -21,6 +18,23 @@
 
   --ui-destructive: #ef4444;
   --ui-destructive-contrast: #ffffff;
+
+  /* Badge tokens */
+  --ui-badge-bg: #f3f4f6;
+  --ui-badge-color: #64748b;
+  --ui-badge-success-bg: #ecfdf5;
+  --ui-badge-success-color: #059669;
+  --ui-badge-warning-bg: #fffbeb;
+  --ui-badge-warning-color: #b45309;
+  --ui-badge-info-bg: #eef2ff;
+  --ui-badge-info-color: #3730a3;
+  --ui-badge-danger-bg: #ffebe9;
+  --ui-badge-danger-color: #ef4444;
+  --ui-badge-border: 1px solid rgba(15, 23, 42, 0.06);
+  --ui-badge-success-border: 1px solid rgba(5, 150, 105, 0.12);
+  --ui-badge-warning-border: 1px solid rgba(212, 125, 21, 0.12);
+  --ui-badge-info-border: 1px solid rgba(55, 48, 163, 0.12);
+  --ui-badge-danger-border: 1px solid rgba(239, 68, 68, 0.12);
 
   /* Aliases for legacy variable names used in the project */
   --primary: var(--ui-button-bg);
@@ -51,6 +65,24 @@
   --ui-destructive: #ef4444;
   --ui-destructive-contrast: #ffffff;
 
+  /* Badge tokens for dark */
+  --ui-badge-bg: #0f172a;
+  --ui-badge-color: #9fb6d9;
+  --ui-badge-success-bg: #08332a;
+  --ui-badge-success-color: #9ee7c8;
+  --ui-badge-warning-bg: #33210a;
+  --ui-badge-warning-color: #ffd8a8;
+  --ui-badge-info-bg: #0b1736;
+  --ui-badge-info-color: #cfe7ff;
+  --ui-badge-danger-bg: #2a0b0b;
+  --ui-badge-danger-color: #ffb4b4;
+
+  --ui-badge-border: 1px solid rgba(255, 255, 255, 0.04);
+  --ui-badge-success-border: 1px solid rgba(158, 231, 200, 0.06);
+  --ui-badge-warning-border: 1px solid rgba(255, 216, 168, 0.06);
+  --ui-badge-info-border: 1px solid rgba(207, 231, 255, 0.06);
+  --ui-badge-danger-border: 1px solid rgba(255, 180, 180, 0.06);
+
   /* Legacy aliases for dark */
   --primary: var(--ui-button-bg);
   --background: var(--ui-button-color);
@@ -72,6 +104,22 @@
     --ui-button-bg: #2563eb;
     --ui-button-color: #ffffff;
 
+    /* badge aliases for prefers-color-scheme fallback */
+    --ui-badge-bg: #0f172a;
+    --ui-badge-color: #9fb6d9;
+    --ui-badge-success-bg: #08332a;
+    --ui-badge-success-color: #9ee7c8;
+    --ui-badge-warning-bg: #33210a;
+    --ui-badge-warning-color: #ffd8a8;
+    --ui-badge-info-bg: #0b1736;
+    --ui-badge-info-color: #cfe7ff;
+    --ui-badge-danger-bg: #2a0b0b;
+    --ui-badge-danger-color: #ffb4b4;
+    --ui-badge-border: 1px solid rgba(255, 255, 255, 0.04);
+    --ui-badge-success-border: 1px solid rgba(158, 231, 200, 0.06);
+    --ui-badge-warning-border: 1px solid rgba(255, 216, 168, 0.06);
+    --ui-badge-info-border: 1px solid rgba(207, 231, 255, 0.06);
+    --ui-badge-danger-border: 1px solid rgba(255, 180, 180, 0.06);
     --primary: var(--ui-button-bg);
     --background: var(--ui-button-color);
     --secondary: var(--ui-secondary-bg);

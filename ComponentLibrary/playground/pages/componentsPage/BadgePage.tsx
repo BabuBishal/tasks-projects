@@ -52,8 +52,8 @@ const BadgePage = () => {
         desc="Custom badge styling"
         content={
           <>
-            <Badge text="Custom 1" className="custom1" />
-            <Badge text="Custom 2" className="custom2" />
+            <Badge unstyled text="Custom 1" className="custom1" />
+            <Badge unstyled text="Custom 2" className="custom2" />
           </>
         }
         codeContent={<CodeBlock code={BadgeCustomCode} />}
