@@ -2,20 +2,7 @@ import Container from "../../components/container/Container";
 import UseCopyToClipboardDemo from "../../../src/modules/useCopyToClipBoard/useCopyToClipboardDemo";
 import CodeBlock from "../../components/codeBlock/CodeBlock";
 
-const CopyToClipboardPage = () => {
-  return (
-    <section
-      id="useCopyToClipboard"
-      className="section copyToClipboard-section"
-    >
-      <h2 className="section-heading">UseCopyToClipboard hook</h2>
-      <Container
-        title="useCopyToClipboard"
-        desc="Hook to copy text to clipboard"
-        content={<UseCopyToClipboardDemo />}
-        codeContent={
-          <CodeBlock
-            code={` const [text, setText] = useState("Copy this text!");
+const CopyToClipboardCode = `const [text, setText] = useState("Copy this text!");
   const { copiedText, copy } = useCopyToClipboard();
 
   return (
@@ -30,10 +17,26 @@ const CopyToClipboardPage = () => {
         {copiedText === text ? "Copied!" : "Copy"}
       </Button>
     </div>
-  );`}
-          />
-        }
-      />
+  );`;
+
+const CopyToClipboardPage = () => {
+  return (
+    <section
+      id="useCopyToClipboard"
+      className="section copyToClipboard-section"
+    >
+      <h2 className="section-heading">UseCopyToClipboard hook</h2>
+      <Container
+        title="useCopyToClipboard"
+        desc="Hook to copy text to clipboard"
+      >
+        <Container.content>
+          <UseCopyToClipboardDemo />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={CopyToClipboardCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };

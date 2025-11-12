@@ -33,7 +33,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       keyRef.current = key;
       setStoredValue(initialValue);
     }
-    // intentionally depend on key and initialValue
+    // depend on key and initialValue
   }, [key, initialValue]);
 
   const setValue = useCallback((value: T | ((prev: T) => T)) => {

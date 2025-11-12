@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  type ReactNode,
+} from "react";
 import type { TabsContextType, TabsProps } from "./Tabs.types";
 import styles from "./Tabs.module.css";
 import { cn } from "../../utils/cn";
@@ -29,9 +35,13 @@ export const Trigger = ({
 
   const isActive = context.activeTab === value;
 
+  const tabChange = useCallback(() => {
+    context.setActiveTab(value);
+  }, [value]);
+
   return (
     <button
-      onClick={() => context.setActiveTab(value)}
+      onClick={tabChange}
       className={cn(styles.tabTrigger, isActive && styles.active)}
     >
       {children}

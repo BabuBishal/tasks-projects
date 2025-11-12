@@ -38,59 +38,53 @@ const FormElementsPage = () => {
       <h4 className="section-desc">
         Input fields, selects, and other form controls
       </h4>
-      <Container
-        title="Text Inputs"
-        desc="Standard text input fields"
-        content={
-          <>
-            <Input label="Email" placeholder="Enter email ..." type="email" />
-            <Input
-              label="Password"
-              placeholder="Enter password ..."
-              type="password"
-            />
-          </>
-        }
-        codeContent={<CodeBlock code={TextInputCode} />}
-      />
-      <Container
-        title="Text Area"
-        desc="Multi-line text inputs"
-        content={
+      <Container title="Text Inputs" desc="Standard text input fields">
+        <Container.content>
+          <Input label="Email" placeholder="Enter email ..." type="email" />
+          <Input
+            label="Password"
+            placeholder="Enter password ..."
+            type="password"
+          />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={TextInputCode} />
+        </Container.code>
+      </Container>
+      <Container title="Text Area" desc="Multi-line text inputs">
+        <Container.content>
           <Textarea label="Message" placeholder="Enter your message..." />
-        }
-        codeContent={<CodeBlock code={TextAreaCode} />}
-      />
-      <Container
-        title="Checkbox"
-        desc="Checkbox inputs"
-        content={
-          <>
-            <Checkbox label="Accept terms and conditions" />
-            <Checkbox label="Subscribe to the newsletter" />
-          </>
-        }
-        codeContent={<CodeBlock code={CheckboxCode} />}
-      />
-      <Container
-        title="Select"
-        desc="Dropdown selection"
-        content={
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={TextAreaCode} />
+        </Container.code>
+      </Container>
+      <Container title="Checkbox" desc="Checkbox inputs">
+        <Container.content>
+          <Checkbox label="Accept terms and conditions" />
+          <Checkbox label="Subscribe to the newsletter" />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={CheckboxCode} />
+        </Container.code>
+      </Container>
+      <Container title="Select" desc="Dropdown selection">
+        <Container.content>
           <Select label="Framework" optionList={["React", "Vue", "Angular"]} />
-        }
-        codeContent={<CodeBlock code={SelectCode} />}
-      />
-      <Container
-        title="Switch"
-        desc="Toggle switch"
-        content={
-          <>
-            <Toggle label="Enable Notifications" />
-            <Toggle checkedText="☀️" uncheckedText="🌙" />
-          </>
-        }
-        codeContent={<CodeBlock code={ToggleCode} />}
-      />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={SelectCode} />
+        </Container.code>
+      </Container>
+      <Container title="Switch" desc="Toggle switch">
+        <Container.content>
+          <Toggle label="Enable Notifications" />
+          <Toggle checkedText="☀️" uncheckedText="🌙" />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={ToggleCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };

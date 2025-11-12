@@ -47,9 +47,14 @@ const UseLocalStoragePage = () => {
       <Container
         title="useLocalStorage"
         desc="Custom hook for storing, updating or removing data from local storage"
-        content={<UseLocalStorageDemo />}
-        codeContent={<CodeBlock code={UseLocalStorageCode} />}
-      />
+      >
+        <Container.content>
+          <UseLocalStorageDemo />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={UseLocalStorageCode} />
+        </Container.code>{" "}
+      </Container>
     </section>
   );
 };

@@ -10,10 +10,11 @@ const InstallationPage = () => {
       <Container
         title="Installation guide"
         desc="Step by step guide to use the different components of the UI library"
-        content={
+      >
+        <Container.content>
           "This feature is not complete yet. Please wait for future updates..."
-        }
-      />
+        </Container.content>
+      </Container>
     </section>
   );
 };

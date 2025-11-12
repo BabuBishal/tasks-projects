@@ -17,9 +17,14 @@ const UseTogglePage = () => {
       <Container
         title="useToggle"
         desc="Simple toggle component using useToggle hook"
-        content={<UseToggleDemo />}
-        codeContent={<CodeBlock code={UseToggleCode} />}
-      />
+      >
+        <Container.content>
+          <UseToggleDemo />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={UseToggleCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };

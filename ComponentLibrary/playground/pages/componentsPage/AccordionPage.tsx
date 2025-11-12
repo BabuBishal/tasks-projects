@@ -41,7 +41,8 @@ const AccordionPage = () => {
         title="Accordion"
         desc="Displays information in collapsible sections. Click a header
         to expand or collapse its content."
-        content={
+      >
+        <Container.content>
           <Accordion defaultOpen="item1">
             <Accordion.Item value="item1">
               <Accordion.Header>What is your return policy?</Accordion.Header>
@@ -69,9 +70,11 @@ const AccordionPage = () => {
               </Accordion.Content>
             </Accordion.Item>
           </Accordion>
-        }
-        codeContent={<CodeBlock code={AccordionCode} />}
-      />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={AccordionCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };

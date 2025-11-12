@@ -5,6 +5,9 @@ const useIntersectionObserverDemo = () => {
   const entries = useIntersectionObserver({
     threshold: 0.2,
     selector: "[data-intersect]",
+    // onChange: (entries) => {
+    //   console.log("Intersection entries changed:", entries);
+    // },
   });
   return (
     <div className={styles.demoContainer}>
@@ -20,9 +23,7 @@ const useIntersectionObserverDemo = () => {
             className={`${styles.demoCard} ${isVisible ? styles.visible : ""}`}
           >
             <h3 className={styles.title}>Card {n}</h3>
-            <p className={styles.desc}>
-              This card fades in when visible.
-            </p>
+            <p className={styles.desc}>This card fades in when visible.</p>
           </div>
         );
       })}

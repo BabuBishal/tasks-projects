@@ -25,10 +25,8 @@ const TablePage = ({ column, row }: any) => {
       <h2 className="section-heading">Tables</h2>
       <h4 className="section-desc">Table element for displaying content</h4>
 
-      <Container
-        title="Table"
-        desc="Table component for displaying data"
-        content={
+      <Container title="Table" desc="Table component for displaying data">
+        <Container.content>
           <Table>
             <Table.Header>
               {column.map((col: any, i: number) => (
@@ -45,9 +43,11 @@ const TablePage = ({ column, row }: any) => {
               ))}
             </Table.Body>
           </Table>
-        }
-        codeContent={<CodeBlock code={TableCode} />}
-      />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={TableCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };

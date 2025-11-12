@@ -1,3 +1,4 @@
+import { memo } from "react";
 import styles from "./CodeBlock.module.css";
 const CodeBlock = ({ code }: { code: string }) => {
   return (
@@ -8,4 +9,4 @@ const CodeBlock = ({ code }: { code: string }) => {
   );
 };
 
-export default CodeBlock;
+export default memo(CodeBlock);

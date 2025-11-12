@@ -39,9 +39,14 @@ const UseIntersectionObserverPage = () => {
       <Container
         title="useIntersectionObserver"
         desc="Custom hook to observe visibility of elements within the viewport"
-        content={<UseIntersectionObserverDemo />}
-        codeContent={<CodeBlock code={UseIntersectionObserverCode} />}
-      />
+      >
+        <Container.content>
+          <UseIntersectionObserverDemo />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={UseIntersectionObserverCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };

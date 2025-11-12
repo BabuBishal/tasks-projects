@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 type IntersectionObserverArgs = {
   selector?: string; // which elements to observe
@@ -6,6 +6,7 @@ type IntersectionObserverArgs = {
   rootMargin?: string;
   threshold?: number | number[];
   triggerOnce?: boolean;
+  onChange?: (entries: IntersectionObserverEntry[]) => void;
 };
 
 export function useIntersectionObserver({
@@ -14,12 +15,22 @@ export function useIntersectionObserver({
   rootMargin = "0px",
   threshold = 0.1,
   triggerOnce = false,
+  onChange, 
 }: IntersectionObserverArgs = {}) {
   const [entries, setEntries] = useState<IntersectionObserverEntry[]>([]);
+
+  // Ref to hold the latest onChange function, preventing the main effect from re-running
+  const onChangeRef = useRef(onChange);
+
+  // Keep the onChangeRef current with the latest function passed from the parent
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]); // This effect runs only when the onChange function changes
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (observedEntries) => {
+        // Update the component state
         setEntries((prev) => {
           const updated = [...prev];
           observedEntries.forEach((entry) => {
@@ -30,6 +41,13 @@ export function useIntersectionObserver({
           return updated;
         });
 
+        // Call the provided callback function immediately
+        // Use the ref to access the latest function
+        if (onChangeRef.current) {
+          onChangeRef.current(observedEntries);
+        }
+
+        // Handle triggerOnce logic
         if (triggerOnce) {
           observedEntries.forEach((entry) => {
             if (entry.isIntersecting) observer.unobserve(entry.target);
@@ -46,6 +64,7 @@ export function useIntersectionObserver({
       elements.forEach((el) => observer.unobserve(el));
       observer.disconnect();
     };
+
   }, [selector, root, rootMargin, threshold, triggerOnce]);
 
   return entries;

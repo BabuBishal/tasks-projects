@@ -19,6 +19,13 @@
   --ui-destructive: #ef4444;
   --ui-destructive-contrast: #ffffff;
 
+  /* Form input tokens */
+  --ui-focus: #2563eb;
+  --ui-danger: #ef4444;
+  --ui-input-disabled-bg: #f3f4f6;
+  --ui-input-disabled-text: #9ca3af;
+  --ui-input-disabled-border: #e5e7eb;
+
   /* Badge tokens */
   --ui-badge-bg: #f3f4f6;
   --ui-badge-color: #64748b;
@@ -65,6 +72,13 @@
   --ui-destructive: #ef4444;
   --ui-destructive-contrast: #ffffff;
 
+  /* Form input tokens for dark mode */
+  --ui-focus: #3b82f6;
+  --ui-danger: #ef4444;
+  --ui-input-disabled-bg: #0f172a;
+  --ui-input-disabled-text: #6b7280;
+  --ui-input-disabled-border: #1e293b;
+
   /* Badge tokens for dark */
   --ui-badge-bg: #0f172a;
   --ui-badge-color: #9fb6d9;
@@ -103,6 +117,13 @@
 
     --ui-button-bg: #2563eb;
     --ui-button-color: #ffffff;
+
+    /* form input tokens for prefers-color-scheme */
+    --ui-focus: #3b82f6;
+    --ui-danger: #ef4444;
+    --ui-input-disabled-bg: #0f172a;
+    --ui-input-disabled-text: #6b7280;
+    --ui-input-disabled-border: #1e293b;
 
     /* badge aliases for prefers-color-scheme fallback */
     --ui-badge-bg: #0f172a;

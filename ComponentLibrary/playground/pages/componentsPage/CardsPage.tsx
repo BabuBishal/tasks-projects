@@ -9,16 +9,14 @@ const CardsPage = () => {
     <section id="cards" className="section card-section">
       <h2 className="section-heading">Cards</h2>
       <h4 className="section-desc">Card elements for displaying content</h4>
-      <Container
-        title="Card"
-        desc="Simple card component"
-        content={
-          <>
-            <Card title="Card Title" content="This is a simple card." />
-          </>
-        }
-        codeContent={<CodeBlock code={CardCode} />}
-      />
+      <Container title="Card" desc="Simple card component">
+        <Container.content>
+          <Card title="Card Title" content="This is a simple card." />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={CardCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };

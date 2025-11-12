@@ -13,15 +13,22 @@ const LoadersPage = () => {
       <Container
         title="Loading Dots"
         desc="Animated loading dots for loading state"
-        content={<LoadingDots />}
-        codeContent={<CodeBlock code={LoadingDotsCode} />}
-      />
-      <Container
-        title="Spinner"
-        desc="Animated spinner for loading state"
-        content={<Spinner />}
-        codeContent={<CodeBlock code={SpinnerCode} />}
-      />
+      >
+        <Container.content>
+          <LoadingDots />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={LoadingDotsCode} />
+        </Container.code>
+      </Container>
+      <Container title="Spinner" desc="Animated spinner for loading state">
+        <Container.content>
+          <Spinner />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={SpinnerCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };

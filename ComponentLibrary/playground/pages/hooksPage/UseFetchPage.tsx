@@ -2,17 +2,7 @@ import UseFetchDemo from "../../../src/modules/useFetch/useFetchDemo";
 import CodeBlock from "../../components/codeBlock/CodeBlock";
 import Container from "../../components/container/Container";
 
-const UseFetchPage = () => {
-  return (
-    <section id="useFetch" className="section useFetch-section">
-      <h2 className="section-heading">UseFetch hook</h2>
-      <Container
-        title="useFetch"
-        desc="Custom hook for fetching data from an API"
-        content={<UseFetchDemo />}
-        codeContent={
-          <CodeBlock
-            code={`  const { data, loading, error } = useFetch<any>("https://jsonplaceholder.typicode.com/posts/1");
+const FetchCode = `const { data, loading, error } = useFetch<any>("https://jsonplaceholder.typicode.com/posts/1");
 
   return (
     <div className={styles.hookDemo}>
@@ -26,10 +16,23 @@ const UseFetchPage = () => {
         </div>
       )}
     </div>
-  );`}
-          />
-        }
-      />
+  );`;
+
+const UseFetchPage = () => {
+  return (
+    <section id="useFetch" className="section useFetch-section">
+      <h2 className="section-heading">UseFetch hook</h2>
+      <Container
+        title="useFetch"
+        desc="Custom hook for fetching data from an API"
+      >
+        <Container.content>
+          <UseFetchDemo />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={FetchCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Tabs from "../../../src/components/tab/Tabs";
 import CodeBlock from "../../components/codeBlock/CodeBlock";
 
@@ -29,28 +30,37 @@ const TabsPage = () => {
       <Container
         title="Tab components"
         desc="Tab components for different tab contents"
-        content={
-          <Tabs defaultValue="Recommended">
-            <Tabs.List>
-              <Tabs.Trigger value="Recommended">Recommended</Tabs.Trigger>
-              <Tabs.Trigger value="Popular">Popular</Tabs.Trigger>
-              <Tabs.Trigger value="New">New</Tabs.Trigger>
-            </Tabs.List>
-            <Tabs.Content value="Recommended">
-              <p>This is the Recommended tab content.</p>
-            </Tabs.Content>
-            <Tabs.Content value="Popular">
-              <p>This is the Popular tab content.</p>
-            </Tabs.Content>
-            <Tabs.Content value="New">
-              <p>This is the New tab content.</p>
-            </Tabs.Content>
-          </Tabs>
-        }
-        codeContent={<CodeBlock code={TabsCode} />}
-      />
+        // content={<Content />}
+        // codeContent={<CodeBlock code={TabsCode} />}
+      >
+        <Container.content>
+          <Content />
+        </Container.content>
+        <Container.code>
+          <CodeBlock code={TabsCode} />
+        </Container.code>
+      </Container>
     </section>
   );
 };
+
+const Content = () => (
+  <Tabs defaultValue="Recommended">
+    <Tabs.List>
+      <Tabs.Trigger value="Recommended">Recommended</Tabs.Trigger>
+      <Tabs.Trigger value="Popular">Popular</Tabs.Trigger>
+      <Tabs.Trigger value="New">New</Tabs.Trigger>
+    </Tabs.List>
+    <Tabs.Content value="Recommended">
+      <p>This is the Recommended tab content.</p>
+    </Tabs.Content>
+    <Tabs.Content value="Popular">
+      <p>This is the Popular tab content.</p>
+    </Tabs.Content>
+    <Tabs.Content value="New">
+      <p>This is the New tab content.</p>
+    </Tabs.Content>
+  </Tabs>
+);
 
 export default TabsPage;
