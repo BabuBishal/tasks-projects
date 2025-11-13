@@ -1,7 +1,7 @@
 .demoCard {
   padding: 2rem;
   border-radius: 1rem;
-  opacity: 0;
+  opacity: 0.7;
   transform: translateY(40px);
   transition: all 0.7s ease;
   border: 1px solid var(--border);

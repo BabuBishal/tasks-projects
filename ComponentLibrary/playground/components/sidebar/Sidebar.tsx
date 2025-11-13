@@ -5,7 +5,7 @@ import {
   customHooksList,
 } from "../../../src/utils/constants";
 import { useEffect } from "react";
-import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
+import { useIntersectionObserverNoRef } from "../../hooks/useIntersectionObserver";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -13,7 +13,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isOpen = false, onClose }: SidebarProps) => {
-  const entries = useIntersectionObserver({
+  const entries = useIntersectionObserverNoRef({
     selector: "section[id]",
     threshold: 0.1,
   });

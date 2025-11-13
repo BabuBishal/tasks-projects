@@ -1,4 +1,3 @@
-import { memo } from "react";
 import Tabs from "../../../src/components/tab/Tabs";
 import CodeBlock from "../../components/codeBlock/CodeBlock";
 

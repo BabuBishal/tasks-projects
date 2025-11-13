@@ -3,6 +3,7 @@ import { useState } from "react";
 import "./App.css";
 import Header from "./components/header/Header";
 import Sidebar from "./components/sidebar/Sidebar";
+import { ToastProvider } from "../src/components/toast";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -11,15 +12,17 @@ function App() {
   const closeSidebar = () => setSidebarOpen(false);
 
   return (
-    <div className="App">
-      <Header onMenuClick={toggleSidebar} />
-      <main className="main">
-        <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
-        <div className="outlet-container">
-          <Outlet />
-        </div>
-      </main>
-    </div>
+    <ToastProvider>
+      <div className="App">
+        <Header onMenuClick={toggleSidebar} />
+        <main className="main">
+          <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
+          <div className="outlet-container">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+    </ToastProvider>
   );
 }
 

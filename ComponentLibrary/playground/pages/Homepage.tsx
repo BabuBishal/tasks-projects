@@ -13,6 +13,10 @@ import UseFetchPage from "./hooksPage/UseFetchPage";
 import InstallationPage from "./componentsPage/InstallationPage";
 import UseLocalStoragePage from "./hooksPage/UseLocalStoragePage";
 import UseIntersectionObserverPage from "./hooksPage/UseIntersectionObserverPage";
+import ToastPage from "./componentsPage/ToastPage";
+import UseWindowSizePage from "./hooksPage/WindowSizePage";
+import ModalPage from "./componentsPage/ModalPage";
+import TimeoutPage from "./hooksPage/TimeoutPage";
 
 const Homepage = () => {
   return (
@@ -33,7 +37,8 @@ const Homepage = () => {
       <CardsPage />
 
       <TablePage column={column} row={row} />
-
+      <ToastPage />
+      <ModalPage />
       <LoadersPage />
 
       <TabsPage />
@@ -50,6 +55,8 @@ const Homepage = () => {
       <UseFetchPage />
       <UseLocalStoragePage />
       <UseIntersectionObserverPage />
+      <UseWindowSizePage />
+      <TimeoutPage />
     </div>
   );
 };

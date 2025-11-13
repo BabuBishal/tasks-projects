@@ -20,6 +20,14 @@ export const componentList = [
     href: "#tables",
   },
   {
+    component: "Toast",
+    href: "#toast",
+  },
+  {
+    component: "Modal",
+    href: "#modal",
+  },
+  {
     component: "Loading Elements",
     href: "#loading",
   },
@@ -64,6 +72,14 @@ export const customHooksList = [
   {
     title: "useIntersectionObserver",
     href: "#useIntersectionObserver",
+  },
+  {
+    title: "useWindowSize",
+    href: "#useWindowSize",
+  },
+  {
+    title: "useTimeout",
+    href: "#useTimeout",
   },
 ];
 

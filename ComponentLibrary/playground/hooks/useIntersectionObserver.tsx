@@ -6,26 +6,26 @@ type IntersectionObserverArgs = {
   rootMargin?: string;
   threshold?: number | number[];
   triggerOnce?: boolean;
-  onChange?: (entries: IntersectionObserverEntry[]) => void;
+  onIntersection?: (entries: IntersectionObserverEntry[]) => void;
 };
 
-export function useIntersectionObserver({
+export function useIntersectionObserverNoRef({
   selector = "",
   root = null,
   rootMargin = "0px",
   threshold = 0.1,
   triggerOnce = false,
-  onChange, 
+  onIntersection,
 }: IntersectionObserverArgs = {}) {
   const [entries, setEntries] = useState<IntersectionObserverEntry[]>([]);
 
-  // Ref to hold the latest onChange function, preventing the main effect from re-running
-  const onChangeRef = useRef(onChange);
+  // Ref to hold the latest onIntersection function, preventing the main effect from re-running
+  const onIntersectionRef = useRef(onIntersection);
 
-  // Keep the onChangeRef current with the latest function passed from the parent
+  // Keep the onIntersectionRef current with the latest function passed from the parent
   useEffect(() => {
-    onChangeRef.current = onChange;
-  }, [onChange]); // This effect runs only when the onChange function changes
+    onIntersectionRef.current = onIntersection;
+  }, [onIntersection]); // This effect runs only when the onIntersection function changes
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -41,10 +41,9 @@ export function useIntersectionObserver({
           return updated;
         });
 
-        // Call the provided callback function immediately
         // Use the ref to access the latest function
-        if (onChangeRef.current) {
-          onChangeRef.current(observedEntries);
+        if (onIntersectionRef.current) {
+          onIntersectionRef.current(observedEntries);
         }
 
         // Handle triggerOnce logic
@@ -64,7 +63,6 @@ export function useIntersectionObserver({
       elements.forEach((el) => observer.unobserve(el));
       observer.disconnect();
     };
-
   }, [selector, root, rootMargin, threshold, triggerOnce]);
 
   return entries;

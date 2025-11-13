@@ -1,6 +1,7 @@
 import Container from "../../components/container/Container";
 import Badge from "../../../src/components/badges/Badges";
 import CodeBlock from "../../components/codeBlock/CodeBlock";
+import useWindowSize from "../../hooks/useWindowSize";
 
 const BadgeVariantCode = `<Badge text="Success" variant="success" />
 <Badge variant="warning" text="Warning" />
@@ -15,6 +16,8 @@ const BadgeCustomCode = `<Badge unstyled text="Custom 1" className="custom1" />
 <Badge unstyled text="Custom 2" className="custom2" />`;
 
 const BadgePage = () => {
+  const windowSize = useWindowSize();
+  console.log("first", windowSize);
   return (
     <section id="badges" className="section badge-section">
       <h2 className="section-heading">Badges</h2>
