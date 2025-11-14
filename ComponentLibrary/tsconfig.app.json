@@ -24,5 +24,11 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "src/shared/ui", "utils"]
+  "include": [
+    "app/docs/src",
+    "packages/ui/src/components",
+    "packages/ui/src/utils",
+    "packages/ui/src/hooks",
+    "packages/ui/src/index.ts"
+  ]
 }

@@ -1,7 +1,16 @@
+// {
+//   "files": [],
+//   "references": [
+//     { "path": "./tsconfig.app.json" },
+//     { "path": "./tsconfig.node.json" }
+//   ]
+// }
+
 {
   "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "references": [{ "path": "./packages/ui" }, { "path": "./app/docs" }],
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true
+  }
 }
