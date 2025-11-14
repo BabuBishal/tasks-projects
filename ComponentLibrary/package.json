@@ -7,8 +7,12 @@
   ],
   "scripts": {
     "build": "pnpm -r build",
-    "dev": "pnpm -C apps/docs dev",
+    "dev": "pnpm -C app/docs dev",
     "lint": "pnpm -r lint",
     "format": "pnpm -r format"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "vite-plugin-static-copy": "^3.1.4"
   }
 }

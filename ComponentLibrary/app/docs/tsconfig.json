@@ -4,6 +4,8 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "target": "ESNext",
+    "outDir": "dist",
+    "rootDir": "src",
     "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {

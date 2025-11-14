@@ -2,8 +2,8 @@ import { Outlet } from "react-router-dom";
 import { useState } from "react";
 import "./App.css";
 import Sidebar from "./shared/templates/sidebar/Sidebar";
-import { ToastProvider } from "../../../packages/ui/src/components/toast";
 import Header from "./shared/templates/header/Header";
+import { ToastProvider } from "@ui/components/toast";
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -38,43 +38,42 @@ const TimeoutPage = lazy(() => import("./hooksPage/TimeoutPage"));
 const Homepage = () => {
   const tableData = useMemo(() => ({ column, row }), []);
   return (
-    <div>hello</div>
-    // <div className="homepage">
-    //   <section id="introduction" className="section intro-section">
-    //     <h2 className="main-title">UI Component Library</h2>
-    //     <h4 className="main-desc">
-    //       A comprehensive collection of beautiful, accessible, and customizable
-    //       UI components built with React
-    //     </h4>
-    //   </section>
+    <div className="homepage">
+      <section id="introduction" className="section intro-section">
+        <h2 className="main-title">UI Component Library</h2>
+        <h4 className="main-desc">
+          A comprehensive collection of beautiful, accessible, and customizable
+          UI components built with React
+        </h4>
+      </section>
 
-    //   <InstallationPage />
-    //   <ButtonPage />
-    //   <Suspense fallback={<div className="loading">Loading...</div>}>
-    //     <BadgePage />
-    //     <FormElementsPage />
-    //     <CardsPage />
-    //     <TablePage column={tableData.column} row={tableData.row} />
-    //     <ToastPage />
-    //     <ModalPage />
-    //     <LoadersPage />
-    //     <TabsPage />
-    //     <AccordionPage />
+      <InstallationPage />
+      <ButtonPage />
+      <Suspense fallback={<div className="loading">Loading...</div>}>
+        <BadgePage />
+        <FormElementsPage />
+        <CardsPage />
+        <TablePage column={tableData.column} row={tableData.row} />
+        <ToastPage />
+        <ModalPage />
+        <LoadersPage />
+        <TabsPage />
+        <AccordionPage />
 
-    //     <section className="section hooks-section">
-    //       <h1 className="section-heading">Custom Hooks</h1>
-    //       <h4 className="section-desc">Common Reusable custom hooks</h4>
-    //     </section>
+        <section className="section hooks-section">
+          <h1 className="section-heading">Custom Hooks</h1>
+          <h4 className="section-desc">Common Reusable custom hooks</h4>
+        </section>
 
-    //     <UseTogglePage />
-    //     <CopyToClipboardPage />
-    //     <UseFetchPage />
-    //     <UseLocalStoragePage />
-    //     <UseIntersectionObserverPage />
-    //     <UseWindowSizePage />
-    //     <TimeoutPage />
-    //   </Suspense>
-    // </div>
+        <UseTogglePage />
+        <CopyToClipboardPage />
+        <UseFetchPage />
+        <UseLocalStoragePage />
+        <UseIntersectionObserverPage />
+        <UseWindowSizePage />
+        <TimeoutPage />
+      </Suspense>
+    </div>
   );
 };
 
