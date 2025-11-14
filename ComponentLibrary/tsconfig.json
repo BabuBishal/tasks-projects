@@ -1,7 +1,22 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+
+    // Use same resolver as Vite
+    "moduleResolution": "bundler",
+
+    "baseUrl": ".",
+    "paths": {
+      "@ui/*": ["packages/ui/src/*"]
+    },
+
+    "lib": ["ESNext", "DOM"],
+
+    // Do NOT add "node" types globally (breaks packages)
+    "types": []
+  },
+
+  // Do not include config/build scripts
+  "exclude": ["**/vite.config.*", "**/dist"]
 }

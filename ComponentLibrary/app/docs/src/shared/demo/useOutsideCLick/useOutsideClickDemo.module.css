@@ -1,0 +1,9 @@
+.hookDemo {
+  display: flex;
+  gap: 0.5rem;
+  align-items: start;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+}
