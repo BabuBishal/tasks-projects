@@ -14,7 +14,7 @@ export * from "./hooks/useTimeout";
 //exports for components
 export * from "./components/button/Button";
 export * from "./components/modal/Modal";
-export * from "./components/slider/Slider";
+export * from "./components/loading/LoadingDots/slider/Slider";
 export * from "./components/tab/Tabs";
 export * from "./components/accordion/Accordion";
 export * from "./components/loading/Spinner/Spinner";

@@ -5,7 +5,7 @@ import Input from "../../../../../packages/ui/src/components/form/TextInput/Inpu
 import Toggle from "../../../../../packages/ui/src/components/toggle/Toggle";
 import CodeBlock from "../../shared/templates/codeBlock/CodeBlock";
 import Container from "../../shared/templates/container/Container";
-import Slider from "../../../../../packages/ui/src/components/slider/Slider";
+import Slider from "../../../../../packages/ui/src/components/loading/LoadingDots/slider/Slider";
 
 const TextInputCode = `<Input 
   label="Email" 
