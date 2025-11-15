@@ -1,10 +1,10 @@
 import ProgressBar from "@/components/ui/progress-bar/ProgressBar";
 import { CheckCircle, CircleAlert, CircleAlertIcon, Clock } from "lucide-react";
 type PaymentStatus = {
-  paid: number;
-  overdue: number;
-  pending: number;
-  total: number;
+  paid: number | undefined;
+  overdue: number | undefined;
+  pending: number | undefined;
+  total: number | undefined;
 };
 const PaymentStatusOverview = ({
   paymentStatus,
@@ -12,9 +12,11 @@ const PaymentStatusOverview = ({
   paymentStatus: PaymentStatus;
 }) => {
   const { paid, overdue, pending, total } = paymentStatus;
-  const paidPercent = Math.floor((paid / total) * 100);
-  const overduePercent = Math.floor((overdue / total) * 100);
-  const pendingPercent = Math.floor((pending / total) * 100);
+  const paidPercent = paid && total && Math.floor((paid / total) * 100);
+  const overduePercent =
+    overdue && total && Math.floor((overdue / total) * 100);
+  const pendingPercent =
+    pending && total && Math.floor((pending / total) * 100);
 
   return (
     <div className="w-full   h-76 flex flex-col gap-4 p-4 rounded-lg border border-border">
@@ -35,7 +37,7 @@ const PaymentStatusOverview = ({
             </span>
             <span className="text-secondary">{`${paid ?? "-"} payments`}</span>
           </div>
-          <ProgressBar progress={paidPercent}></ProgressBar>
+          <ProgressBar progress={paidPercent as number}></ProgressBar>
         </div>
         <div className="flex flex-col gap-1">
           <div className="flex gap-2 justify-between items-center">

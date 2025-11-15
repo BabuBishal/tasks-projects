@@ -1,4 +1,4 @@
-import Toggle from "../../../../../../packages/ui/src/components/toggle/Toggle";
+// import Toggle from "../../../../../../packages/ui/src/components/toggle/Toggle";
 import { useTheme } from "../../../context/themeContext";
 import styles from "./Header.module.css";
 interface HeaderProps {
@@ -24,12 +24,12 @@ const Header = ({ onMenuClick }: HeaderProps) => {
           <li className={styles.navitem}>Components</li>
           <li className={styles.navitem}>Documentation</li>
         </ul>
-        <Toggle
+        {/* <Toggle
           checkedText="☀️"
           uncheckedText="🌙"
           checked={theme === "dark"}
           onChange={() => toggleTheme()}
-        />
+        /> */}
       </nav>
     </header>
   );

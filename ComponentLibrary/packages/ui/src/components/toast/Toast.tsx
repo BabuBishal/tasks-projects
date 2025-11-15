@@ -6,8 +6,8 @@ import {
   useMemo,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
-import styles from "./Toast.module.css";
 import type { ToastContextValue, ToastItem, ToastOptions } from "./Toast.types";
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -16,9 +16,7 @@ function makeId(prefix = "toast") {
   return `${prefix}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-export const ToastProvider: React.FC<React.PropsWithChildren<{}>> = ({
-  children,
-}) => {
+export const ToastProvider = ({ children }: { children: ReactNode }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const timers = useRef<Record<string, number | undefined>>({});
 
@@ -49,16 +47,15 @@ export const ToastProvider: React.FC<React.PropsWithChildren<{}>> = ({
     setToasts((s) => s.filter((t) => t.id !== id));
     const t = timers.current[id];
     if (t) {
-      window.clearTimeout(t);
+      clearTimeout(t);
       delete timers.current[id];
     }
   }, []);
 
-  // clear timers when unmounting provider
+  // Cleanup timers on unmount
   useEffect(() => {
     return () => {
-      Object.values(timers.current).forEach((t) => t && window.clearTimeout(t));
-      timers.current = {};
+      Object.values(timers.current).forEach((t) => t && clearTimeout(t));
     };
   }, []);
 
@@ -67,9 +64,15 @@ export const ToastProvider: React.FC<React.PropsWithChildren<{}>> = ({
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className={styles.container} aria-live="polite" aria-atomic="true">
-        {toasts.map((t) => (
-          <ToastView key={t.id} toast={t} onClose={() => dismiss(t.id)} />
+
+      {/* Container */}
+      <div className="toast-container" aria-live="polite" aria-atomic="true">
+        {toasts.map((toast) => (
+          <ToastView
+            key={toast.id}
+            toast={toast}
+            onClose={() => dismiss(toast.id)}
+          />
         ))}
       </div>
     </ToastContext.Provider>
@@ -95,54 +98,35 @@ function ToastView({
 
   useEffect(() => {
     if (!progressRef.current || duration <= 0) return;
-    // animate width from 100% to 0 using CSS transform over duration
     const el = progressRef.current;
-    // ensure the element starts at scaleX(1)
+
     el.style.transform = "scaleX(1)";
-    // force layout so the browser registers the initial transform
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    el.offsetWidth;
+    el.offsetHeight; // force layout
     el.style.transition = `transform ${duration}ms linear`;
+
     requestAnimationFrame(() => {
       el.style.transform = "scaleX(0)";
     });
   }, [duration]);
 
-  const variantClass = (() => {
-    switch (type) {
-      case "success":
-        return styles["variant-success"];
-      case "info":
-        return styles["variant-info"];
-      case "warning":
-        return styles["variant-warning"];
-      case "destructive":
-        return styles["variant-destructive"];
-      default:
-        return styles["variant-default"];
-    }
-  })();
-
   return (
     <div
-      className={`${styles.toast} ${variantClass}`}
+      className={`toast-root toast-variant-${type}`}
       role="status"
       aria-live="polite"
     >
-      <div className={styles.content}>
-        {title && <div className={styles.title}>{title}</div>}
-        {description && <div className={styles.description}>{description}</div>}
+      <div className="toast-content">
+        {title && <div className="toast-title">{title}</div>}
+        {description && <div className="toast-description">{description}</div>}
+
         {duration > 0 && (
-          <div className={styles.progress} aria-hidden>
-            <div ref={progressRef} className={styles.progressBar} />
+          <div className="toast-progress">
+            <div ref={progressRef} className="toast-progress-bar" />
           </div>
         )}
       </div>
-      <button
-        className={styles.close}
-        onClick={onClose}
-        aria-label="Close notification"
-      >
+
+      <button className="toast-close" onClick={onClose} aria-label="Close">
         ✕
       </button>
     </div>

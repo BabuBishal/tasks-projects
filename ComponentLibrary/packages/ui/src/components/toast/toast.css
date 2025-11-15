@@ -1,0 +1,111 @@
+/* Container */
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Toast Root */
+.toast-root {
+  pointer-events: auto;
+  min-width: 240px;
+  max-width: 380px;
+  background: var(--ui-surface, #ffffff);
+  color: var(--ui-text-primary, #0f172a);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  padding: 0.75rem;
+  border: 1px solid var(--ui-border, rgba(15, 23, 42, 0.06));
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  transform-origin: top right;
+  animation: toast-in 160ms ease;
+}
+
+/* Title */
+.toast-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Description */
+.toast-description {
+  font-size: 0.9rem;
+  color: var(--ui-text-secondary, #64748b);
+  margin-top: 0.25rem;
+}
+
+/* Content wrapper */
+.toast-content {
+  flex: 1 1 auto;
+}
+
+/* Close Button */
+.toast-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.25rem;
+  margin-left: 0.25rem;
+  border-radius: 6px;
+}
+
+.toast-close:focus-visible {
+  outline: 2px solid var(--ui-focus, #2563eb);
+}
+
+/* Variants */
+.toast-variant-default {
+  border-left: 4px solid rgba(15, 23, 42, 0.06);
+}
+.toast-variant-success {
+  border-left: 4px solid #059669;
+}
+.toast-variant-info {
+  border-left: 4px solid #2563eb;
+}
+.toast-variant-warning {
+  border-left: 4px solid #d97706;
+}
+.toast-variant-destructive {
+  border-left: 4px solid #ef4444;
+}
+
+/* Progress bar wrapper */
+.toast-progress {
+  height: 3px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+/* Progress bar itself */
+.toast-progress-bar {
+  height: 100%;
+  background: rgba(56, 165, 70, 0.63);
+  width: 100%;
+  transform-origin: left;
+  transform: scaleX(1);
+  will-change: transform;
+}
+
+/* Animation */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

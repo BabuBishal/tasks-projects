@@ -1,0 +1,68 @@
+/* ────────────────────────────────
+   Base card styles
+────────────────────────────────── */
+.ui-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--ui-surface, #ffffff);
+  color: var(--ui-text-primary, #0f172a);
+  border: 1px solid var(--ui-border, #e6e6e6);
+  border-radius: 0.5rem;
+  box-shadow: var(--ui-shadow, 0 1px 3px rgba(0,0,0,0.1));
+  padding: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+/* ────────────────────────────────
+   Hover effect
+────────────────────────────────── */
+.ui-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ui-shadow-md, 0 4px 6px rgba(0,0,0,0.1));
+}
+
+/* ────────────────────────────────
+   Variants
+────────────────────────────────── */
+
+/* Elevated card */
+.ui-card--elevated {
+  box-shadow: var(--ui-shadow-lg, 0 10px 15px rgba(0,0,0,0.1));
+}
+
+/* Bordered card */
+.ui-card--bordered {
+  border: 1px solid var(--ui-border, #e6e6e6);
+}
+
+/* Rounded corners */
+.ui-card--rounded {
+  border-radius: 1rem;
+}
+
+/* Padding sizes */
+.ui-card--sm {
+  padding: 0.5rem;
+}
+
+.ui-card--md {
+  padding: 1rem;
+}
+
+.ui-card--lg {
+  padding: 1.5rem;
+}
+
+/* Background variants */
+.ui-card--primary {
+  background-color: var(--ui-primary, #1f6feb);
+  color: var(--ui-primary-contrast, #ffffff);
+}
+
+.ui-card--secondary {
+  background-color: var(--ui-secondary, #f3f4f6);
+  color: var(--ui-secondary-contrast, #0f172a);
+}
