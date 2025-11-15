@@ -10,8 +10,6 @@ import { cn } from "@/utils/cn";
 import "./accordion.css";
 import { AccordionContextType } from "./accordion.types";
 
-
-
 const AccordionContext = createContext<AccordionContextType | undefined>(
   undefined
 );
@@ -29,9 +27,7 @@ export const Accordion = ({
 
   const toggleItem = useCallback((value: string) => {
     setOpenItems((prev) =>
-      prev.includes(value)
-        ? prev.filter((v) => v !== value)
-        : [...prev, value]
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
     );
   }, []);
 
@@ -107,12 +103,7 @@ const Trigger = ({
     >
       <span>{children}</span>
 
-      <span
-        className={cn(
-          "accordion-icon",
-          isOpen && "accordion-icon-open"
-        )}
-      >
+      <span className={cn("accordion-icon", isOpen && "accordion-icon-open")}>
         ▼
       </span>
     </button>
@@ -159,5 +150,3 @@ const Content = ({
 Accordion.Item = Item;
 Accordion.Trigger = Trigger;
 Accordion.Content = Content;
-
-export default Accordion;

@@ -161,5 +161,3 @@ Modal.Close = function ModalClose({
     </button>
   );
 };
-
-export default Modal;

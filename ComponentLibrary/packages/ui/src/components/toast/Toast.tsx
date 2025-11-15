@@ -132,5 +132,3 @@ function ToastView({
     </div>
   );
 }
-
-export default ToastProvider;

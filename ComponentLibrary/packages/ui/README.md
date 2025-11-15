@@ -1,4 +1,4 @@
-# b3-ui
+# 3UI
 
 A modern, accessible React component library with TypeScript support, built for flexibility and ease of use.
 
@@ -11,22 +11,22 @@ A modern, accessible React component library with TypeScript support, built for 
 - 🎭 **Unstyled mode** - Complete control over styling when needed
 - 🪝 **Custom Hooks** - Useful React hooks included
 - 🚀 **Zero dependencies** - Lightweight with no external dependencies
+- 🎨 **CSS included** - Styles automatically bundled, no manual CSS imports needed
 
 ## Installation
 
 ```bash
-npm install b3-ui
+npm install 3ui
 # or
-yarn add b3-ui
+yarn add 3ui
 # or
-pnpm add b3-ui
+pnpm add 3ui
 ```
 
 ## Quick Start
 
 ```tsx
-import { Button, Input, useToast, ToastProvider } from "b3-ui";
-import "b3-ui/theme.css"; // Import theme CSS
+import { Button, Input, useToast, ToastProvider } from "3ui";
 
 function App() {
   return (
@@ -39,22 +39,21 @@ function App() {
 }
 ```
 
+**Note:** Styles are automatically included! No need to import CSS manually.
+
 ## Theming
 
 The library supports light and dark themes out of the box.
 
 ### Auto Theme (based on system preference)
 
-```tsx
-// Just import the theme CSS - it will auto-detect system preference
-import "b3-ui/theme.css";
-```
+Themes are automatically detected based on system preferences. No setup required!
 
 ### Manual Theme Control
 
 ```tsx
 // Set data-theme attribute on html or body
-<html data-theme="dark">{/* Your app */}</html>;
+<html data-theme="dark">{/* Your app */}</html>
 
 // Or programmatically
 document.documentElement.setAttribute("data-theme", "dark");
@@ -69,7 +68,7 @@ Override CSS custom properties to match your brand:
   --ui-button-bg: #your-color;
   --ui-button-color: #your-text-color;
   --ui-border: #your-border-color;
-  /* See theme.css for all available tokens */
+  /* See documentation for all available tokens */
 }
 ```
 
@@ -80,7 +79,7 @@ Override CSS custom properties to match your brand:
 Versatile button component with multiple variants and sizes.
 
 ```tsx
-import { Button } from 'b3-ui';
+import { Button } from '3ui';
 
 <Button variant="primary" size="md" onClick={handleClick}>
   Primary Button
@@ -105,12 +104,62 @@ import { Button } from 'b3-ui';
 ```
 
 **Props:**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `"primary" \| "secondary" \| "outline" \| "danger"` | `"primary"` | Button style variant |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Button size |
+| `disabled` | `boolean` | `false` | Disable the button |
+| `unstyled` | `boolean` | `false` | Remove default styles |
+| `className` | `string` | - | Additional CSS classes |
 
-- `variant`: "primary" | "secondary" | "outline" | "danger"
-- `size`: "sm" | "md" | "lg"
-- `disabled`: boolean
-- `unstyled`: boolean
-- All standard button HTML attributes
+---
+
+### Card
+
+Container component with multiple variants.
+
+```tsx
+import { Card } from '3ui';
+
+<Card variant="elevated" size="md">
+  <h3>Card Title</h3>
+  <p>Card content goes here</p>
+</Card>
+
+<Card variant="bordered" size="lg">
+  Rich content
+</Card>
+```
+
+**Props:**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `"elevated" \| "bordered" \| "primary" \| "secondary" \| "rounded"` | - | Card style |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Padding size |
+| `unstyled` | `boolean` | `false` | Remove default styles |
+
+---
+
+### Badge
+
+Display status or category labels.
+
+```tsx
+import { Badge } from '3ui';
+
+<Badge variant="success" size="sm">New</Badge>
+<Badge variant="warning" size="md">Warning</Badge>
+<Badge variant="danger" size="lg" rounded>Error</Badge>
+<Badge variant="info">Info</Badge>
+```
+
+**Props:**
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `"primary" \| "secondary" \| "outline" \| "success" \| "warning" \| "danger"` | `"primary"` | Badge color variant |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | Badge size |
+| `rounded` | `boolean` | `false` | Pill-shaped badge |
+| `unstyled` | `boolean` | `false` | Remove default styles |
 
 ---
 
@@ -118,108 +167,86 @@ import { Button } from 'b3-ui';
 
 #### Input
 
-```tsx
-import { Input } from "b3-ui";
+Compound component for text inputs with label and error states.
 
-<Input
-  label="Email"
-  type="email"
-  placeholder="Enter your email"
-  helperText="We'll never share your email"
-  error={errors.email}
-/>;
+```tsx
+import { Input } from "3ui";
+
+<Input id="email" initialValue="" placeholder="Enter email">
+  <Input.Label>Email Address</Input.Label>
+  <Input.Field type="email" />
+  <Input.Error>Invalid email</Input.Error>
+</Input>
 ```
 
 #### Textarea
 
 ```tsx
-import { Textarea } from "b3-ui";
+import { Textarea } from "3ui";
 
-<Textarea
-  label="Description"
-  rows={5}
-  placeholder="Enter description"
-  helperText="Maximum 500 characters"
-/>;
+<Textarea initialValue="" className="w-full">
+  <Textarea.Label htmlFor="description">Description</Textarea.Label>
+  <Textarea.Field rows={5} placeholder="Enter description..." />
+</Textarea>
 ```
 
 #### Select
 
-```tsx
-import { Select } from "b3-ui";
+Compound select dropdown component.
 
-<Select
-  label="Country"
-  optionList={["USA", "UK", "Canada", "Australia"]}
-  helperText="Select your country"
-/>;
+```tsx
+import { Select } from "3ui";
+
+<Select.Root value={selected} onChange={setSelected}>
+  <Select.Trigger>Select option</Select.Trigger>
+  <Select.List>
+    <Select.Option value="option1">Option 1</Select.Option>
+    <Select.Option value="option2">Option 2</Select.Option>
+  </Select.List>
+</Select.Root>
 ```
 
 #### Checkbox
 
 ```tsx
-import { Checkbox } from "b3-ui";
+import { Checkbox } from "3ui";
 
 <Checkbox
   label="Accept terms and conditions"
-  helperText="Required to proceed"
-/>;
-```
-
----
-
-### Card
-
-```tsx
-import { Card } from 'b3-ui';
-
-<Card
-  title="Card Title"
-  content="Card content goes here"
+  checked={accepted}
+  onChange={(e) => setAccepted(e.target.checked)}
 />
-
-<Card
-  title="With JSX Content"
-  content={<div>Rich content with <strong>formatting</strong></div>}
-/>
-```
-
----
-
-### Badge
-
-```tsx
-import { Badge } from 'b3-ui';
-
-<Badge text="New" variant="success" size="small" />
-<Badge text="Warning" variant="warning" size="medium" />
-<Badge text="Error" variant="danger" size="large" />
-<Badge text="Info" variant="info" />
 ```
 
 ---
 
 ### Modal
 
+Dialog component with compound pattern.
+
 ```tsx
-import { Modal } from "b3-ui";
-import { useState } from "react";
+import { Modal } from "3ui";
 
-function MyComponent() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <>
-      <Button onClick={() => setIsOpen(true)}>Open Modal</Button>
-
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <h2>Modal Title</h2>
-        <p>Modal content goes here</p>
-      </Modal>
-    </>
-  );
-}
+<Modal defaultOpen={false}>
+  <Modal.Trigger>Open Modal</Modal.Trigger>
+  
+  <Modal.Content>
+    <Modal.Header>
+      <h2>Modal Title</h2>
+    </Modal.Header>
+    
+    <Modal.Body>
+      <p>Modal content goes here</p>
+    </Modal.Body>
+    
+    <Modal.Footer>
+      <Modal.Close>Close</Modal.Close>
+    </Modal.Footer>
+  </Modal.Content>
+</Modal>
 ```
+
+**Important:** Add `<div id="modal-root"></div>` to your HTML for modal portal.
 
 ---
 
@@ -228,9 +255,9 @@ function MyComponent() {
 Toast notifications with progress indicator.
 
 ```tsx
-import { ToastProvider, useToast } from "b3-ui";
+import { ToastProvider, useToast } from "3ui";
 
-// Wrap your app with ToastProvider
+// Wrap your app
 function App() {
   return (
     <ToastProvider>
@@ -256,14 +283,16 @@ function MyComponent() {
 }
 ```
 
-**Toast Types:** "default" | "success" | "info" | "warning" | "destructive"
+**Toast Types:** `"default" | "success" | "info" | "warning" | "destructive"`
 
 ---
 
 ### Tabs
 
+Tab navigation component.
+
 ```tsx
-import { Tabs } from "b3-ui";
+import { Tabs } from "3ui";
 
 <Tabs defaultValue="tab1">
   <Tabs.List>
@@ -275,41 +304,47 @@ import { Tabs } from "b3-ui";
   <Tabs.Content value="tab1">Content for tab 1</Tabs.Content>
   <Tabs.Content value="tab2">Content for tab 2</Tabs.Content>
   <Tabs.Content value="tab3">Content for tab 3</Tabs.Content>
-</Tabs>;
+</Tabs>
 ```
 
 ---
 
 ### Accordion
 
-```tsx
-import { Accordion } from "b3-ui";
+Collapsible content sections.
 
-<Accordion defaultOpen="item-1">
+```tsx
+import { Accordion } from "3ui";
+
+<Accordion defaultOpenItems={["item-1"]}>
   <Accordion.Item value="item-1">
-    <Accordion.Header>Section 1</Accordion.Header>
+    <Accordion.Trigger>Section 1</Accordion.Trigger>
     <Accordion.Content>Content for section 1</Accordion.Content>
   </Accordion.Item>
 
   <Accordion.Item value="item-2">
-    <Accordion.Header>Section 2</Accordion.Header>
+    <Accordion.Trigger>Section 2</Accordion.Trigger>
     <Accordion.Content>Content for section 2</Accordion.Content>
   </Accordion.Item>
-</Accordion>;
+</Accordion>
 ```
 
 ---
 
 ### Table
 
-```tsx
-import { Table } from "b3-ui";
+Responsive table with optional pagination.
 
-<Table>
+```tsx
+import { Table } from "3ui";
+
+<Table striped>
   <Table.Header>
-    <Table.HeaderCell>Name</Table.HeaderCell>
-    <Table.HeaderCell>Email</Table.HeaderCell>
-    <Table.HeaderCell>Role</Table.HeaderCell>
+    <Table.Row>
+      <Table.Head>Name</Table.Head>
+      <Table.Head>Email</Table.Head>
+      <Table.Head>Role</Table.Head>
+    </Table.Row>
   </Table.Header>
 
   <Table.Body>
@@ -318,34 +353,65 @@ import { Table } from "b3-ui";
       <Table.Cell>john@example.com</Table.Cell>
       <Table.Cell>Admin</Table.Cell>
     </Table.Row>
-    <Table.Row>
-      <Table.Cell>Jane Smith</Table.Cell>
-      <Table.Cell>jane@example.com</Table.Cell>
-      <Table.Cell>User</Table.Cell>
-    </Table.Row>
   </Table.Body>
-</Table>;
+</Table>
+
+// With pagination
+<Table 
+  striped
+  pagination={{
+    pageSize: 10,
+    total: 100,
+    onPageChange: (page) => console.log(page)
+  }}
+>
+  {/* ... */}
+</Table>
 ```
 
 ---
 
 ### Toggle
 
+Switch/toggle component.
+
 ```tsx
-import { Toggle } from "b3-ui";
+import { Toggle } from "3ui";
 import { useState } from "react";
 
 function MyComponent() {
   const [enabled, setEnabled] = useState(false);
 
   return (
-    <Toggle
-      checked={enabled}
+    <Toggle.Root 
+      checked={enabled} 
       onChange={setEnabled}
-      label="Enable notifications"
-    />
+      variant="primary"
+    >
+      <Toggle.Button />
+      <Toggle.Label>Enable notifications</Toggle.Label>
+    </Toggle.Root>
   );
 }
+```
+
+**Variants:** `"primary" | "success" | "danger" | "warning"`
+
+---
+
+### Slider
+
+Range input slider.
+
+```tsx
+import { Slider } from "3ui";
+
+<Slider id="volume" initialValue={50} min={0} max={100}>
+  <Slider.Label htmlFor="volume" showValue>
+    Volume
+  </Slider.Label>
+  <Slider.Field step={1} onChange={(val) => console.log(val)} />
+</Slider>
 ```
 
 ---
@@ -355,19 +421,22 @@ function MyComponent() {
 #### Spinner
 
 ```tsx
-import { Spinner } from 'b3-ui';
+import { Spinner } from '3ui';
 
-<Spinner />
-<Spinner className="custom-spinner" />
+<Spinner size={40} color="var(--ui-accent)" speed={1}>
+  Loading...
+</Spinner>
 ```
 
 #### LoadingDots
 
 ```tsx
-import { LoadingDots } from 'b3-ui';
+import { LoadingDots } from '3ui';
 
-<LoadingDots />
-<LoadingDots className="custom-dots" />
+<LoadingDots size="md" speed={0.6}>
+  <LoadingDots.Dot />
+  <LoadingDots.Label>Loading</LoadingDots.Label>
+</LoadingDots>
 ```
 
 ---
@@ -379,7 +448,7 @@ import { LoadingDots } from 'b3-ui';
 Toggle boolean state easily.
 
 ```tsx
-import { useToggle } from "b3-ui";
+import { useToggle } from "3ui";
 
 function MyComponent() {
   const [isOpen, toggleOpen] = useToggle(false);
@@ -400,7 +469,7 @@ function MyComponent() {
 Persist state in localStorage with automatic synchronization.
 
 ```tsx
-import { useLocalStorage } from "b3-ui";
+import { useLocalStorage } from "3ui";
 
 function MyComponent() {
   const [name, setName, removeName] = useLocalStorage("username", "");
@@ -421,7 +490,7 @@ function MyComponent() {
 Copy text to clipboard with state tracking.
 
 ```tsx
-import { useCopyToClipboard } from "b3-ui";
+import { useCopyToClipboard } from "3ui";
 
 function MyComponent() {
   const { copy, isCopied } = useCopyToClipboard();
@@ -441,7 +510,7 @@ function MyComponent() {
 Simple data fetching hook.
 
 ```tsx
-import { useFetch } from "b3-ui";
+import { useFetch } from "3ui";
 
 function MyComponent() {
   const { data, loading, error } = useFetch<User>("/api/user");
@@ -460,7 +529,7 @@ function MyComponent() {
 Observe when a single element enters the viewport.
 
 ```tsx
-import { useIntersectionObserverSingle } from "b3-ui";
+import { useIntersectionObserverSingle } from "3ui";
 
 function MyComponent() {
   const [isVisible, ref] = useIntersectionObserverSingle({
@@ -479,7 +548,7 @@ function MyComponent() {
 Track window dimensions.
 
 ```tsx
-import { useWindowSize } from "b3-ui";
+import { useWindowSize } from "3ui";
 
 function MyComponent() {
   const { width, height } = useWindowSize();
@@ -499,7 +568,7 @@ function MyComponent() {
 Declarative setTimeout hook.
 
 ```tsx
-import { useTimeout } from "b3-ui";
+import { useTimeout } from "3ui";
 
 function MyComponent() {
   useTimeout(() => {
@@ -517,7 +586,7 @@ function MyComponent() {
 Detect clicks outside an element.
 
 ```tsx
-import { useOutsideClick } from "b3-ui";
+import { useOutsideClick } from "3ui";
 import { useRef } from "react";
 
 function MyComponent() {
@@ -547,18 +616,14 @@ All components support an `unstyled` prop for complete styling control:
 <Input unstyled className="my-input" />
 ```
 
-### CSS Modules
-
-Components use CSS modules internally, so styles won't conflict with your app.
-
 ### Custom Utility
 
 The library includes a `cn` utility for className merging:
 
 ```tsx
-import { cn } from "b3-ui";
+import { cn } from "3ui";
 
-<div className={cn("base-class", isActive && "active-class")}>Content</div>;
+<div className={cn("base-class", isActive && "active-class")}>Content</div>
 ```
 
 ## Accessibility
@@ -576,10 +641,15 @@ All components follow WCAG 2.1 Level AA guidelines:
 Full TypeScript support with exported types:
 
 ```tsx
-import type { ButtonProps, InputProps, ToastOptions } from "b3-ui";
+import type { ButtonProps, InputProps, ToastOptions } from "3ui";
 ```
 
-- Edge (latest) -->
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
 
 ## Contributing
 
@@ -587,7 +657,7 @@ Contributions are welcome! Please read our contributing guidelines before submit
 
 ## License
 
-MIT
+MIT © Bishal Babu Bohara
 
 ## Support
 

@@ -5,7 +5,7 @@ import { cn } from "@/utils/cn";
 
 const SliderContext = createContext<SliderContextType | undefined>(undefined);
 
-const Slider = ({
+export const Slider = ({
   children,
   id,
   initialValue = 50,
@@ -22,8 +22,6 @@ const Slider = ({
     </SliderContext.Provider>
   );
 };
-
-export default Slider;
 
 // ------------------------
 // Compound Components

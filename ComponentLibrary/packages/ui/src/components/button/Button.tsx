@@ -13,9 +13,9 @@ export const Button = ({
   return (
     <button
       className={cn(
-        !unstyled && "b3-button",
-        !unstyled && variant && `b3-button-${variant}`,
-        !unstyled && size && `b3-button-${size}`,
+        !unstyled && "ui-button",
+        !unstyled && variant && `ui-button-${variant}`,
+        !unstyled && size && `ui-button-${size}`,
         className
       )}
       {...props}

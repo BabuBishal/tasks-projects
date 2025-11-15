@@ -3,12 +3,17 @@ import "./table.css";
 import { cn } from "../../utils/cn";
 import { TableProps } from "./table.types";
 
-
-
-const Table = ({ children, className, striped = false, pagination }: TableProps) => {
+export const Table = ({
+  children,
+  className,
+  striped = false,
+  pagination,
+}: TableProps) => {
   const [page, setPage] = useState(1);
 
-  const totalPages = pagination ? Math.ceil(pagination.total / pagination.pageSize) : 1;
+  const totalPages = pagination
+    ? Math.ceil(pagination.total / pagination.pageSize)
+    : 1;
 
   const goToPage = (newPage: number) => {
     setPage(newPage);
@@ -87,5 +92,3 @@ Table.Body = Body;
 Table.Row = Row;
 Table.Head = Head;
 Table.Cell = Cell;
-
-export default Table;

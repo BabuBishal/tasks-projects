@@ -4,7 +4,7 @@
 
 /* Item wrapper */
 .accordion-item {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--ui-accordion-border, #ddd);
   padding: 0;
 }
 
@@ -25,7 +25,7 @@
 }
 
 .accordion-trigger:hover {
-  color: var(--primary, #333);
+  color: var(--ui-accordion-hover-color, #333);
 }
 
 .accordion-trigger-open {

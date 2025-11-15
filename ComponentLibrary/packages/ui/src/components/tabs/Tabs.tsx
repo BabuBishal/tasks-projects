@@ -11,7 +11,7 @@ import { cn } from "../../utils/cn";
 
 const TabsContext = createContext<TabsContextType | undefined>(undefined);
 
-const Tabs = ({ defaultValue, children, className }: TabsProps) => {
+export const Tabs = ({ defaultValue, children, className }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(defaultValue);
 
   return (
@@ -78,5 +78,3 @@ export const Content = ({
 Tabs.List = List;
 Tabs.Trigger = Trigger;
 Tabs.Content = Content;
-
-export default Tabs;
