@@ -47,13 +47,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BabuBishal/tasks-projects.git",
+    "url": "https://github.com/BabuBishal/3ui.git",
     "directory": "ComponentLibrary/packages/ui"
   },
   "bugs": {
-    "url": "https://github.com/BabuBishal/tasks-projects/issues"
+    "url": "https://github.com/BabuBishal/3ui/issues"
   },
-  "homepage": "https://github.com/BabuBishal/tasks-projects#readme",
+  "homepage": "https://github.com/BabuBishal/3ui#readme",
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
