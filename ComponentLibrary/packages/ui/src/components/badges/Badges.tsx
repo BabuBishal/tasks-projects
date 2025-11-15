@@ -1,27 +1,28 @@
-import { type FC } from "react";
-import type { BadgeProps } from "./Badges.types";
 import { cn } from "../../utils/cn";
-import styles from "./Badges.module.css";
+import "./badges.css";
+import { BadgeProps } from "./badges.types";
 
-const Badge: FC<BadgeProps> = ({
-  text,
-  variant,
-  size,
+export function Badge({
+  children,
   className,
-  unstyled,
-}) => {
+  variant = "primary",
+  size = "md",
+  rounded = false,
+  unstyled = false,
+  ...props
+}: BadgeProps) {
   return (
     <span
+      {...props}
       className={cn(
-        !unstyled && styles.badge,
-        !unstyled && variant && styles[variant],
-        !unstyled && size && styles[size],
-        className && className
+        !unstyled && "ui-badge",
+        !unstyled && variant && `ui-badge--${variant}`,
+        !unstyled && size && `ui-badge--${size}`,
+        rounded && "ui-badge--rounded",
+        className
       )}
     >
-      {text}
+      {children}
     </span>
   );
-};
-
-export default Badge;
+}

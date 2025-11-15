@@ -1,0 +1,65 @@
+.accordion {
+  width: 100%;
+}
+
+/* Item wrapper */
+.accordion-item {
+  border-bottom: 1px solid #ddd;
+  padding: 0;
+}
+
+/* Trigger */
+.accordion-trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.accordion-trigger:hover {
+  color: var(--primary, #333);
+}
+
+.accordion-trigger-open {
+  font-weight: 600;
+}
+
+/* Icon */
+.accordion-icon {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.accordion-icon-open {
+  transform: rotate(180deg);
+}
+
+/* Content wrapper (animates height) */
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+.accordion-content-closed {
+  max-height: 0;
+  padding: 0;
+}
+
+.accordion-content-open {
+  max-height: 300px; /* enough for text; can be increased */
+  padding: 10px 0;
+}
+
+/* inner content */
+.accordion-content-inner {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}

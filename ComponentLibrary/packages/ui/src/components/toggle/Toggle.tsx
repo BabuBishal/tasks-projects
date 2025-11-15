@@ -1,37 +1,97 @@
-import { useState } from "react";
-import styles from "./Toggle.module.css";
-import type { ToggleProps } from "./Toggle.types";
-import { cn } from "../../utils/cn";
+"use client";
 
-const Toggle = ({
-  checkedText,
-  label,
-  uncheckedText,
-  checked: checkedProp,
+import { createContext, useContext, ReactNode, useState } from "react";
+import "./toggle.css";
+import { ToggleContextType, ToggleRootProps, Variant } from "./toggle.types";
+
+const variantColors: Record<Variant, string> = {
+  primary: "#3b82f6",
+  success: "#16a34a",
+  danger: "#dc2626",
+  warning: "#f59e0b",
+};
+
+const ToggleContext = createContext<ToggleContextType | null>(null);
+
+export const useToggle = () => {
+  const ctx = useContext(ToggleContext);
+  if (!ctx)
+    throw new Error(
+      "Toggle compound components must be used inside <Toggle.Root>"
+    );
+  return ctx;
+};
+
+const ToggleRoot = ({
+  children,
+  checked,
   onChange,
-}: ToggleProps) => {
-  const [internalChecked, setInternalChecked] = useState(false);
-  const isControlled = checkedProp !== undefined;
-  const checked = isControlled ? checkedProp : internalChecked;
+  defaultChecked = false,
+  disabled = false,
+  variant = "primary",
+  style,
+  ...props
+}: ToggleRootProps) => {
+  const isControlled = checked !== undefined;
 
-  const handleToggle = () => {
-    const newToggleState = !checked;
-    if (!isControlled) setInternalChecked(newToggleState);
-    onChange?.(newToggleState);
+  const [internalChecked, setInternalChecked] = useState(defaultChecked);
+
+  const currentChecked = isControlled ? checked! : internalChecked;
+
+  const toggle = () => {
+    if (disabled) return;
+
+    if (isControlled && onChange) {
+      onChange(!checked);
+    } else {
+      setInternalChecked((prev) => !prev);
+      onChange?.(!internalChecked);
+    }
   };
+
+  const themeStyles = {
+    "--toggle-bg-on": variantColors[variant],
+    ...style,
+  } as React.CSSProperties;
+
   return (
-    <>
+    <ToggleContext.Provider
+      value={{ checked: currentChecked, toggle, disabled }}
+    >
       <div
-        className={cn(styles.toggle, checked && styles.toggleChecked)}
-        onClick={handleToggle}
+        {...props}
+        style={themeStyles}
+        className={`toggle-container ${disabled ? "disabled" : ""}`}
       >
-        {checkedText && <span>{checkedText}</span>}
-        {uncheckedText && <span>{uncheckedText}</span>}
-        <div className={cn(styles.knob, checked && styles.knobChecked)} />
+        {children}
       </div>
-      {label && <span className={styles.toggleLabel}>{label}</span>}
-    </>
+    </ToggleContext.Provider>
   );
 };
 
-export default Toggle;
+const ToggleButton = () => {
+  const { checked, toggle, disabled } = useToggle();
+
+  return (
+    <div
+      role="switch"
+      aria-checked={checked}
+      aria-disabled={disabled}
+      onClick={toggle}
+      className={`toggle-button ${checked ? "toggle-on" : ""}`}
+    >
+      <div className="toggle-thumb" />
+    </div>
+  );
+};
+
+const ToggleLabel = ({ children }: { children?: ReactNode }) => {
+  const { checked } = useToggle();
+  return <span>{children ?? (checked ? "On" : "Off")}</span>;
+};
+
+export const Toggle = {
+  Root: ToggleRoot,
+  Button: ToggleButton,
+  Label: ToggleLabel,
+};

@@ -1,12 +1,26 @@
-import type { CardProps } from "./Card.types";
-import styles from "./Card.module.css";
-const Card = ({ title, content }: CardProps) => {
+import { cn } from "../../utils/cn";
+import type { CardProps } from "./card.types";
+import "./card.css";
+
+export const Card = ({
+  children,
+  className,
+  variant,
+  size,
+  unstyled,
+  ...props
+}: CardProps) => {
   return (
-    <div className={styles.card}>
-      <h4 className={styles.cardTitle}>{title}</h4>
-      <div className={styles.cardContent}>{content}</div>
+    <div
+      className={cn(
+        !unstyled && "ui-card",
+        !unstyled && variant && `ui-card--${variant}`,
+        !unstyled && size && `ui-card--${size}`,
+        className
+      )}
+      {...props}
+    >
+      {children}
     </div>
   );
 };
-
-export default Card;

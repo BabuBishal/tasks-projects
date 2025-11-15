@@ -1,0 +1,46 @@
+/* Root container */
+.toggle-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Disabled state */
+.toggle-container.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Switch Track */
+.toggle-button {
+  position: relative;
+  width: var(--toggle-width, 44px);
+  height: var(--toggle-height, 24px);
+  background-color: var(--toggle-bg-off, #ccc);
+  border-radius: 999px;
+  transition: background-color 0.25s ease, opacity 0.25s ease;
+}
+
+/* Switch Track (ON) */
+.toggle-on {
+  background-color: var(--toggle-bg-on, #4caf50);
+}
+
+/* Thumb */
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: var(--toggle-thumb-size, 18px);
+  height: var(--toggle-thumb-size, 18px);
+  background: var(--toggle-thumb-bg, #fff);
+  border-radius: 50%;
+  transition: transform 0.25s ease;
+}
+
+/* Thumb moved when ON */
+.toggle-on .toggle-thumb {
+  transform: translateX(calc(var(--toggle-width, 44px) - var(--toggle-thumb-size, 18px) - 6px));
+}

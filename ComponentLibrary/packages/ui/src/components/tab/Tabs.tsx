@@ -5,24 +5,28 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { TabsContextType, TabsProps } from "./Tabs.types";
-import styles from "./Tabs.module.css";
+import type { TabsContextType, TabsProps } from "./tabs.types";
+import "./tabs.css";
 import { cn } from "../../utils/cn";
+
 const TabsContext = createContext<TabsContextType | undefined>(undefined);
 
 const Tabs = ({ defaultValue, children, className }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(defaultValue);
+
   return (
     <TabsContext.Provider value={{ activeTab, setActiveTab }}>
-      <div className={className}>{children}</div>
+      <div className={cn("tabs", className)}>{children}</div>
     </TabsContext.Provider>
   );
 };
 
+/* LIST */
 export const List = ({ children }: { children: ReactNode }) => (
-  <div className={styles.tabList}>{children}</div>
+  <div className="tabList">{children}</div>
 );
 
+/* TRIGGER */
 export const Trigger = ({
   value,
   children,
@@ -31,7 +35,7 @@ export const Trigger = ({
   children: ReactNode;
 }) => {
   const context = useContext(TabsContext);
-  if (!context) throw new Error("Trigger must be used inside Tabs");
+  if (!context) throw new Error("Trigger must be used inside <Tabs>");
 
   const isActive = context.activeTab === value;
 
@@ -42,13 +46,16 @@ export const Trigger = ({
   return (
     <button
       onClick={tabChange}
-      className={cn(styles.tabTrigger, isActive && styles.active)}
+      className={cn("tabTrigger", isActive && "active")}
+      role="tab"
+      aria-selected={isActive}
     >
       {children}
     </button>
   );
 };
 
+/* CONTENT */
 export const Content = ({
   value,
   children,
@@ -57,12 +64,15 @@ export const Content = ({
   children: ReactNode;
 }) => {
   const context = useContext(TabsContext);
-  if (!context) throw new Error("Content must be used inside Tabs");
+  if (!context) throw new Error("Content must be used inside <Tabs>");
 
-  // const isActive = context.activeTab === value;
   if (context.activeTab !== value) return null;
 
-  return <div className={cn(styles.tabContent)}>{children}</div>;
+  return (
+    <div className={cn("tabContent")} role="tabpanel">
+      {children}
+    </div>
+  );
 };
 
 Tabs.List = List;

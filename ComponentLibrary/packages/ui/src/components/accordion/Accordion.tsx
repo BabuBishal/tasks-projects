@@ -1,11 +1,16 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
-import type {
-  AccordionContextType,
-  AccordionItemProps,
-  AccordionProps,
-} from "./Accordion.types";
-import styles from "./Accordion.module.css";
-import { cn } from "../../utils/cn";
+import {
+  createContext,
+  useContext,
+  useState,
+  type ReactNode,
+  useCallback,
+  useId,
+} from "react";
+import { cn } from "@/utils/cn";
+import "./accordion.css";
+import { AccordionContextType } from "./accordion.types";
+
+
 
 const AccordionContext = createContext<AccordionContextType | undefined>(
   undefined
@@ -13,68 +18,146 @@ const AccordionContext = createContext<AccordionContextType | undefined>(
 
 export const Accordion = ({
   children,
-  defaultOpen,
+  defaultOpenItems = [],
   className,
-}: AccordionProps) => {
-  const [openItem, setOpenItem] = useState<string | null>(defaultOpen ?? null);
+}: {
+  children: ReactNode;
+  defaultOpenItems?: string[];
+  className?: string;
+}) => {
+  const [openItems, setOpenItems] = useState<string[]>(defaultOpenItems);
 
-  const toggleItem = (value: string) => {
-    setOpenItem((prev) => (prev === value ? null : value));
-  };
+  const toggleItem = useCallback((value: string) => {
+    setOpenItems((prev) =>
+      prev.includes(value)
+        ? prev.filter((v) => v !== value)
+        : [...prev, value]
+    );
+  }, []);
 
   return (
-    <AccordionContext.Provider value={{ openItem, toggleItem }}>
-      <div className={className}>{children}</div>
+    <AccordionContext.Provider value={{ openItems, toggleItem }}>
+      <div className={cn("accordion", className)}>{children}</div>
     </AccordionContext.Provider>
   );
 };
 
-const AccordionItemContext = createContext<{ value: string } | undefined>(
+// ───────────────────────────────────────────────
+// Item
+// ───────────────────────────────────────────────
+const ItemContext = createContext<{ value: string; id: string } | undefined>(
   undefined
 );
 
-const Item = ({ value, children }: AccordionItemProps) => (
-  <AccordionItemContext.Provider value={{ value }}>
-    <div className={styles.accordionItem}>{children}</div>
-  </AccordionItemContext.Provider>
-);
+const Item = ({
+  value,
+  children,
+  className,
+}: {
+  value: string;
+  children: ReactNode;
+  className?: string;
+}) => {
+  const id = useId();
+  return (
+    <ItemContext.Provider value={{ value, id }}>
+      <div className={cn("accordion-item", className)}>{children}</div>
+    </ItemContext.Provider>
+  );
+};
 
-const Header = ({ children }: { children: ReactNode }) => {
+// ───────────────────────────────────────────────
+// Trigger
+// ───────────────────────────────────────────────
+const Trigger = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
+  const item = useContext(ItemContext);
   const accordion = useContext(AccordionContext);
-  const item = useContext(AccordionItemContext);
-  if (!accordion || !item)
-    throw new Error("Header must be used within Accordion.Item");
 
-  const isOpen = accordion.openItem === item.value;
+  if (!item || !accordion)
+    throw new Error("Accordion.Trigger must be inside Accordion.Item");
+
+  const isOpen = accordion.openItems.includes(item.value);
+
+  const triggerId = `${item.id}-trigger`;
+  const contentId = `${item.id}-content`;
 
   return (
     <button
+      id={triggerId}
+      aria-expanded={isOpen}
+      aria-controls={contentId}
       onClick={() => accordion.toggleItem(item.value)}
-      className={styles.accordionHeader}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          accordion.toggleItem(item.value);
+        }
+      }}
+      className={cn(
+        "accordion-trigger",
+        isOpen && "accordion-trigger-open",
+        className
+      )}
     >
       <span>{children}</span>
-      <span className={cn(styles.accordionIcon, isOpen && styles.open)}>▼</span>
+
+      <span
+        className={cn(
+          "accordion-icon",
+          isOpen && "accordion-icon-open"
+        )}
+      >
+        ▼
+      </span>
     </button>
   );
 };
 
-const Content = ({ children }: { children: ReactNode }) => {
+// ───────────────────────────────────────────────
+// Content
+// ───────────────────────────────────────────────
+const Content = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => {
+  const item = useContext(ItemContext);
   const accordion = useContext(AccordionContext);
-  const item = useContext(AccordionItemContext);
-  if (!accordion || !item)
-    throw new Error("Content must be used within Accordion.Item");
 
-  const isOpen = accordion.openItem === item.value;
+  if (!item || !accordion)
+    throw new Error("Accordion.Content must be inside Accordion.Item");
+
+  const isOpen = accordion.openItems.includes(item.value);
+
+  const contentId = `${item.id}-content`;
+  const triggerId = `${item.id}-trigger`;
 
   return (
-    <div className={cn(styles.accordionContent, isOpen && styles.open)}>
-      <div className={styles.accordionBody}>{children}</div>
+    <div
+      id={contentId}
+      aria-labelledby={triggerId}
+      role="region"
+      className={cn(
+        "accordion-content",
+        isOpen ? "accordion-content-open" : "accordion-content-closed",
+        className
+      )}
+    >
+      <div className="accordion-content-inner">{children}</div>
     </div>
   );
 };
 
 Accordion.Item = Item;
-Accordion.Header = Header;
+Accordion.Trigger = Trigger;
 Accordion.Content = Content;
 
 export default Accordion;

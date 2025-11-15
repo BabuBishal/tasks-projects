@@ -1,23 +1,22 @@
-import styles from "./Button.module.css";
-import type { ButtonProps } from "./Button.types";
 import { cn } from "../../utils/cn";
+import "./button.css";
+import { ButtonProps } from "./button.types";
 
 export const Button = ({
   className,
+  unstyled,
   variant,
   size,
   children,
-  unstyled,
   ...props
 }: ButtonProps) => {
   return (
     <button
       className={cn(
-        // include module styles unless consumer requests unstyled
-        !unstyled && styles.button,
-        !unstyled && variant && styles[variant],
-        !unstyled && size && styles[size],
-        className && className
+        !unstyled && "b3-button",
+        !unstyled && variant && `b3-button-${variant}`,
+        !unstyled && size && `b3-button-${size}`,
+        className
       )}
       {...props}
     >
