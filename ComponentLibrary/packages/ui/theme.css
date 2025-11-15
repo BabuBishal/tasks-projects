@@ -1,77 +1,136 @@
-/* Default theme tokens for the UI library */
+/* ============================================
+   3UI Theme Variables
+   Complete set of CSS custom properties
+   ============================================ */
+
 :root {
-  /* Core tokens */
+  /* ===== CORE COLORS ===== */
   --ui-background: #ffffff;
+  --ui-surface: #ffffff;
   --ui-text-primary: #0f172a;
   --ui-text-secondary: #64748b;
+  --ui-text-muted: #94a3b8;
   --ui-border: #e6e6e6;
-  --ui-surface: #ffffff;
   
-  /* Shadows */
+  /* ===== SHADOWS ===== */
   --ui-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   --ui-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --ui-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   
-  /* Accent color */
+  /* ===== ACCENT & INTERACTION ===== */
   --ui-accent: #2563eb;
   --ui-accent-hover: #1d4ed8;
-
-  /* Button tokens */
+  --ui-focus: #2563eb;
+  --ui-hover: #f8fafc;
+  
+  /* ===== SEMANTIC COLORS ===== */
+  --ui-primary: #1f6feb;
+  --ui-primary-contrast: #ffffff;
+  --ui-primary-border: transparent;
+  
+  --ui-secondary: #f3f4f6;
+  --ui-secondary-contrast: #111827;
+  --ui-secondary-border: #e5e7eb;
+  
+  --ui-success: #10b981;
+  --ui-success-contrast: #ffffff;
+  --ui-success-border: transparent;
+  
+  --ui-warning: #f59e0b;
+  --ui-warning-contrast: #ffffff;
+  --ui-warning-border: transparent;
+  
+  --ui-danger: #ef4444;
+  --ui-danger-contrast: #ffffff;
+  --ui-danger-border: transparent;
+  
+  --ui-info: #3b82f6;
+  --ui-info-contrast: #ffffff;
+  --ui-info-border: transparent;
+  
+  --ui-destructive: #ef4444;
+  --ui-destructive-contrast: #ffffff;
+  
+  /* ===== BUTTON TOKENS ===== */
   --ui-button-bg: #1f6feb;
   --ui-button-color: #ffffff;
   --ui-button-border: transparent;
   --ui-button-hover-bg: #1558d6;
+  --ui-button-padding: 0.5rem 1rem;
+  --ui-button-font-size: 0.95rem;
 
   --ui-secondary-bg: #f3f4f6;
   --ui-secondary-color: #0f172a;
-  --ui-secondary-border: #e6e6e6;
+  
+  --ui-outline-color: #0f172a;
+  --ui-outline-hover-bg: #f3f4f6;
 
-  --ui-destructive: #ef4444;
-  --ui-destructive-contrast: #ffffff;
-
-  /* Form input tokens */
-  --ui-focus: #2563eb;
-  --ui-danger: #ef4444;
+  /* ===== FORM INPUT TOKENS ===== */
   --ui-input-disabled-bg: #f3f4f6;
   --ui-input-disabled-text: #9ca3af;
   --ui-input-disabled-border: #e5e7eb;
 
-  /* Badge tokens */
+  /* ===== BADGE TOKENS ===== */
   --ui-badge-bg: #f3f4f6;
   --ui-badge-color: #64748b;
+  --ui-badge-border: 1px solid rgba(15, 23, 42, 0.06);
+  --ui-badge-padding: 0.25rem 0.5rem;
+  --ui-badge-font-size: 0.75rem;
+  --ui-badge-padding-sm: 0.15rem 0.4rem;
+  --ui-badge-font-size-sm: 0.65rem;
+  --ui-badge-padding-md: 0.25rem 0.5rem;
+  --ui-badge-font-size-md: 0.75rem;
+  --ui-badge-padding-lg: 0.35rem 0.65rem;
+  --ui-badge-font-size-lg: 0.85rem;
+  
   --ui-badge-success-bg: #ecfdf5;
   --ui-badge-success-color: #059669;
+  --ui-badge-success-border: 1px solid rgba(5, 150, 105, 0.12);
+  
   --ui-badge-warning-bg: #fffbeb;
   --ui-badge-warning-color: #b45309;
+  --ui-badge-warning-border: 1px solid rgba(212, 125, 21, 0.12);
+  
   --ui-badge-info-bg: #eef2ff;
   --ui-badge-info-color: #3730a3;
+  --ui-badge-info-border: 1px solid rgba(55, 48, 163, 0.12);
+  
   --ui-badge-danger-bg: #ffebe9;
   --ui-badge-danger-color: #ef4444;
-  --ui-badge-border: 1px solid rgba(15, 23, 42, 0.06);
-  --ui-badge-success-border: 1px solid rgba(5, 150, 105, 0.12);
-  --ui-badge-warning-border: 1px solid rgba(212, 125, 21, 0.12);
-  --ui-badge-info-border: 1px solid rgba(55, 48, 163, 0.12);
   --ui-badge-danger-border: 1px solid rgba(239, 68, 68, 0.12);
   
-  /* Table tokens */
+  /* ===== TABLE TOKENS ===== */
   --ui-table-header-bg: #f9fafb;
   --ui-table-hover-bg: #f3f4f6;
   --ui-table-alt-row-bg: #fafafa;
+  --ui-striped-bg: #f8fafc;
   
-  /* Toggle tokens */
+  /* ===== TOGGLE TOKENS ===== */
   --ui-toggle-bg: #e6e9eb;
   --ui-toggle-checked-bg: #2563eb;
   --ui-toggle-knob-bg: #ffffff;
+  --toggle-width: 44px;
+  --toggle-height: 24px;
+  --toggle-thumb-size: 18px;
+  --toggle-bg-off: #ccc;
+  --toggle-bg-on: #4caf50;
+  --toggle-thumb-bg: #fff;
   
-  /* Modal tokens */
-  --ui-modal-overlay: rgba(0, 0, 0, 0.7);
+  /* ===== MODAL TOKENS ===== */
+  --ui-modal-overlay: rgba(0, 0, 0, 0.55);
+  --ui-modal-bg: #fff;
+  --ui-modal-text: #111;
   
-  /* Slider tokens */
+  /* ===== SLIDER TOKENS ===== */
   --ui-slider-track-bg: #e6e6e6;
   --ui-slider-thumb-bg: #2563eb;
   --ui-slider-thumb-hover-bg: #1d4ed8;
 
-  /* Aliases for legacy variable names used in the project */
+  /* ===== ACCORDION TOKENS ===== */
+  --ui-accordion-border: #ddd;
+  --ui-accordion-hover-color: #333;
+
+  /* ===== LEGACY ALIASES (for backward compatibility) ===== */
   --primary: var(--ui-button-bg);
   --background: var(--ui-background);
   --secondary: var(--ui-secondary-bg);
@@ -87,79 +146,111 @@
   --table-alt-row-bg: var(--ui-table-alt-row-bg);
 }
 
-/* Dark theme (applied when consumer sets data-theme="dark" on <html> or <body>) */
+/* ============================================
+   DARK THEME
+   ============================================ */
+
 :root[data-theme="dark"] {
+  /* ===== CORE COLORS ===== */
   --ui-background: #071226;
+  --ui-surface: #0f172a;
   --ui-text-primary: #e6eef8;
   --ui-text-secondary: #94a3b8;
+  --ui-text-muted: #64748b;
   --ui-border: #132033;
-  --ui-surface: #0f172a;
   
-  /* Shadows for dark mode */
+  /* ===== SHADOWS ===== */
   --ui-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
   --ui-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
   --ui-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.6);
   
-  /* Accent color for dark */
+  /* ===== ACCENT & INTERACTION ===== */
   --ui-accent: #3b82f6;
   --ui-accent-hover: #2563eb;
-
+  --ui-focus: #3b82f6;
+  --ui-hover: #1e293b;
+  
+  /* ===== SEMANTIC COLORS ===== */
+  --ui-primary: #2563eb;
+  --ui-primary-contrast: #ffffff;
+  
+  --ui-secondary: #0f172a;
+  --ui-secondary-contrast: #cfe7ff;
+  --ui-secondary-border: #213147;
+  
+  --ui-success: #10b981;
+  --ui-warning: #f59e0b;
+  --ui-danger: #ef4444;
+  --ui-info: #3b82f6;
+  
+  --ui-destructive: #ef4444;
+  --ui-destructive-contrast: #ffffff;
+  
+  /* ===== BUTTON TOKENS ===== */
   --ui-button-bg: #2563eb;
   --ui-button-color: #ffffff;
-  --ui-button-border: transparent;
   --ui-button-hover-bg: #1e4acb;
 
   --ui-secondary-bg: #0f172a;
   --ui-secondary-color: #cfe7ff;
-  --ui-secondary-border: #213147;
+  
+  --ui-outline-color: #e6eef8;
+  --ui-outline-hover-bg: #1e293b;
 
-  --ui-destructive: #ef4444;
-  --ui-destructive-contrast: #ffffff;
-
-  /* Form input tokens for dark mode */
-  --ui-focus: #3b82f6;
-  --ui-danger: #ef4444;
+  /* ===== FORM INPUT TOKENS ===== */
   --ui-input-disabled-bg: #0f172a;
   --ui-input-disabled-text: #6b7280;
   --ui-input-disabled-border: #1e293b;
 
-  /* Badge tokens for dark */
+  /* ===== BADGE TOKENS ===== */
   --ui-badge-bg: #0f172a;
   --ui-badge-color: #9fb6d9;
+  --ui-badge-border: 1px solid rgba(255, 255, 255, 0.04);
+  
   --ui-badge-success-bg: #08332a;
   --ui-badge-success-color: #9ee7c8;
+  --ui-badge-success-border: 1px solid rgba(158, 231, 200, 0.06);
+  
   --ui-badge-warning-bg: #33210a;
   --ui-badge-warning-color: #ffd8a8;
+  --ui-badge-warning-border: 1px solid rgba(255, 216, 168, 0.06);
+  
   --ui-badge-info-bg: #0b1736;
   --ui-badge-info-color: #cfe7ff;
+  --ui-badge-info-border: 1px solid rgba(207, 231, 255, 0.06);
+  
   --ui-badge-danger-bg: #2a0b0b;
   --ui-badge-danger-color: #ffb4b4;
-
-  --ui-badge-border: 1px solid rgba(255, 255, 255, 0.04);
-  --ui-badge-success-border: 1px solid rgba(158, 231, 200, 0.06);
-  --ui-badge-warning-border: 1px solid rgba(255, 216, 168, 0.06);
-  --ui-badge-info-border: 1px solid rgba(207, 231, 255, 0.06);
   --ui-badge-danger-border: 1px solid rgba(255, 180, 180, 0.06);
   
-  /* Table tokens for dark */
+  /* ===== TABLE TOKENS ===== */
   --ui-table-header-bg: #0f172a;
   --ui-table-hover-bg: #1e293b;
   --ui-table-alt-row-bg: #151f32;
+  --ui-striped-bg: #151f32;
   
-  /* Toggle tokens for dark */
+  /* ===== TOGGLE TOKENS ===== */
   --ui-toggle-bg: #1e293b;
   --ui-toggle-checked-bg: #3b82f6;
   --ui-toggle-knob-bg: #f1f5f9;
+  --toggle-bg-off: #475569;
+  --toggle-bg-on: #3b82f6;
   
-  /* Modal tokens for dark */
+  /* ===== MODAL TOKENS ===== */
   --ui-modal-overlay: rgba(0, 0, 0, 0.85);
+  --ui-modal-bg: #0f172a;
+  --ui-modal-text: #e6eef8;
   
-  /* Slider tokens for dark */
+  /* ===== SLIDER TOKENS ===== */
   --ui-slider-track-bg: #1e293b;
   --ui-slider-thumb-bg: #3b82f6;
   --ui-slider-thumb-hover-bg: #2563eb;
 
-  /* Legacy aliases for dark */
+  /* ===== ACCORDION TOKENS ===== */
+  --ui-accordion-border: #213147;
+  --ui-accordion-hover-color: #cfe7ff;
+
+  /* ===== LEGACY ALIASES ===== */
   --primary: var(--ui-button-bg);
   --background: var(--ui-background);
   --secondary: var(--ui-secondary-bg);
@@ -175,14 +266,19 @@
   --table-alt-row-bg: var(--ui-table-alt-row-bg);
 }
 
-/* Auto-detect user preference if consumer hasn't explicitly set a theme */
+/* ============================================
+   AUTO DARK MODE (based on system preference)
+   ============================================ */
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
+    /* Apply same dark theme variables when no explicit theme is set */
     --ui-background: #071226;
+    --ui-surface: #0f172a;
     --ui-text-primary: #e6eef8;
     --ui-text-secondary: #94a3b8;
+    --ui-text-muted: #64748b;
     --ui-border: #132033;
-    --ui-surface: #0f172a;
     
     --ui-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
     --ui-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
@@ -190,17 +286,26 @@
     
     --ui-accent: #3b82f6;
     --ui-accent-hover: #2563eb;
-
+    --ui-focus: #3b82f6;
+    --ui-hover: #1e293b;
+    
+    --ui-primary: #2563eb;
+    --ui-secondary: #0f172a;
+    --ui-secondary-contrast: #cfe7ff;
+    --ui-secondary-border: #213147;
+    
     --ui-button-bg: #2563eb;
     --ui-button-color: #ffffff;
     --ui-button-hover-bg: #1e4acb;
-
-    --ui-focus: #3b82f6;
-    --ui-danger: #ef4444;
+    --ui-secondary-bg: #0f172a;
+    --ui-secondary-color: #cfe7ff;
+    --ui-outline-color: #e6eef8;
+    --ui-outline-hover-bg: #1e293b;
+    
     --ui-input-disabled-bg: #0f172a;
     --ui-input-disabled-text: #6b7280;
     --ui-input-disabled-border: #1e293b;
-
+    
     --ui-badge-bg: #0f172a;
     --ui-badge-color: #9fb6d9;
     --ui-badge-success-bg: #08332a;
@@ -211,25 +316,28 @@
     --ui-badge-info-color: #cfe7ff;
     --ui-badge-danger-bg: #2a0b0b;
     --ui-badge-danger-color: #ffb4b4;
-    --ui-badge-border: 1px solid rgba(255, 255, 255, 0.04);
-    --ui-badge-success-border: 1px solid rgba(158, 231, 200, 0.06);
-    --ui-badge-warning-border: 1px solid rgba(255, 216, 168, 0.06);
-    --ui-badge-info-border: 1px solid rgba(207, 231, 255, 0.06);
-    --ui-badge-danger-border: 1px solid rgba(255, 180, 180, 0.06);
     
     --ui-table-header-bg: #0f172a;
     --ui-table-hover-bg: #1e293b;
     --ui-table-alt-row-bg: #151f32;
+    --ui-striped-bg: #151f32;
     
     --ui-toggle-bg: #1e293b;
     --ui-toggle-checked-bg: #3b82f6;
     --ui-toggle-knob-bg: #f1f5f9;
+    --toggle-bg-off: #475569;
+    --toggle-bg-on: #3b82f6;
     
     --ui-modal-overlay: rgba(0, 0, 0, 0.85);
+    --ui-modal-bg: #0f172a;
+    --ui-modal-text: #e6eef8;
     
     --ui-slider-track-bg: #1e293b;
     --ui-slider-thumb-bg: #3b82f6;
     --ui-slider-thumb-hover-bg: #2563eb;
+    
+    --ui-accordion-border: #213147;
+    --ui-accordion-hover-color: #cfe7ff;
     
     --primary: var(--ui-button-bg);
     --background: var(--ui-background);

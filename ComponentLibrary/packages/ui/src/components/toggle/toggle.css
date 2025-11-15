@@ -18,7 +18,7 @@
   position: relative;
   width: var(--toggle-width, 44px);
   height: var(--toggle-height, 24px);
-  background-color: var(--toggle-bg-off, #ccc);
+background-color: var(--ui-toggle-bg, #e6e9eb);
   border-radius: 999px;
   transition: background-color 0.25s ease, opacity 0.25s ease;
 }
@@ -35,8 +35,7 @@
   left: 3px;
   width: var(--toggle-thumb-size, 18px);
   height: var(--toggle-thumb-size, 18px);
-  background: var(--toggle-thumb-bg, #fff);
-  border-radius: 50%;
+background-color: var(--ui-toggle-checked-bg, #2563eb);  border-radius: 50%;
   transition: transform 0.25s ease;
 }
 

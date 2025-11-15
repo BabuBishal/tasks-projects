@@ -1,6 +1,6 @@
 import { cn } from "@/utils/cn";
 import type { CheckboxProps } from "./checkbox.types";
-import "./Checkbox.css";
+import "./checkbox.css";
 
 export const Checkbox = ({
   className,
