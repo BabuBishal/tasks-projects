@@ -5,7 +5,7 @@ import type {
   TableHeaderProps,
   TableRootProps,
   TableRowProps,
-} from "./Table.types";
+} from "./table.types";
 
 const TableRoot = ({ children, className }: TableRootProps) => {
   return (

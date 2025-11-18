@@ -29,7 +29,6 @@ export const registerSchema = {
     message: "Password must be at least 4 characters",
   },
 };
-
 export const studentSchema = {
   name: {
     required: true,
@@ -41,27 +40,21 @@ export const studentSchema = {
     pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
     message: "Invalid email address",
   },
-  rollNo: {
-    required: true,
-  },
-  program: {
+  programId: {
     required: true,
     message: "Please select a program",
   },
   semester: {
-    required: true,
-    pattern: /^[1-8]$/,
-    message: "Semester must be between 1 and 8",
+    required: false,
   },
   phone: {
-    required: true,
-    pattern: /^[0-9]{10}$/,
-    message: "Phone number must be 10 digits",
+    required: false,
   },
   address: {
-    required: true,
-    minLength: 3,
-    message: "Address must be at least 3 characters",
+    required: false,
+  },
+  scholarshipId: {
+    required: false,
   },
 };
 

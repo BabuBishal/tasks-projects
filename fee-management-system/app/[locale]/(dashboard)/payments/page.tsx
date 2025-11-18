@@ -33,6 +33,7 @@ const page = async () => {
           <div className="text-md font-semibold text-secondary">
             Payment History
           </div>
+
           {data.length > 0 ? (
             <Table className="rounded-md text-xs text-secondary">
               <Table.Header>

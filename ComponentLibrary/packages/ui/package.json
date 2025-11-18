@@ -24,7 +24,7 @@
     "*.css"
   ],
   "scripts": {
-    "build": "pnpm run clean && tsc && vite build && cp ./theme.css ./dist/theme.css",
+    "build": "pnpm run clean && tsc -p tsconfig.build.json && vite build && cp ./theme.css ./dist/theme.css",
     "clean": "rm -rf dist",
     "dev": "vite",
     "prepare": "pnpm run build",

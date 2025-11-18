@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { prisma } from "@/lib/prisma";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -12,30 +13,24 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         const { email, password } = credentials ?? {};
 
-        const res = await fetch("http://localhost:4000/users");
-        const users = await res.json();
-        // console.log("user", users);
-        // Check for matching user
-        const user = users.find(
-          (u: any) => u.email === email && u.password === password
-        );
+        if (!email || !password) return null;
 
-        if (user) {
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-          };
-        }
+        // Find user from Prisma
+        const user = await prisma.user.findUnique({
+          where: { email },
+        });
 
-        // If login fails
+        if (!user) return null;
 
-        if (!res.ok || !user) {
-          throw new Error(user?.error || "Invalid credentials");
-        }
-        return null;
+        // Compare password
+        const isValid = password === user.password;
+        if (!isValid) return null;
 
-       
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        };
       },
     }),
     // GoogleProvider({

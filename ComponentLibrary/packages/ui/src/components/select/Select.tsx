@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import "./Select.css";
+import "./select.css";
 import { cn } from "@/utils/cn";
 import { SelectContextType, SelectRootProps } from "./select.types";
 

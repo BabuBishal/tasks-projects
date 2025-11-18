@@ -34,12 +34,10 @@ export type UseFormProps<T extends Record<string, any>> = {
 export type UseFormReturn<T extends Record<string, any>> = {
   formData: T;
   formErrors: ValidationErrors<T>;
-  handleChange: (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => void;
+  handleChange: (e: ChangeEvent<any>) => void;
   handleSubmit: (
     e: FormEvent<HTMLFormElement>,
-    onSubmit?: (data: T) => void
+    onSubmit: (data: T) => void
   ) => void;
   setFormData: React.Dispatch<React.SetStateAction<T>>;
 };
@@ -58,22 +56,39 @@ export type FormInputs = {
 };
 export type LoginFormInputs = Omit<FormInputs, "name">;
 
-export type StudentFormInputs = {
+export interface StudentFormInputs {
   name: string;
-  rollNo: string;
-  program: "BBA" | "BBM" | "BIM" | "BSc CSIT";
-  year?: number;
-  semester: number;
   email: string;
+  // rollNo: string;
+  programId: string;
+  semester: number;
   phone: string;
   address: string;
-};
+  // year: number;
+  scholarshipId?: string;
+}
 
-export type PaymentFormInputs = {
+export interface PaymentFormProps {
+  formData: PaymentFormInputs;
+  formErrors: {
+    id: string;
+    amount: string;
+    method: string;
+  };
+  handleSubmit: (e: React.FormEvent | React.MouseEvent) => Promise<void>; // ✅ Updated signature
+  handleChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => void;
+}
+
+export interface PaymentFormInputs {
   id: string;
-  amount: string;
-  method: "Cash" | "Online" | "Bank Transfer";
-};
+  amount: number;
+  method: string;
+  selectedFeeIds?: string; // ✅ Add this if not already present
+}
 
 export type LoginFormProps = {
   onSubmit: (data: LoginFormInputs) => void;
@@ -110,24 +125,24 @@ export type AddStudentFormProps = {
   ) => void;
 };
 
-export type PaymentFormProps = {
-  onSubmit: (data: PaymentFormInputs) => void;
-  formData: PaymentFormInputs;
-  formErrors: Partial<Record<keyof PaymentFormInputs, string>>;
-  handleSubmit: (
-    e: FormEvent<HTMLFormElement>,
-    callback: (data: PaymentFormInputs) => void
-  ) => void;
-  handleChange: (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => void;
-};
+// export type PaymentFormProps = {
+//   onSubmit: (data: PaymentFormInputs) => void;
+//   formData: PaymentFormInputs;
+//   formErrors: Partial<Record<keyof PaymentFormInputs, string>>;
+//   handleSubmit: (
+//     e: FormEvent<HTMLFormElement>,
+//     callback: (data: PaymentFormInputs) => void
+//   ) => void;
+//   handleChange: (
+//     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+//   ) => void;
+// };
 
 export interface Student {
   id: string;
   name: string;
   rollNo: string;
-  program: "BBA" | "BBM" | "BIM" | "BSc CSIT" | "N/A";
+  program: string;
   year: number;
   semester: number;
   email: string;
@@ -137,16 +152,30 @@ export interface Student {
     total: number;
     paid: number;
     balance: number;
-    dueDate: string;
+    dueDate: string | null;
     status: "Paid" | "Partial" | "Overdue" | "N/A";
+    totalOutstandingAll?: number;
   };
+  // Detailed per-semester fees
+  feesList?: Array<{
+    id: string;
+    academicYear: string;
+    semesterNo: number;
+    originalFee: number;
+    discount: number;
+    payableFee: number;
+    paid: number;
+    balance: number;
+    status: string;
+    dueDate: string | null;
+  }>;
 }
 
 export interface StudentDetail {
   id: string;
   name: string;
   rollNo: string;
-  program: "BBA" | "BBM" | "BIM" | "BSc CSIT" | "N/A";
+  program: string;
   year: number;
   semester: number;
   email: string;

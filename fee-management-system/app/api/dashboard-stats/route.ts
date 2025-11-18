@@ -1,92 +1,203 @@
-import { Student } from "@/lib/@types/types";
+// app/api/dashboard-stats/route.ts
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import type {
+  StudentWithFees,
+  DashboardData,
+  DashboardStats,
+  PaymentStats,
+  PaymentWithStudent,
+  StudentFeeWithDetails,
+} from "@/lib/@types/prisma";
+
+type StudentPaymentStatus = {
+  studentId: string;
+  status: "paid" | "partial" | "overdue" | "pending" | "no-fees";
+};
 
 export async function GET(req: NextRequest) {
   try {
-    const res = await fetch("http://localhost:4000/students");
+    // Fetch all students with their fees
+    const students = (await prisma.student.findMany({
+      include: {
+        fees: {
+          include: {
+            payments: true,
+            feeStructure: true,
+          },
+        },
+        program: true,
+      },
+    })) as unknown as StudentWithFees[];
 
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: "Failed to fetch students" },
-        { status: 500 }
-      );
-    }
+    // Calculate totals from all student fees
+    const allFees = students.flatMap((student) => student.fees);
 
-    const students = await res.json();
-
-    // For Dashboard Stats
     const totalStudents = students.length;
 
-    const totalFee = students.reduce(
-      (sum: number, student: Student) => sum + student.fees.total,
-      0
+    // Total fee = sum of all payable fees
+    const totalFee = allFees.reduce((sum, fee) => sum + fee.payableFee, 0);
+
+    // Total revenue = sum of all paid amounts
+    const totalRevenue = allFees.reduce((sum, fee) => sum + fee.paid, 0);
+
+    // Pending payment = sum of all balances
+    const pendingPayment = allFees.reduce((sum, fee) => sum + fee.balance, 0);
+
+    // Payment success percentage
+    const paymentStatusPercentage =
+      totalFee > 0 ? Math.floor((totalRevenue / totalFee) * 100) : 0;
+
+    // Student payment status categorization
+    const studentPaymentStatus: StudentPaymentStatus[] = students.map(
+      (student) => {
+        const studentFees = student.fees;
+
+        // Check if student has any fees
+        if (studentFees.length === 0) {
+          return { studentId: student.id, status: "no-fees" as const };
+        }
+
+        // Get the most recent fee record
+        const latestFee = studentFees.reduce((latest, fee) =>
+          new Date(fee.createdAt) > new Date(latest.createdAt) ? fee : latest
+        );
+
+        // Categorize based on latest fee status
+        if (latestFee.balance === 0) {
+          return { studentId: student.id, status: "paid" as const };
+        } else if (latestFee.paid > 0 && latestFee.balance > 0) {
+          return { studentId: student.id, status: "partial" as const };
+        } else if (new Date(latestFee.dueDate) < new Date()) {
+          return { studentId: student.id, status: "overdue" as const };
+        } else {
+          return { studentId: student.id, status: "pending" as const };
+        }
+      }
     );
 
-    const totalRevenue = students.reduce(
-      (sum: number, student: Student) => sum + student.fees.paid,
-      0
-    );
-
-    const pendingPayment = students.reduce(
-      (sum: number, student: Student) => sum + student.fees.balance,
-      0
-    );
-
-    const paymentStatusPercentage = Math.floor((totalRevenue / totalFee) * 100);
-
-    // For payment stats
-
-    const pendingStudents = students.filter(
-      (student: Student) =>
-        student.fees.balance > 0 && student.fees.balance !== student.fees.total
+    // Count students by status
+    const paidStudents = studentPaymentStatus.filter(
+      (s) => s.status === "paid"
     ).length;
 
-    const paidStudents = students.filter(
-      (student: Student) => student.fees.balance == 0
+    const partialStudents = studentPaymentStatus.filter(
+      (s) => s.status === "partial"
     ).length;
 
-    const overdueStudents = students.filter(
-      (student: Student) => student.fees.balance === student.fees.total
+    const overdueStudents = studentPaymentStatus.filter(
+      (s) => s.status === "overdue"
     ).length;
 
-    const dashboardStats = [
+    const pendingStudents = studentPaymentStatus.filter(
+      (s) => s.status === "pending"
+    ).length;
+
+    // Dashboard stats cards
+    const dashboardStats: DashboardStats[] = [
       {
         title: "Total Revenue",
-        value: `$ ${totalRevenue}`,
+        value: `Rs ${totalRevenue.toLocaleString()}`,
         desc: "Total fees collected",
+        icon: "💰",
       },
       {
         title: "Total Students",
-        value: totalStudents,
+        value: totalStudents.toString(),
         desc: "Total students enrolled",
+        icon: "👨‍🎓",
       },
       {
         title: "Pending Payments",
-        value: `$ ${pendingPayment}`,
+        value: `Rs ${pendingPayment.toLocaleString()}`,
         desc: "Awaiting Payments",
+        icon: "⏳",
       },
       {
         title: "Collection Status",
-        value: `${paymentStatusPercentage} %`,
+        value: `${paymentStatusPercentage}%`,
         desc: "Total Payment Success",
+        icon: "📊",
       },
     ];
 
-    const paymentStats = {
+    // Payment statistics
+    const paymentStats: PaymentStats = {
       paid: paidStudents,
+      partial: partialStudents,
       overdue: overdueStudents,
       pending: pendingStudents,
       total: totalStudents,
     };
 
-    return NextResponse.json({
+    // Recent payments (last 5)
+    const recentPayments = await prisma.payment.findMany({
+      take: 5,
+      orderBy: {
+        date: "desc",
+      },
+      include: {
+        studentFee: {
+          include: {
+            student: true,
+          },
+        },
+      },
+    });
+
+    // Overdue fees
+    const overdueFees = await prisma.studentFee.findMany({
+      where: {
+        balance: {
+          gt: 0,
+        },
+        dueDate: {
+          lt: new Date(),
+        },
+      },
+      include: {
+        student: {
+          include: {
+            program: true,
+          },
+        },
+        feeStructure: true,
+        payments: true,
+      },
+      orderBy: {
+        dueDate: "asc",
+      },
+      take: 10,
+    });
+
+    return NextResponse.json<DashboardData>({
       dashboardStats,
       paymentStats,
+      recentPayments: recentPayments.map((payment: PaymentWithStudent) => ({
+        id: payment.id,
+        studentName: payment.studentFee.student.name,
+        amount: payment.amount,
+        method: payment.method,
+        date: payment.date,
+        receiptNo: payment.receiptNo,
+      })),
+      overdueFees: overdueFees.map((fee: StudentFeeWithDetails) => ({
+        id: fee.id,
+        studentName: fee.student.name,
+        studentRollNo: fee.student.rollNo,
+        program: fee.student.program.name,
+        balance: fee.balance,
+        dueDate: fee.dueDate,
+        daysOverdue: Math.floor(
+          (new Date().getTime() - new Date(fee.dueDate).getTime()) /
+            (1000 * 60 * 60 * 24)
+        ),
+      })),
     });
-  } catch (error: any) {
-    console.error("Error fetching students:", error);
+  } catch (error) {
+    console.error("Error fetching dashboard stats:", error);
     return NextResponse.json(
-      { error: "Error fetching student data" },
+      { error: "Error fetching dashboard data" },
       { status: 500 }
     );
   }

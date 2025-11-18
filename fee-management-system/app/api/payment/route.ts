@@ -1,17 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 export async function GET(req: NextRequest) {
   try {
-    const res = await fetch("http://localhost:4000/payments");
+    const payments = await prisma.payment.findMany({
+      include: {
+        studentFee: {
+          include: {
+            student: true,
+          },
+        },
+      },
+    });
 
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: "Failed to fetch Payments" },
-        { status: res.status }
-      );
-    }
-
-    const payments = await res.json();
     return NextResponse.json(payments);
   } catch (error) {
     console.error("Error fetching Payments:", error);

@@ -26,4 +26,3 @@ export type TableRowProps = {
 export type TableCellProps = {
   children: ReactNode;
 };
-

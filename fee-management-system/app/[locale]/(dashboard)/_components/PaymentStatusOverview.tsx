@@ -1,10 +1,10 @@
 import ProgressBar from "@/components/ui/progress-bar/ProgressBar";
 import { CheckCircle, CircleAlert, CircleAlertIcon, Clock } from "lucide-react";
 type PaymentStatus = {
-  paid: number | undefined;
-  overdue: number | undefined;
-  pending: number | undefined;
-  total: number | undefined;
+  paid: number;
+  overdue: number;
+  pending: number;
+  total: number;
 };
 const PaymentStatusOverview = ({
   paymentStatus,

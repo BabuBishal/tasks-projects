@@ -1,63 +1,112 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import AddStudentForm from "@/components/forms/AddStudentForm";
 import useForm from "@/hooks/useForm";
-import { StudentFormInputs } from "@/lib/@types/types";
+import { Program, Scholarship } from "@/lib/@types/prisma";
 import { studentSchema } from "@/lib/constants";
 import { validateForm } from "@/lib/validator";
-import { useState } from "react";
-import { useRouter } from "@/i18n/navigation";
+import { StudentFormInputs } from "@/lib/@types/types";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default function AddStudentPage() {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [programs, setPrograms] = useState<Program[]>([]);
+  const [scholarships, setScholarships] = useState<Scholarship[]>([]);
   const router = useRouter();
+
   const { formData, formErrors, handleChange, handleSubmit } =
     useForm<StudentFormInputs>({
       initialValues: {
         name: "",
         email: "",
-        rollNo: "",
-        program: "BBA",
+        programId: "",
         semester: 1,
         phone: "",
         address: "",
+        scholarshipId: "",
       },
       validateForm,
       schema: studentSchema,
     });
 
+  // Fetch programs and scholarships from API
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [programRes, scholarshipRes] = await Promise.all([
+          fetch(`${baseUrl}/api/programs`),
+          fetch(`${baseUrl}/api/scholarships`),
+        ]);
+
+        const programData = await programRes.json();
+        const scholarshipData = await scholarshipRes.json();
+
+        setPrograms(programData);
+        setScholarships(scholarshipData);
+        setLoading(false);
+
+        // // Set first program as default
+        // if (programData.length > 0) {
+        //   formData.programId = programData[0].id;
+        // }
+      } catch (err) {
+        console.error("Fetching failed:", err);
+        setError("Failed to load required data.");
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
   const onSubmit = async (data: StudentFormInputs) => {
+    console.log("sending data to api", data);
     try {
-      const res = await fetch(`${baseUrl}/api/students/add`, {
+      setLoading(true);
+      const res = await fetch(`${baseUrl}/api/students`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-        }),
+        body: JSON.stringify(data),
       });
-      // console.log(data);
+
+      const responseData = await res.json();
+
       if (!res.ok) {
-        throw new Error("Failed to create student");
+        const errorMsg =
+          responseData.details ||
+          responseData.error ||
+          "Failed to create student";
+        console.error("API Error:", errorMsg);
+        throw new Error(errorMsg);
       }
-      router.push("/students");
+
       setError("");
-    } catch (err) {
-      console.error(err);
-      setError("Something went wrong while adding student.");
+      setLoading(false);
+      router.push("/students");
+    } catch (err: any) {
+      console.error("Error:", err);
+      setError(err.message || "Something went wrong while adding student.");
+      setLoading(false);
     }
   };
 
+  console.log("first", scholarships);
   return (
-    <div className="w-full flex flex-col items-center justify-center mt-10">
+    <div className=" w-full max-w-xl mx-auto mt-10">
       <AddStudentForm
-        onSubmit={onSubmit}
+        programs={programs}
         formData={formData}
         formErrors={formErrors}
-        handleSubmit={handleSubmit}
         handleChange={handleChange}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
         error={error}
+        scholarships={scholarships}
+        loading={loading}
       />
     </div>
   );
