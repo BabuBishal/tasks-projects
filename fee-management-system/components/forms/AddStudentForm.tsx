@@ -22,14 +22,13 @@ export default function AddStudentForm({
   loading,
 }: Props) {
   return (
-  
     <form
       onSubmit={(e) => handleSubmit(e, onSubmit)}
-      className="bg-background border border-border p-8 rounded-lg shadow max-w-md mx-auto shadow-muted"
+      className="bg-background border border-border p-8 rounded-lg shadow max-w-2xl w-full mx-auto shadow-muted"
     >
-      <h2 className="text-secondary text-xl font-semibold mb-6 text-center">
+      {/* <h2 className="text-secondary text-xl font-semibold mb-6 text-center">
         Add Student
-      </h2>
+      </h2> */}
 
       {/* Name */}
       <div className="mb-4">
@@ -137,7 +136,7 @@ export default function AddStudentForm({
         )}
       </div>
 
-        {/* Scholarships */}
+      {/* Scholarships */}
       <div className="mb-4">
         <label className="block text-sm mb-1">Scholarship (optional)</label>
         <select

@@ -2,12 +2,16 @@
 import { useState, useEffect } from "react";
 import PaymentForm from "../../../../../components/forms/PaymentForm";
 import { Student, PaymentFormInputs } from "@/lib/@types/types";
+import { useToast } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 
 export default function PaymentPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
+  const { notify } = useToast();
+  const router = useRouter();
 
   const [formData, setFormData] = useState<PaymentFormInputs>({
     id: "",
@@ -164,7 +168,7 @@ export default function PaymentPage() {
 
     try {
       setError("");
-      setSuccessMessage("");
+      // setSuccessMessage("");
 
       // Validate that we have selected fees
       if (!formData.selectedFeeIds || formData.selectedFeeIds.trim() === "") {
@@ -200,9 +204,9 @@ export default function PaymentPage() {
       const result = await res.json();
 
       // Show success message
-      setSuccessMessage(
-        `Payment of Rs. ${formData.amount.toLocaleString()} processed successfully!`
-      );
+      // setSuccessMessage(
+      //   `Payment of Rs. ${formData.amount.toLocaleString()} processed successfully!`
+      // );
 
       // Reset form ONLY after successful submission
       setFormData({
@@ -211,39 +215,40 @@ export default function PaymentPage() {
         method: "",
         selectedFeeIds: "",
       });
-
+      notify({
+        title: "Payment Successful",
+        description: "Added new payment successfully.",
+        type: "success",
+      });
+      router.push("/payments");
       // Refresh student data to show updated balances
       await fetchStudents();
 
       // Clear success message after 5 seconds
-      setTimeout(() => setSuccessMessage(""), 5000);
+      // setTimeout(() => setSuccessMessage(""), 5000);
     } catch (err: any) {
       setError(err.message || "Failed to process payment");
+      notify({
+        title: "Payment Successful",
+        description: err.message || "Added new payment successfully.",
+        type: "error",
+      });
     }
   };
 
-  if (loading) {
-    return (
-      <div className="container mx-auto p-6 flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading students...</p>
-        </div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="container mx-auto p-6 flex items-center justify-center min-h-[400px]">
+  //       <div className="text-center">
+  //         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+  //         <p className="mt-4 text-gray-600">Loading students...</p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="container mx-auto p-6">
-      {/* Success Message */}
-      {successMessage && (
-        <div className="mb-6 bg-green-50 border-2 border-green-200 rounded-lg p-4 animate-fade-in">
-          <p className="text-green-600 font-medium flex items-center gap-2">
-            <span className="text-xl">✅</span> {successMessage}
-          </p>
-        </div>
-      )}
-
       <PaymentForm
         formData={formData}
         formErrors={formErrors}
@@ -252,6 +257,7 @@ export default function PaymentPage() {
         error={error}
         students={students}
         setAmount={setFormAmount}
+        loading={loading}
       />
     </div>
   );

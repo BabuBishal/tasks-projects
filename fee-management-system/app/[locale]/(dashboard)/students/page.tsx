@@ -1,10 +1,10 @@
 // app/students/page.tsx
-import { Button } from "@/components/ui/Button/Button";
-import Table from "@/components/ui/Table/Table";
+import { Button } from "@/components/ui/button/Button";
+import Table from "@/components/ui/table/Table";
 import { Eye, Phone, Plus } from "lucide-react";
 import { studentHeaders } from "@/lib/constants";
 import Link from "next/link";
-import Badge from "@/components/ui/Badges/Badges";
+import Badge from "@/components/ui/badges/Badges";
 // import {Badge} from "l3ui";
 import type { StudentWithFees } from "@/lib/@types/prisma";
 

@@ -1,8 +1,14 @@
-const ProgressBar = ({ progress = 10 }: { progress: number }) => {
+const ProgressBar = ({
+  progress = 0,
+  color = "bg-green-300",
+}: {
+  progress: number;
+  color?: string;
+}) => {
   return (
-    <div className="relative min-w-20 w-full   h-1.5 bg-border text-muted z-10 rounded-sm ">
+    <div className="w-full bg-border rounded-full h-2">
       <div
-        className={`absolute left-0 top-0 h-1.5 bg-primary rounded-sm`}
+        className={`${color} h-2 rounded-full transition-all duration-300`}
         style={{ width: `${progress}%` }}
       ></div>
     </div>

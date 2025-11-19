@@ -3,9 +3,10 @@
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/Sheet/sheet";
+} from "@/components/ui/sheet/sheet";
 import { useRouter } from "next/navigation";
 import AddStudentPage from "../../add/page";
 
@@ -16,7 +17,8 @@ export default function AddStudentSheet() {
     <Sheet defaultOpen onOpenChange={(open) => !open && router.back()}>
       <SheetContent side="right" className="max-w-lg">
         <SheetHeader>
-          <SheetTitle>Add new student here</SheetTitle>
+          <SheetTitle>Add Student</SheetTitle>
+          <SheetDescription>Add new students here</SheetDescription>
         </SheetHeader>
 
         {/* Reuse the same page content */}

@@ -27,7 +27,7 @@ const index = () => {
         <School />
         <span className="font-semibold">{t("appTitle")}</span>
       </div>
-      <div className=" flex flex-col gap-3 text-sm flex-1 p-5">
+      <div className=" flex flex-col gap-3 text-sm flex-1 p-5 h-full">
         {sidebarLinks.map((link) => {
           const Icon = link.icon;
           const isActive = pathname.includes(link.path);

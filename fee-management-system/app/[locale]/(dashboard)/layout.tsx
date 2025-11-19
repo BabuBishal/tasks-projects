@@ -15,7 +15,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         <Sidebar />
         <div className="w-full  flex flex-col gap-1 flex-1 ml-0 sm:ml-58 transition-transform ease duration-200">
           <Navbar />
-          <main className="w-full h-full p-5">{children}</main>
+          <main className="w-full h-full p-10">{children}</main>
         </div>
       </div>
     </SessionProvider>

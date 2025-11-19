@@ -2,7 +2,7 @@
 import { PaymentFormProps, Student } from "@/lib/@types/types";
 import { paymentMethod } from "@/lib/constants";
 import { useState } from "react";
-import { Button } from "../ui/Button/Button";
+import { Button } from "../ui/button/Button";
 
 export default function PaymentForm({
   formData,
@@ -12,10 +12,12 @@ export default function PaymentForm({
   error,
   students,
   setAmount,
+  loading,
 }: PaymentFormProps & {
   error: string;
   students: Student[];
   setAmount?: (v: number) => void;
+  loading: boolean;
 }) {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedFeeIds, setSelectedFeeIds] = useState<Set<string>>(new Set());
@@ -86,7 +88,7 @@ export default function PaymentForm({
   return (
     <div className="bg-background border border-border rounded-lg shadow-lg w-full max-w-4xl mx-auto">
       {/* Header */}
-      <div className="bg-linear-to-r from-zinc-900 to-zinc-800 text-white px-6 py-4 rounded-t-lg">
+      <div className="bg-linear-to-r from-stone-800 to-stone-800 text-white px-6 py-4 rounded-t-lg">
         <h2 className="text-2xl font-bold">Fee Payment</h2>
         <p className="text-blue-100 text-sm mt-1">
           Select student and semesters to pay
@@ -448,7 +450,8 @@ export default function PaymentForm({
             disabled={
               !selectedStudent ||
               selectedFeeIds.size === 0 ||
-              formData.amount <= 0
+              formData.amount <= 0 ||
+              loading
             }
             onClick={handleSubmit}
           >

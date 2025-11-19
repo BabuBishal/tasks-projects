@@ -6,7 +6,7 @@ const StudentCard = ({
   email = "N/A",
   phone = "N/A",
   year,
-  // program = "N/A",
+  program = "N/A",
   semester,
 }: Partial<Student>) => {
   return (
@@ -23,10 +23,10 @@ const StudentCard = ({
         </span>
       </div>
       <div className="text-xs text-muted flex gap-5 justify-between min-w-52 w-full ">
-        {/* <span className="flex gap-2 items-center  flex-1 ">
+        <span className="flex gap-2 items-center  flex-1 ">
           <Book className="w-4 h-4" />
           {program}
-        </span> */}
+        </span>
         <span className="flex gap-2 items-center  flex-1 ">
           <Calendar className="w-4 h-4" />
           {year} - Semester {semester}

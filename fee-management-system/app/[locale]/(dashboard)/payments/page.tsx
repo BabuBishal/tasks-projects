@@ -1,6 +1,6 @@
-import Badge from "@/components/ui/Badges/Badges";
-import { Button } from "@/components/ui/Button/Button";
-import Table from "@/components/ui/Table/Table";
+import Badge from "@/components/ui/badges/Badges";
+import { Button } from "@/components/ui/button/Button";
+import Table from "@/components/ui/table/Table";
 import { PaymentHistory } from "@/lib/@types/types";
 import { paymentHeaders } from "@/lib/constants";
 import { Plus } from "lucide-react";

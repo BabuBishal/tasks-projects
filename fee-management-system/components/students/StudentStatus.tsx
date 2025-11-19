@@ -1,8 +1,8 @@
 "use client";
 
 import { StudentDetail } from "@/lib/@types/types";
-import Badge from "../ui/Badges/Badges";
-import { Button } from "../ui/Button/Button";
+import Badge from "../ui/badges/Badges";
+import { Button } from "../ui/button/Button";
 import { Download } from "lucide-react";
 
 const StudentStatus = ({ studentDetail }: { studentDetail: StudentDetail }) => {

@@ -141,74 +141,95 @@ export type AddStudentFormProps = {
 export interface Student {
   id: string;
   name: string;
-  rollNo: string;
-  program: string;
-  year: number;
-  semester: number;
   email: string;
+  rollNo: string;
+  programId: string;
+  semester: number;
   phone: string;
   address: string;
-  fees: {
-    total: number;
-    paid: number;
-    balance: number;
-    dueDate: string | null;
-    status: "Paid" | "Partial" | "Overdue" | "N/A";
-    totalOutstandingAll?: number;
-  };
-  // Detailed per-semester fees
-  feesList?: Array<{
-    id: string;
-    academicYear: string;
-    semesterNo: number;
-    originalFee: number;
-    discount: number;
-    payableFee: number;
-    paid: number;
-    balance: number;
-    status: string;
-    dueDate: string | null;
-  }>;
+  year: number;
+  joinedYear: number;
+  createdAt: string;
+  updatedAt: string;
+
+  // Relations
+  program: Program;
+  fees: StudentFee[];
+  scholarships: StudentScholarship[];
+
+  // Computed totals
+  totalOriginalFee: number;
+  totalDiscount: number;
+  totalPayableFee: number;
+  totalPaid: number;
+  totalBalance: number;
+  totalScholarshipAmount: number;
 }
 
-export interface StudentDetail {
+export interface Program {
   id: string;
   name: string;
-  rollNo: string;
-  program: string;
-  year: number;
-  semester: number;
-  email: string;
-  phone: string;
-  address: string;
-  fees: {
-    total: number;
-    paid: number;
-    balance: number;
-    dueDate: string;
-    status: "Paid" | "Partial" | "Overdue" | "N/A";
-  };
-  paymentHistory: Payment[];
+  duration: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export type Payment = {
+export interface StudentFee {
   id: string;
   studentId: string;
+  feeStructureId: string;
+  academicYear: string;
+  originalFee: number;
+  discount: number;
+  payableFee: number;
+  paid: number;
+  balance: number;
+  status: "Paid" | "Pending" | "Partial";
+  dueDate: string;
+  createdAt: string;
+  updatedAt: string;
+
+  payments: Payment[];
+  feeStructure: FeeStructure;
+}
+
+export interface FeeStructure {
+  id: string;
+  programSemesterId: string;
+  academicYear: string;
+  originalFee?: number; // depends on schema
+  createdAt: string;
+  updatedAt: string;
+  labFee?: number; // depends on schema
+  libraryFee?: number; // depends on schema
+  sportsFee?: number; // depends on schema
+  miscFee?: number; // depends on schema
+  totalFee: number;
+  tuitionFee?: number; // depends on schema
+}
+
+export interface Payment {
+  id: string;
+  studentFeeId: string;
   amount: number;
-  date: string;
   method: string;
   receiptNo: string;
-  status: "Pending" | "Paid" | "Overdue";
-};
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
-export type PaymentHistory = {
+export interface StudentScholarship {
   id: string;
   studentId: string;
-  studentName: string;
-  rollNo: string;
-  program: string;
-  amount: number;
-  date: string;
-  method: string;
-  status: "Partial" | "Full";
-};
+  scholarshipId: string;
+  actualAmount: number;
+  scholarship: Scholarship;
+}
+
+export interface Scholarship {
+  id: string;
+  name: string;
+  type: "percentage" | "fixed";
+  value?: number; // optional, depends on schema
+}

@@ -8,6 +8,7 @@ import { Program, Scholarship } from "@/lib/@types/prisma";
 import { studentSchema } from "@/lib/constants";
 import { validateForm } from "@/lib/validator";
 import { StudentFormInputs } from "@/lib/@types/types";
+import { useToast } from "@/components/ui/toast";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -17,6 +18,7 @@ export default function AddStudentPage() {
   const [programs, setPrograms] = useState<Program[]>([]);
   const [scholarships, setScholarships] = useState<Scholarship[]>([]);
   const router = useRouter();
+  const { notify } = useToast();
 
   const { formData, formErrors, handleChange, handleSubmit } =
     useForm<StudentFormInputs>({
@@ -64,7 +66,6 @@ export default function AddStudentPage() {
   }, []);
 
   const onSubmit = async (data: StudentFormInputs) => {
-    console.log("sending data to api", data);
     try {
       setLoading(true);
       const res = await fetch(`${baseUrl}/api/students`, {
@@ -81,22 +82,38 @@ export default function AddStudentPage() {
           responseData.error ||
           "Failed to create student";
         console.error("API Error:", errorMsg);
+        notify({
+          title: "Adding Failed",
+          description: "Failed to add student.",
+          type: "error",
+        });
         throw new Error(errorMsg);
       }
 
       setError("");
       setLoading(false);
+      notify({
+        title: "Added Successfully",
+        description: "New student added successfully.",
+        type: "success",
+      });
       router.push("/students");
     } catch (err: any) {
       console.error("Error:", err);
       setError(err.message || "Something went wrong while adding student.");
       setLoading(false);
+      notify({
+        title: "Adding Failed",
+        description: "Error adding new successfully.",
+        type: "error",
+      });
     }
   };
 
-  console.log("first", scholarships);
+  // console.log("first", scholarships);
   return (
-    <div className=" w-full max-w-xl mx-auto mt-10">
+    <div className=" w-full max-w-xl flex flex-col gap-5 justify-center items-center mx-auto mt-10">
+      <h2 className="text-2xl font-semibold">Add Student</h2>
       <AddStudentForm
         programs={programs}
         formData={formData}

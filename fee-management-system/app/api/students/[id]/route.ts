@@ -8,13 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  // console.log("Attempting to fetch student with ID:", id);
 
-  console.log("🔍 API ROUTE - Received ID:", id);
-  console.log("🔍 API ROUTE - Full params:", params);
-  console.log("🔍 API ROUTE - Request URL:", req.url);
-
-  // CRITICAL CHECK: Ensure the ID is present from the URL (e.g., /api/students/123)
   if (!id) {
     return NextResponse.json(
       { error: "Missing student ID in request URL" },
@@ -48,7 +42,80 @@ export async function GET(
       return NextResponse.json({ error: "Student not found" }, { status: 404 });
     }
 
-    return NextResponse.json(student);
+    // Calculate total original fee first (needed for percentage scholarships)
+    const totalOriginalFee = student.fees.reduce(
+      (total, fee) => total + fee.originalFee,
+      0
+    );
+
+    // Calculate total scholarship amount based on type
+    const totalScholarshipAmount = student.scholarships.reduce((total, ss) => {
+      const scholarship = ss.scholarship;
+
+      if (scholarship.type === "fixed") {
+        // Fixed amount (e.g., Sports Scholarship)
+        return total + scholarship.value;
+      } else if (scholarship.type === "percentage") {
+        // Percentage-based (e.g., Merit 25%, Need-based 50%)
+        // Calculate percentage of total original fee
+        const scholarshipAmount = (totalOriginalFee * scholarship.value) / 100;
+        return total + scholarshipAmount;
+      }
+
+      return total;
+    }, 0);
+
+    // Calculate total payable fee (sum of all fee payableFee)
+    const totalPayableFee = student.fees.reduce(
+      (total, fee) => total + fee.payableFee,
+      0
+    );
+
+    // Calculate total paid (sum of all fee paid)
+    const totalPaid = student.fees.reduce((total, fee) => total + fee.paid, 0);
+
+    // Calculate total balance/remaining (sum of all fee balance)
+    const totalBalance = student.fees.reduce(
+      (total, fee) => total + fee.balance,
+      0
+    );
+
+    // Calculate total discount applied
+    const totalDiscount = student.fees.reduce(
+      (total, fee) => total + fee.discount,
+      0
+    );
+
+    // Calculate scholarships with actual amounts for display
+    const scholarshipsWithAmounts = student.scholarships.map((ss) => {
+      const scholarship = ss.scholarship;
+      let actualAmount = 0;
+
+      if (scholarship.type === "fixed") {
+        actualAmount = scholarship.value;
+      } else if (scholarship.type === "percentage") {
+        actualAmount = (totalOriginalFee * scholarship.value) / 100;
+      }
+
+      return {
+        ...ss,
+        actualAmount, // Add calculated amount
+      };
+    });
+
+    // Attach calculated totals to the student object
+    const studentWithTotals = {
+      ...student,
+      scholarships: scholarshipsWithAmounts, // Replace with scholarships that have actualAmount
+      totalScholarshipAmount,
+      totalOriginalFee,
+      totalPayableFee,
+      totalPaid,
+      totalBalance,
+      totalDiscount,
+    };
+
+    return NextResponse.json(studentWithTotals);
   } catch (error) {
     console.error("Error fetching student:", error);
     return NextResponse.json(
