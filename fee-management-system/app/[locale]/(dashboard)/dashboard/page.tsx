@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const { data, isLoading, isError } = useGetDashboardStats();
   // const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
+  // useEffect(() => {+
   //   fetchDashboardData();
   // }, []);
 
@@ -39,7 +39,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!data) {
+  if (!data || isError) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-red-600">Failed to load dashboard data</p>

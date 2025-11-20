@@ -1,3 +1,4 @@
+"use client";
 import {
   createContext,
   useContext,
@@ -64,20 +65,12 @@ Modal.Content = function ModalContent({
   children: ReactNode;
   className?: string;
 }) {
+  const [mounted, setMounted] = useState(false);
   const modal = useContext(ModalContext);
   if (!modal) throw new Error("Modal.Content must be inside <Modal>");
 
   const { isOpen, close } = modal;
-
-  // Prevent rendering if closed
-  if (!isOpen) return null;
-
-  // Create portal container
-  const el = document.getElementById("modal-root");
-  if (!el) {
-    console.error("You need a <div id='modal-root'></div> in your HTML.");
-    return null;
-  }
+  useEffect(() => setMounted(true), []);
 
   // Escape key to close
   useEffect(() => {
@@ -87,6 +80,17 @@ Modal.Content = function ModalContent({
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [close]);
+
+  // Prevent rendering if closed
+  if (!isOpen) return null;
+
+  if (!mounted) return null;
+  // Create portal container
+  const el = document.getElementById("modal-root");
+  if (!el) {
+    console.error("You need a <div id='modal-root'></div> in your HTML.");
+    return null;
+  }
 
   return ReactDOM.createPortal(
     <div className="modal-overlay" onClick={close}>
@@ -158,6 +162,40 @@ Modal.Close = function ModalClose({
   return (
     <button onClick={modal.close} className={cn("modal-close", className)}>
       {children ?? "Close"}
+    </button>
+  );
+};
+
+// ─────────────────────────────
+// Close Icon (X button in corner)
+// ─────────────────────────────
+Modal.CloseIcon = function ModalCloseIcon({
+  className,
+}: {
+  className?: string;
+}) {
+  const modal = useContext(ModalContext);
+  if (!modal) throw new Error("Modal.CloseIcon must be inside <Modal>");
+
+  return (
+    <button
+      onClick={modal.close}
+      className={cn("modal-close-icon", className)}
+      aria-label="Close modal"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
     </button>
   );
 };

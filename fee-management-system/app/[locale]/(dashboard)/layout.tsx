@@ -9,13 +9,17 @@ type DashboardLayoutProps = {
 };
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
   return (
     <SessionProvider>
-      <div className="flex min-h-screen w-full">
-        <Sidebar />
-        <div className="w-full  flex flex-col gap-1 flex-1 ml-0 sm:ml-58 transition-transform ease duration-200">
-          <Navbar />
-          <main className="w-full h-full p-10">{children}</main>
+      <div className="flex min-h-screen w-full bg-background">
+        <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+        <div className="flex-1 flex flex-col min-h-screen transition-all duration-300 ease-in-out md:ml-58">
+          <Navbar onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+          <main className="flex-1 p-6 md:p-10 overflow-x-hidden ">
+            {children}
+          </main>
         </div>
       </div>
     </SessionProvider>

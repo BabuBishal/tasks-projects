@@ -16,7 +16,7 @@ export default function PaymentPage() {
   const [formData, setFormData] = useState<PaymentFormInputs>({
     id: "",
     amount: 0,
-    method: "",
+    method: "cash",
     selectedFeeIds: "", // Add this to track selected fee IDs
   });
 

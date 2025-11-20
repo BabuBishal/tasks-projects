@@ -1,8 +1,8 @@
 "use client";
-import { useState, useEffect, use, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Pencil, Trash2, ArrowLeft, CreditCard, Award } from "lucide-react";
-import { formatCurrency, formatDate, getStatusColor } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button/Button";
 import StatsCard from "@/components/shared/stats-card/StatsCard";
 import StudentInfo from "../_components/StudentInfo";
@@ -27,28 +27,27 @@ export default function StudentDetailsPage() {
   });
 
   useEffect(() => {
+    const fetchStudent = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/students/${params.id}`);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch student");
+        }
+
+        const data = await response.json();
+        setStudent(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
     if (params.id) {
       fetchStudent();
     }
   }, [params.id]);
-
-  const fetchStudent = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/students/${params.id}`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch student");
-      }
-
-      const data = await response.json();
-      setStudent(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async () => {
     try {
@@ -134,11 +133,9 @@ export default function StudentDetailsPage() {
               Edit
             </Button>
             <Modal>
-              <Modal.Trigger>
-                <Button variant="danger" size="md">
-                  <Trash2 className="w-4 h-4" />
-                  Delete
-                </Button>
+              <Modal.Trigger className="flex gap-2 p-2  justify-center items-center bg-red-600 rounded-sm text-white hover:bg-red-500 hover:-translate-y-px dark:bg-red-400 transition-all">
+                <Trash2 className="w-4 h-4" />
+                <span>Delete</span>
               </Modal.Trigger>
               <Modal.Content>
                 <Modal.Header>Confirm Deletion</Modal.Header>
@@ -147,7 +144,9 @@ export default function StudentDetailsPage() {
                   cannot be undone.
                 </Modal.Body>
                 <Modal.Footer>
-                  <Modal.Close>Cancel</Modal.Close>
+                  <Modal.Close className="hover:-translate-y-px">
+                    Cancel
+                  </Modal.Close>
                   <Button
                     variant="danger"
                     size="md"

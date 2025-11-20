@@ -1,5 +1,4 @@
 import { DashboardStats } from "@/lib/@types/prisma";
-import Card from "../../../../components/shared/stats-card/StatsCard";
 
 const StatsOverview = ({
   dashboardStats,
@@ -7,7 +6,7 @@ const StatsOverview = ({
   dashboardStats: DashboardStats[];
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div className="grid grid-cols-1 min-[480px]:grid-cols-2 min-[1024px]:grid-cols-4 gap-6 mb-8">
       {dashboardStats.map((stat, index) => (
         <div
           key={index}

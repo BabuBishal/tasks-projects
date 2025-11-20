@@ -78,8 +78,8 @@
   --color-accent: var(--accent);
   --color-error: var(--error);
   --color-success: var(--success);
-  --color-error: var(--warning);
-  --color-error: var(--info);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
 
   --color-neutral-border: var(--neutral-border);
   --color-neutral-bg: var(--neutral-bg);

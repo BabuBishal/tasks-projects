@@ -1,18 +1,16 @@
 // app/students/page.tsx
 import { Button } from "@/components/ui/button/Button";
-import Table from "@/components/ui/table/Table";
-import { Eye, Phone, Plus } from "lucide-react";
-import { studentHeaders } from "@/lib/constants";
+import { Plus, Users, Wallet, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import Badge from "@/components/ui/badges/Badges";
-// import {Badge} from "l3ui";
 import type { StudentWithFees } from "@/lib/@types/prisma";
+import StatsCard from "@/components/ui/stats-card/StatsCard";
+import StudentList from "@/components/students/StudentList";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const Students = async () => {
   try {
-    const res = await fetch(`${baseUrl}/api/students`);
+    const res = await fetch(`${baseUrl}/api/students`, { cache: "no-store" });
 
     if (!res.ok) {
       throw new Error("Failed to fetch students");
@@ -20,12 +18,41 @@ const Students = async () => {
 
     const students: StudentWithFees[] = await res.json();
 
+    // Calculate statistics
+    const totalStudents = students.length;
+    const paidStudents = students.filter((s) => {
+      const latestFee =
+        s.fees.length > 0
+          ? s.fees.reduce((latest, fee) =>
+              new Date(fee.createdAt) > new Date(latest.createdAt)
+                ? fee
+                : latest
+            )
+          : null;
+      return latestFee?.status === "Paid";
+    }).length;
+
+    const overdueStudents = students.filter((s) => {
+      const latestFee =
+        s.fees.length > 0
+          ? s.fees.reduce((latest, fee) =>
+              new Date(fee.createdAt) > new Date(latest.createdAt)
+                ? fee
+                : latest
+            )
+          : null;
+      return latestFee?.status === "Overdue";
+    }).length;
+
     return (
-      <div className="w-full h-full flex flex-col gap-10">
-        <div className="flex justify-between items-end g-5">
+      <div className="w-full h-full flex flex-col gap-8">
+        {/* Header */}
+        <div className="flex justify-between items-end gap-5">
           <div>
             <h1 className="text-primary text-2xl font-bold">Students Panel</h1>
-            <h4 className="text-muted text-sm">Manage students, fees, etc</h4>
+            <h4 className="text-muted text-sm">
+              Manage students, fees, and academic records
+            </h4>
           </div>
           <div>
             <Link href="/students/add">
@@ -36,100 +63,35 @@ const Students = async () => {
           </div>
         </div>
 
-        <div className="w-full flex flex-col gap-5 p-4 border border-border rounded-lg">
-          <div className="flex justify-between items-center">
-            <div className="flex flex-col">
-              <span className="text-secondary text-sm">Student Management</span>
-              <span className="text-xs text-muted">
-                Manage and view all student records
-              </span>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <div className="text-md font-semibold text-secondary">
-              All Students ({students.length})
-            </div>
-
-            {students.length === 0 ? (
-              <div className="text-center py-10 text-muted">
-                <p>No students found.</p>
-                <Link href="/students/add">
-                  <Button variant="primary" size="sm" className="mt-4">
-                    <Plus className="w-4 h-4" /> Add Your First Student
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              <Table className="rounded-md text-xs text-secondary">
-                <Table.Header>
-                  {studentHeaders?.map((head, index: number) => (
-                    <Table.HeaderCell key={index}>{head}</Table.HeaderCell>
-                  ))}
-                </Table.Header>
-                <Table.Body>
-                  {students.map((student) => {
-                    // Calculate total balance from all fees
-                    const totalBalance = student.fees.reduce(
-                      (sum, fee) => sum + fee.balance,
-                      0
-                    );
-
-                    // Get latest fee status
-                    const latestFee =
-                      student.fees.length > 0
-                        ? student.fees.reduce((latest, fee) =>
-                            new Date(fee.createdAt) > new Date(latest.createdAt)
-                              ? fee
-                              : latest
-                          )
-                        : null;
-
-                    const feeStatus = latestFee?.status || "No Fees";
-
-                    return (
-                      <Table.Row key={student.id}>
-                        <Table.Cell>{student.name}</Table.Cell>
-                        <Table.Cell>{student.rollNo}</Table.Cell>
-                        <Table.Cell>{student.program.name}</Table.Cell>
-                        <Table.Cell>{student.semester}</Table.Cell>
-                        <Table.Cell>
-                          <div className="flex gap-2 items-center">
-                            <Phone className="w-4 h-4" /> {student.phone}
-                          </div>
-                        </Table.Cell>
-                        <Table.Cell>
-                          Rs {totalBalance.toLocaleString()}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Badge
-                            size="small"
-                            variant={
-                              feeStatus === "Partial"
-                                ? "info"
-                                : feeStatus === "Overdue"
-                                ? "danger"
-                                : feeStatus === "Paid"
-                                ? "success"
-                                : "warning"
-                            }
-                          >
-                            {feeStatus}
-                          </Badge>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Link href={`/students/${student.id}`}>
-                            <Eye className="w-4 h-4 cursor-pointer hover:text-primary" />
-                          </Link>
-                        </Table.Cell>
-                      </Table.Row>
-                    );
-                  })}
-                </Table.Body>
-              </Table>
-            )}
-          </div>
+        {/* Statistics Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <StatsCard
+            title="Total Students"
+            value={totalStudents}
+            icon={Users}
+            description="Active students in the system"
+            trend={{ value: 12, label: "vs last month", positive: true }}
+          />
+          <StatsCard
+            title="Paid Fees"
+            value={paidStudents}
+            icon={Wallet}
+            description="Students with fully paid fees"
+            trend={{ value: 5, label: "vs last month", positive: true }}
+            variant="success"
+          />
+          <StatsCard
+            title="Overdue Fees"
+            value={overdueStudents}
+            icon={AlertCircle}
+            description="Students with outstanding payments"
+            trend={{ value: 2, label: "vs last month", positive: false }}
+            variant="danger"
+          />
         </div>
+
+        {/* Student List */}
+        <StudentList initialStudents={students} />
       </div>
     );
   } catch (error) {

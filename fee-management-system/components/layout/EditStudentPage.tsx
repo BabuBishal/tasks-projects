@@ -78,7 +78,7 @@ export default function EditStudentPage() {
     if (studentId) {
       fetchStudent();
     }
-  }, [studentId]);
+  }, [studentId, notify, setFormData]);
 
   // Fetch programs and scholarships from API
   useEffect(() => {
@@ -121,11 +121,11 @@ export default function EditStudentPage() {
           responseData.error ||
           "Failed to update student";
         console.error("API Error:", errorMsg);
-        notify({
-          title: "Update Failed",
-          description: errorMsg,
-          type: "error",
-        });
+        // notify({
+        //   title: "Update Failed",
+        //   description: errorMsg,
+        //   type: "error",
+        // });
         router.back();
         throw new Error(errorMsg);
       }

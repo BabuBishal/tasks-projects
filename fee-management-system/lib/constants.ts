@@ -91,4 +91,4 @@ export const paymentHeaders = [
 ];
 
 export const programList = ["BBA", "BBM", "BIM", "BSc CSIT"];
-export const paymentMethod = ["Cash", "Bank Transfer", "Online"];
+export const paymentMethod = ["Cash", "Bank", "Online"];

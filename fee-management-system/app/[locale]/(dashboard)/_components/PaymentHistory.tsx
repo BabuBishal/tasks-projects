@@ -1,4 +1,4 @@
-import Table from "@/components/ui/table/Table";
+import { Table } from "@/components/ui/table/Table";
 import { RecentPayment } from "@/lib/@types/prisma";
 import React from "react";
 
@@ -9,44 +9,32 @@ const PaymentHistory = ({ paymentData }: { paymentData: RecentPayment[] }) => {
         Recent Payments
       </h2>
       {paymentData && paymentData.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left py-2 px-3 text-sm font-semibold text-secondary">
-                  Student
-                </th>
-                <th className="text-left py-2 px-3 text-sm font-semibold text-secondary">
-                  Amount
-                </th>
-                <th className="text-left py-2 px-3 text-sm font-semibold text-secondary">
-                  Method
-                </th>
-                <th className="text-left py-2 px-3 text-sm font-semibold text-secondary">
-                  Date
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {paymentData.map((payment) => (
-                <tr key={payment.id} className="border-b hover:bg-accent">
-                  <td className="py-3 px-3 text-sm text-secondary">
-                    {payment.studentName}
-                  </td>
-                  <td className="py-3 px-3 text-sm font-medium text-secondary">
-                    Rs {payment.amount.toLocaleString()}
-                  </td>
-                  <td className="py-3 px-3 text-sm text-secondary">
-                    {payment.method}
-                  </td>
-                  <td className="py-3 px-3 text-sm text-secondary">
-                    {new Date(payment.date).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table className="rounded-md text-xs text-secondary">
+          <Table.Header>
+            <Table.Row>
+              <Table.Head>Student</Table.Head>
+              <Table.Head>Amount</Table.Head>
+              <Table.Head>Method</Table.Head>
+              <Table.Head>Date</Table.Head>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {paymentData.map((payment) => (
+              <Table.Row key={payment.id}>
+                <Table.Cell dataLabel="Student">
+                  {payment.studentName}
+                </Table.Cell>
+                <Table.Cell dataLabel="Amount">
+                  Rs {payment.amount.toLocaleString()}
+                </Table.Cell>
+                <Table.Cell dataLabel="Method">{payment.method}</Table.Cell>
+                <Table.Cell dataLabel="Date">
+                  {new Date(payment.date).toLocaleDateString()}
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table>
       ) : (
         <p className="text-gray-500 text-center py-4">No recent payments</p>
       )}

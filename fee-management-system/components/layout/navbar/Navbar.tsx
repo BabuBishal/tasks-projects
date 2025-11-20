@@ -7,7 +7,7 @@ import { Bell, Menu, UserCircle } from "lucide-react";
 import Profile from "../profile/Profile";
 import { useEffect, useRef, useState } from "react";
 
-const Navbar = () => {
+const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
   // const session = await getServerSession(authOptions);
   const [openDropdown, setOpenDropdown] = useState(false);
   const dropdownRef = useRef<HTMLSpanElement>(null);
@@ -29,9 +29,12 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className=" flex  px-5 py-4  justify-between items-center h-16 border-b border-border dark:border-border ">
+    <nav className="sticky top-0 z-30 w-full flex px-5 py-4 justify-between items-center h-16 border-b border-border dark:border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="align-start">
-        <Menu className="w-5 h-5 sm:hidden" />
+        <Menu
+          className="w-5 h-5 md:hidden cursor-pointer"
+          onClick={onMenuClick}
+        />
       </div>
       <div className="flex justify-center items-center gap-3">
         <LanguageSwitcher />

@@ -39,8 +39,6 @@ export const generateReceiptNumber = (): string => {
     .toUpperCase()}`;
 };
 
-// 📁 In your API route/controller where you create students
-
 /**
  * Calculate which academic year a semester falls into
  */

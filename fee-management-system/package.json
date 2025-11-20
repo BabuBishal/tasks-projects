@@ -23,6 +23,8 @@
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
     "json-server": "^1.0.0-beta.3",
+    "jspdf": "^3.0.4",
+    "jspdf-autotable": "^5.0.2",
     "l3ui": "^0.1.2",
     "lucide-react": "^0.548.0",
     "next": "16.0.1",

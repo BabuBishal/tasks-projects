@@ -1,48 +1,95 @@
-import styles from "./Table.module.css";
-import type {
-  TableBodyProps,
-  TableCellProps,
-  TableHeaderProps,
-  TableRootProps,
-  TableRowProps,
-} from "./table.types";
+"use client";
+import { useState, type ReactNode } from "react";
+import "./table.css";
+import { cn } from "@/lib/utils";
+import { TableProps } from "./table.types";
 
-const TableRoot = ({ children, className }: TableRootProps) => {
+export const Table = ({
+  children,
+  className,
+  striped = false,
+  pagination,
+}: TableProps) => {
+  const [page, setPage] = useState(1);
+
+  const totalPages = pagination
+    ? Math.ceil(pagination.total / pagination.pageSize)
+    : 1;
+
+  const goToPage = (newPage: number) => {
+    setPage(newPage);
+    pagination?.onPageChange?.(newPage);
+  };
+
   return (
-    <table className={`${styles.table} ${className ?? ""}`}>{children}</table>
+    <div className={cn("table-wrapper", striped && "striped", className)}>
+      <table className="ui-table">{children}</table>
+
+      {/* Pagination UI */}
+      {pagination && (
+        <div className="table-pagination">
+          <button
+            onClick={() => goToPage(page - 1)}
+            disabled={page === 1}
+            className="pagination-btn"
+          >
+            Prev
+          </button>
+
+          <span className="pagination-info">
+            Page {page} / {totalPages}
+          </span>
+
+          <button
+            onClick={() => goToPage(page + 1)}
+            disabled={page === totalPages}
+            className="pagination-btn"
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 
-const TableHeader = ({ children }: TableHeaderProps) => {
-  return (
-    <thead className={styles.tableHeader}>
-      <tr className={styles.tableRow}>{children}</tr>
-    </thead>
-  );
-};
+/* Header */
+const Header = ({ children }: { children: ReactNode }) => (
+  <thead className="ui-table-header">{children}</thead>
+);
 
-const TableBody = ({ children }: TableBodyProps) => {
-  return <tbody className={styles.tableBody}>{children}</tbody>;
-};
+/* Body */
+const Body = ({ children }: { children: ReactNode }) => (
+  <tbody className="ui-table-body">{children}</tbody>
+);
 
-const TableRow = ({ children }: TableRowProps) => {
-  return <tr className={styles.tr}>{children}</tr>;
-};
+/* Row */
+const Row = ({ children }: { children: ReactNode }) => (
+  <tr className="ui-table-row">{children}</tr>
+);
 
-const TableHeaderCell = ({ children }: TableCellProps) => {
-  return <th className={styles.th}>{children}</th>;
-};
+/* Head Cell */
+const Head = ({ children }: { children: ReactNode }) => (
+  <th scope="col" className="ui-table-head">
+    {children}
+  </th>
+);
 
-const TableCell = ({ children }: TableCellProps) => {
-  return <td className={styles.td}>{children}</td>;
-};
+/* Data Cell */
+const Cell = ({
+  children,
+  dataLabel,
+}: {
+  children: ReactNode;
+  dataLabel?: string;
+}) => (
+  <td className="ui-table-cell" data-label={dataLabel}>
+    {children}
+  </td>
+);
 
-export const Table = Object.assign(TableRoot, {
-  Header: TableHeader,
-  HeaderCell: TableHeaderCell,
-  Body: TableBody,
-  Row: TableRow,
-  Cell: TableCell,
-});
-
-export default Table;
+Table.Header = Header;
+Table.Body = Body;
+Table.Row = Row;
+Table.Head = Head;
+Table.Cell = Cell;
