@@ -15,14 +15,29 @@ export async function GET() {
           },
         },
       },
+      orderBy: {
+        date: "desc", // Most recent payments first
+      },
     });
+
     console.log("payments fetched successfully", payments);
 
     type PaymentWithStudent = (typeof payments)[number];
 
     const paymentHistory = payments.map((payment: PaymentWithStudent) => {
       const student = payment.studentFee.student;
-      let paymentStatus = "Partial";
+      const fee = payment.studentFee;
+
+      let paymentStatus;
+
+      // paymentStatus = fee.status;
+
+      // Or if you want to determine based on the payment:
+      if (fee.balance === 0) {
+        paymentStatus = "Paid";
+      } else if (fee.balance > 0 && fee.paid > 0) {
+        paymentStatus = "Partial";
+      }
 
       return {
         id: payment.id,
@@ -33,7 +48,12 @@ export async function GET() {
         amount: payment.amount,
         date: payment.date,
         method: payment.method,
+        receiptNo: payment.receiptNo,
         status: paymentStatus,
+        // Additional useful info
+        feeBalance: fee.balance,
+        feeStatus: fee.status,
+        academicYear: fee.academicYear,
       };
     });
 

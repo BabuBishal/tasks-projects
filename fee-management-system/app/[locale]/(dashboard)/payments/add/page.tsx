@@ -102,7 +102,7 @@ export default function PaymentPage() {
             totalOutstandingAll,
           },
           feesList,
-        } as Student;
+        };
       });
 
       setStudents(mapped);
@@ -185,7 +185,7 @@ export default function PaymentPage() {
           .filter((id) => id.trim() !== ""),
       };
 
-      console.log("Sending payment data:", paymentData);
+      // console.log("Sending payment data:", paymentData);
 
       // Call the API directly
       const res = await fetch("/api/payment/add", {

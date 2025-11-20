@@ -30,10 +30,7 @@ export async function POST(req: NextRequest) {
           where: {
             id: { in: selectedFeeIds },
           },
-          orderBy: [
-            { academicYear: "asc" },
-            { createdAt: "asc" },
-          ],
+          orderBy: [{ academicYear: "asc" }, { createdAt: "asc" }],
         },
       },
     });
@@ -50,17 +47,29 @@ export async function POST(req: NextRequest) {
     }
 
     // Calculate total balance from selected fees
-    const totalBalance = student.fees.reduce((sum, fee) => sum + fee.balance, 0);
+    const totalBalance = student.fees.reduce(
+      (sum, fee) => sum + fee.balance,
+      0
+    );
+    console.log("student", student);
+
+    console.log("totalBalance", totalBalance);
+    console.log("amount", amount);
 
     if (amount > totalBalance) {
       return NextResponse.json(
-        { error: `Payment amount (Rs. ${amount}) exceeds total balance (Rs. ${totalBalance})` },
+        {
+          error: `Payment amount (Rs. ${amount}) exceeds total balance (Rs. ${totalBalance})`,
+        },
         { status: 400 }
       );
     }
 
     // Generate unique receipt number
-    const receiptNo = `RCP-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+    const receiptNo = `RCP-${Date.now()}-${Math.random()
+      .toString(36)
+      .substr(2, 9)
+      .toUpperCase()}`;
 
     // Distribute payment across selected fees
     let remainingAmount = amount;
@@ -74,16 +83,34 @@ export async function POST(req: NextRequest) {
       const paymentForThisFee = Math.min(remainingAmount, fee.balance);
       const newPaid = fee.paid + paymentForThisFee;
       const newBalance = fee.balance - paymentForThisFee;
+      console.log("newBalance", newBalance);
 
       // Determine new status
-      let newStatus = "Pending";
+      let newStatus: string;
+
       if (newBalance === 0) {
+        // Fee is fully paid
         newStatus = "Paid";
-      } else if (newPaid > 0 && newBalance > 0) {
-        newStatus = "Partial";
-      } else if (fee.dueDate && new Date(fee.dueDate) < new Date()) {
-        newStatus = "Overdue";
+      } else if (newBalance > 0 && newPaid > 0) {
+        // Fee has some payment but still has balance
+        // Check if it's overdue
+        if (fee.dueDate && new Date(fee.dueDate) < new Date()) {
+          newStatus = "Overdue";
+        } else {
+          newStatus = "Partial";
+        }
+      } else if (newBalance === fee.payableFee) {
+        // No payment made yet
+        if (fee.dueDate && new Date(fee.dueDate) < new Date()) {
+          newStatus = "Overdue";
+        } else {
+          newStatus = "Pending";
+        }
+      } else {
+        // Default fallback
+        newStatus = "Pending";
       }
+      console.log("status", newStatus);
 
       // Update the fee record
       const updatedFee = await prisma.studentFee.update({

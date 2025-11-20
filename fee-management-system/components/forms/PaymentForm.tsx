@@ -88,9 +88,9 @@ export default function PaymentForm({
   return (
     <div className="bg-background border border-border rounded-lg shadow-lg w-full max-w-4xl mx-auto">
       {/* Header */}
-      <div className="bg-linear-to-r from-stone-800 to-stone-800 text-white px-6 py-4 rounded-t-lg">
+      <div className="bg-secondary text-background px-6 py-4 rounded-t-lg">
         <h2 className="text-2xl font-bold">Fee Payment</h2>
-        <p className="text-blue-100 text-sm mt-1">
+        <p className="text-zinc-100 dark:text-zinc-900 text-sm mt-1">
           Select student and semesters to pay
         </p>
       </div>
@@ -128,53 +128,53 @@ export default function PaymentForm({
 
         {/* Student Info Card */}
         {selectedStudent && (
-          <div className="bg-linear-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-5">
+          <div className="bg-accent  border-2 border-border rounded-lg p-5">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div>
-                <p className="text-xs text-gray-600 font-medium uppercase">
+                <p className="text-xs text-muted font-medium uppercase">
                   Program
                 </p>
-                <p className="text-lg font-bold text-gray-800">
+                <p className="text-lg font-bold text-secondary">
                   {selectedStudent.program}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 font-medium uppercase">
+                <p className="text-xs text-muted font-medium uppercase">
                   Current Semester
                 </p>
-                <p className="text-lg font-bold text-gray-800">
+                <p className="text-lg font-bold text-secondary">
                   Semester {selectedStudent.semester}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 font-medium uppercase">
+                <p className="text-xs text-muted font-medium uppercase">
                   Roll Number
                 </p>
-                <p className="text-lg font-bold text-gray-800">
+                <p className="text-lg font-bold text-secondary">
                   {selectedStudent.rollNo}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 font-medium uppercase">
+                <p className="text-xs text-muted font-medium uppercase">
                   Total Paid
                 </p>
-                <p className="text-lg font-bold text-green-600">
+                <p className="text-lg font-bold text-green-600 dark:text-green-400">
                   Rs. {selectedStudent.fees?.paid?.toLocaleString()}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 font-medium uppercase">
+                <p className="text-xs text-muted font-medium uppercase">
                   Current Balance
                 </p>
-                <p className="text-lg font-bold text-orange-600">
+                <p className="text-lg font-bold text-orange-600 dark:text-orange-400">
                   Rs. {selectedStudent.fees?.balance?.toLocaleString()}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 font-medium uppercase">
+                <p className="text-xs text-muted font-medium uppercase">
                   Total Outstanding
                 </p>
-                <p className="text-lg font-bold text-red-600">
+                <p className="text-lg font-bold text-red-600 dark:text-red-400">
                   Rs.{" "}
                   {selectedStudent.fees?.totalOutstandingAll?.toLocaleString()}
                 </p>
@@ -196,14 +196,14 @@ export default function PaymentForm({
                   <button
                     type="button"
                     onClick={handleSelectAll}
-                    className="text-sm px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    className="text-sm px-4 py-2 bg-blue-600 dark:bg-blue-400 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                   >
                     Select All Unpaid
                   </button>
                   <button
                     type="button"
                     onClick={handleClearSelection}
-                    className="text-sm px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                    className="text-sm px-4 py-2 bg-accent text-priimary rounded-lg hover:bg-muted transition-colors font-medium"
                   >
                     Clear Selection
                   </button>
@@ -213,9 +213,9 @@ export default function PaymentForm({
               <div className="border-2 border-border rounded-lg overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-100 border-b-2 border-border">
+                    <thead className="bg-accent border-b-2 border-border">
                       <tr>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-left font-semibold text-secondary">
                           <input
                             type="checkbox"
                             className="w-4 h-4"
@@ -236,31 +236,31 @@ export default function PaymentForm({
                             }}
                           />
                         </th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-left font-semibold text-secondary">
                           Academic Year
                         </th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-left font-semibold text-secondary">
                           Semester
                         </th>
-                        <th className="px-4 py-3 text-right font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-right font-semibold text-secondary">
                           Original Fee
                         </th>
-                        <th className="px-4 py-3 text-right font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-right font-semibold text-secondary">
                           Discount
                         </th>
-                        <th className="px-4 py-3 text-right font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-right font-semibold text-secondary">
                           Payable
                         </th>
-                        <th className="px-4 py-3 text-right font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-right font-semibold text-secondary">
                           Paid
                         </th>
-                        <th className="px-4 py-3 text-right font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-right font-semibold text-secondary">
                           Balance
                         </th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-left font-semibold text-secondary">
                           Status
                         </th>
-                        <th className="px-4 py-3 text-left font-semibold text-gray-700">
+                        <th className="px-4 py-3 text-left font-semibold text-secondary">
                           Due Date
                         </th>
                       </tr>
@@ -276,13 +276,13 @@ export default function PaymentForm({
                             className={`
                             ${
                               isSelected
-                                ? "bg-blue-50 border-l-4 border-l-blue-500"
+                                ? "bg-blue-50 dark:bg-blue-950 border-l-4 border-l-blue-500"
                                 : ""
                             }
                             ${
                               isPaid
-                                ? "bg-green-50 opacity-60"
-                                : "hover:bg-gray-50"
+                                ? "bg-green-50 dark:bg-green-950 opacity-60"
+                                : "hover:bg-gray-50 dark:hover:bg-zinc-800"
                             }
                             transition-colors cursor-pointer
                           `}
@@ -356,7 +356,7 @@ export default function PaymentForm({
                                 {f.status}
                               </span>
                             </td>
-                            <td className="px-4 py-3 text-sm text-gray-600">
+                            <td className="px-4 py-3 text-sm text-secondary ">
                               {f.dueDate
                                 ? new Date(f.dueDate).toLocaleDateString()
                                 : "-"}

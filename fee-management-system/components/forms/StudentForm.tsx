@@ -10,7 +10,7 @@ interface Props extends AddStudentFormProps {
   loading: boolean;
 }
 
-export default function AddStudentForm({
+export default function StudentForm({
   onSubmit,
   formData,
   formErrors,
@@ -185,7 +185,7 @@ export default function AddStudentForm({
         disabled={loading}
         className="w-full bg-primary text-background py-2 rounded hover:bg-secondary transition"
       >
-        {loading ? "Adding..." : "Add Student"}
+        {loading ? "Submitting..." : "Submit"}
       </button>
     </form>
   );

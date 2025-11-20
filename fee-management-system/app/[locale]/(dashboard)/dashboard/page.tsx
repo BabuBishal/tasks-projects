@@ -6,28 +6,31 @@ import { useState, useEffect } from "react";
 import Overdue from "../_components/Overdue";
 import PaymentStatusOverview from "../_components/PaymentStatusOverview";
 import StatsOverview from "../_components/StatsOverview";
+import { useGetDashboardStats } from "@/lib/services/queries/getDashboardStats.queries";
 
 export default function DashboardPage() {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
+  // const [data, setData] = useState<DashboardData | null>(null);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
+  const { data, isLoading, isError } = useGetDashboardStats();
+  // const [loading, setLoading] = useState(true);
 
-  const fetchDashboardData = async () => {
-    try {
-      const response = await fetch("/api/dashboard-stats");
-      const result = await response.json();
-      setData(result);
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // useEffect(() => {
+  //   fetchDashboardData();
+  // }, []);
 
-  if (loading) {
+  // const fetchDashboardData = async () => {
+  //   try {
+  //     const response = await fetch("/api/dashboard-stats");
+  //     const result = await response.json();
+  //     setData(result);
+  //   } catch (error) {
+  //     console.error("Error fetching dashboard data:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen gap-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>

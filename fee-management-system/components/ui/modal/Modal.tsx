@@ -7,7 +7,7 @@ import {
   useCallback,
 } from "react";
 import ReactDOM from "react-dom";
-import { cn } from "@/utils/cn";
+import { cn } from "@/lib/utils";
 import "./modal.css";
 import { type ModalContextType } from "./modal.types";
 

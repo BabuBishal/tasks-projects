@@ -8,6 +8,8 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { ToastProvider } from "@/components/ui/toast";
+import React from "react";
+import ReactQueryProvider from "@/lib/services/providers/ReactQueryProviders";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,13 +62,16 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex `}
       >
-        <ThemeProvider>
-          <ToastProvider>
-            <NextIntlClientProvider locale={locale} messages={messages}>
-              {children}
-            </NextIntlClientProvider>
-          </ToastProvider>
-        </ThemeProvider>
+        <ReactQueryProvider>
+          <ThemeProvider>
+            <ToastProvider>
+              <NextIntlClientProvider locale={locale} messages={messages}>
+                {children}
+                <div id="modal-root"></div>
+              </NextIntlClientProvider>
+            </ToastProvider>
+          </ThemeProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

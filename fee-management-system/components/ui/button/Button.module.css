@@ -46,7 +46,7 @@
 }
 
 .secondary {
-  background-color: var(--secondary);
+  background-color: var(--accent);
   color: var(--text-primary);
 }
 
@@ -62,7 +62,7 @@
 }
 
 .outline:hover {
-  background-color: var(--secondary);
+  background-color: var(--accent);
 }
 
 .button:disabled {

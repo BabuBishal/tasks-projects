@@ -33,13 +33,11 @@ export default withAuth(
 
     // Redirect logged-in users away from auth pages
     if (isLoggedIn && isAuthPage) {
-      console.log("Redirecting logged-in user from auth page to dashboard");
       return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url));
     }
 
     // Redirect non-logged-in users away from protected pages
     if (!isLoggedIn && isProtectedPage) {
-      console.log("Redirecting non-logged-in user to login");
       return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
     }
 

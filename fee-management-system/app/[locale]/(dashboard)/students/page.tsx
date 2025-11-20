@@ -12,9 +12,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const Students = async () => {
   try {
-    const res = await fetch(`${baseUrl}/api/students`, {
-      cache: "no-store", // Disable caching for fresh data
-    });
+    const res = await fetch(`${baseUrl}/api/students`);
 
     if (!res.ok) {
       throw new Error("Failed to fetch students");
@@ -113,7 +111,7 @@ const Students = async () => {
                                 ? "danger"
                                 : feeStatus === "Paid"
                                 ? "success"
-                                : ""
+                                : "warning"
                             }
                           >
                             {feeStatus}

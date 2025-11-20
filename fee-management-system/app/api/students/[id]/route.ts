@@ -194,6 +194,36 @@ export async function PUT(
       }
     }
 
+    // Validate semester if provided
+    if (body.semester !== undefined && body.semester !== null) {
+      const semesterNum = Number(body.semester);
+      if (isNaN(semesterNum) || semesterNum < 1 || semesterNum > 12) {
+        return NextResponse.json(
+          { error: "Semester must be a number between 1 and 12" },
+          { status: 400 }
+        );
+      }
+    }
+
+    if (
+      body.semester !== undefined &&
+      body.semester !== existingStudent.semester
+    ) {
+      const feeCount = await prisma.studentFee.count({
+        where: { studentId: id },
+      });
+
+      if (feeCount > 0) {
+        return NextResponse.json(
+          {
+            error:
+              "Cannot change semester because this student already has associated fees.",
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     // Update student
     const updatedStudent = await prisma.student.update({
       where: { id },
@@ -216,7 +246,7 @@ export async function PUT(
   } catch (error) {
     console.error("Error updating student:", error);
     return NextResponse.json(
-      { error: "Failed to update student" },
+      { error: error || "Failed to update student" },
       { status: 500 }
     );
   }
@@ -250,8 +280,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Student not found" }, { status: 404 });
     }
 
+    console.log(" std", student);
+
     // Check if student has any fees/payments
-    if (student.fees.length > 0) {
+    if (student.fees[0].balance > 0) {
       return NextResponse.json(
         {
           error:

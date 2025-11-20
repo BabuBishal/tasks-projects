@@ -8,6 +8,9 @@ import StatsCard from "@/components/shared/stats-card/StatsCard";
 import StudentInfo from "../_components/StudentInfo";
 import { Student } from "@/lib/@types/types";
 import Badge from "@/components/ui/badges/Badges";
+import { Modal } from "@/components/ui/modal";
+import { useToast } from "@/components/ui/toast";
+import { useInfiniteScrollObserver } from "@/hooks/useInfiniteScrollObserver";
 
 export default function StudentDetailsPage() {
   const params = useParams();
@@ -16,6 +19,12 @@ export default function StudentDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const { notify } = useToast();
+
+  const lastRef = useInfiniteScrollObserver({
+    enabled: !loading,
+    onIntersect: () => console.log("last element reached."),
+  });
 
   useEffect(() => {
     if (params.id) {
@@ -41,42 +50,7 @@ export default function StudentDetailsPage() {
     }
   };
 
-  const observer = useRef<IntersectionObserver | null>(null);
-  const lastRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (loading) return;
-
-      if (observer.current) {
-        observer.current.disconnect();
-      }
-
-      observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0]?.isIntersecting && !loading) {
-            alert("Last element visible - load more data here if applicable");
-          }
-        },
-        {
-          rootMargin: "200px",
-        }
-      );
-
-      if (node) {
-        observer.current.observe(node);
-      }
-    },
-    [loading]
-  );
-
   const handleDelete = async () => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this student? This action cannot be undone."
-      )
-    ) {
-      return;
-    }
-
     try {
       setDeleteLoading(true);
       const response = await fetch(`/api/students/${params.id}`, {
@@ -87,11 +61,17 @@ export default function StudentDetailsPage() {
         const data = await response.json();
         throw new Error(data.error || "Failed to delete student");
       }
-
-      alert("Student deleted successfully");
+      notify({ description: "Student deleted successfully", type: "success" });
+      // alert("Student deleted successfully");
       router.push("/students");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to delete student");
+      notify({
+        description:
+          err instanceof Error ? err.message : "Failed to delete student",
+        type: "error",
+      });
+
+      // alert(err instanceof Error ? err.message : "Failed to delete student");
     } finally {
       setDeleteLoading(false);
     }
@@ -153,15 +133,33 @@ export default function StudentDetailsPage() {
               <Pencil className="w-4 h-4" />
               Edit
             </Button>
-            <Button
-              variant="danger"
-              size="md"
-              onClick={handleDelete}
-              disabled={deleteLoading}
-            >
-              <Trash2 className="w-4 h-4" />
-              {deleteLoading ? "Deleting..." : "Delete"}
-            </Button>
+            <Modal>
+              <Modal.Trigger>
+                <Button variant="danger" size="md">
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </Button>
+              </Modal.Trigger>
+              <Modal.Content>
+                <Modal.Header>Confirm Deletion</Modal.Header>
+                <Modal.Body>
+                  Are you sure you want to delete this student? This action
+                  cannot be undone.
+                </Modal.Body>
+                <Modal.Footer>
+                  <Modal.Close>Cancel</Modal.Close>
+                  <Button
+                    variant="danger"
+                    size="md"
+                    onClick={handleDelete}
+                    disabled={deleteLoading}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    {deleteLoading ? "Deleting..." : "Delete"}
+                  </Button>
+                </Modal.Footer>
+              </Modal.Content>
+            </Modal>
           </div>
         </div>
 
