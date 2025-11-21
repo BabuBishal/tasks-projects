@@ -25,7 +25,7 @@ const StudentCard = ({
       <div className="text-xs text-muted flex gap-5 justify-between min-w-52 w-full ">
         <span className="flex gap-2 items-center  flex-1 ">
           <Book className="w-4 h-4" />
-          {program}
+          {typeof program === "object" ? program.name : program}
         </span>
         <span className="flex gap-2 items-center  flex-1 ">
           <Calendar className="w-4 h-4" />

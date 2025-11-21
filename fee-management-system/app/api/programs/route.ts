@@ -5,6 +5,9 @@ export async function GET() {
   try {
     const programs = await prisma.program.findMany({
       orderBy: { createdAt: "asc" },
+      include: {
+        semesters: true,
+      },
     });
 
     return NextResponse.json(programs, { status: 200 });

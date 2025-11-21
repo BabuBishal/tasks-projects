@@ -1,6 +1,27 @@
 "use client";
 
-import { StudentDetail } from "@/lib/@types/types";
+interface StudentDetail {
+  id: string;
+  name: string;
+  rollNo: string;
+  program: string;
+  semester: number;
+  year: number;
+  fees: {
+    total: number;
+    paid: number;
+    balance: number;
+    status: string;
+    dueDate: string;
+  };
+  paymentHistory: {
+    date: string;
+    amount: number;
+    method: string;
+    receiptNo: string;
+    status: string;
+  }[];
+}
 import Badge from "../ui/badges/Badges";
 import { Button } from "../ui/button/Button";
 import { Download } from "lucide-react";

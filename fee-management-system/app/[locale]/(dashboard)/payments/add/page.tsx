@@ -201,7 +201,7 @@ export default function PaymentPage() {
         throw new Error(errorData.error || "Payment failed");
       }
 
-      const result = await res.json();
+      await res.json();
 
       // Show success message
       // setSuccessMessage(
@@ -212,7 +212,7 @@ export default function PaymentPage() {
       setFormData({
         id: "",
         amount: 0,
-        method: "",
+        method: "cash",
         selectedFeeIds: "",
       });
       notify({

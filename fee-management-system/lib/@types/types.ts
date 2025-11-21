@@ -138,32 +138,57 @@ export type AddStudentFormProps = {
 //   ) => void;
 // };
 
+export interface FeeListItem {
+  id: string;
+  academicYear: string;
+  semesterNo: number;
+  originalFee: number;
+  discount: number;
+  payableFee: number;
+  paid: number;
+  balance: number;
+  status: string;
+  dueDate: string | null;
+}
+
 export interface Student {
   id: string;
   name: string;
   email: string;
   rollNo: string;
-  programId: string;
+  programId?: string;
   semester: number;
   phone: string;
   address: string;
   year: number;
-  joinedYear: number;
-  createdAt: string;
-  updatedAt: string;
+  joinedYear?: number;
+  createdAt?: string;
+  updatedAt?: string;
 
-  // Relations
-  program: Program;
-  fees: StudentFee[];
-  scholarships: StudentScholarship[];
+  // Relations - can be either object or string depending on context
+  program: Program | string;
+  fees?:
+    | StudentFee[]
+    | {
+        total: number;
+        paid: number;
+        balance: number;
+        dueDate: string | null;
+        status: string;
+        totalOutstandingAll: number;
+      };
+  scholarships?: StudentScholarship[];
+
+  // Detailed fees list for payment form
+  feesList?: FeeListItem[];
 
   // Computed totals
-  totalOriginalFee: number;
-  totalDiscount: number;
-  totalPayableFee: number;
-  totalPaid: number;
-  totalBalance: number;
-  totalScholarshipAmount: number;
+  totalOriginalFee?: number;
+  totalDiscount?: number;
+  totalPayableFee?: number;
+  totalPaid?: number;
+  totalBalance?: number;
+  totalScholarshipAmount?: number;
 }
 
 export interface Program {

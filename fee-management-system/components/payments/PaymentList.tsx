@@ -135,23 +135,22 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
     document.body.removeChild(link);
   };
 
-  const filteredPayments = useMemo(() => {
-    return initialPayments.filter((payment) => {
-      const matchesSearch =
-        payment.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        payment.id.toLowerCase().includes(searchQuery.toLowerCase());
+ const filteredPayments = initialPayments.filter((payment) => {
+  const matchesSearch =
+    payment.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    payment.id.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus = statusFilter
-        ? payment.status.toLowerCase() === statusFilter.toLowerCase()
-        : true;
+  const matchesStatus = statusFilter
+    ? payment.status.toLowerCase() === statusFilter.toLowerCase()
+    : true;
 
-      const matchesMethod = methodFilter
-        ? payment.method.toLowerCase() === methodFilter.toLowerCase()
-        : true;
+  const matchesMethod = methodFilter
+    ? payment.method.toLowerCase() === methodFilter.toLowerCase()
+    : true;
 
-      return matchesSearch && matchesStatus && matchesMethod;
-    });
-  }, [initialPayments, searchQuery, statusFilter, methodFilter]);
+  return matchesSearch && matchesStatus && matchesMethod;
+});
+
 
   const paginatedPayments = filteredPayments.slice(
     (currentPage - 1) * itemsPerPage,
@@ -260,7 +259,7 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {paginatedPayments.map((payment) => (
+              {paginatedPayments.map((payment: Payment) => (
                 <Table.Row key={payment.id}>
                   <Table.Cell dataLabel="PaymentID">{payment.id}</Table.Cell>
                   <Table.Cell dataLabel="Student">

@@ -6,6 +6,7 @@ import {
   Settings,
   Users,
   Wallet,
+  Banknote,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
@@ -26,6 +27,7 @@ const Sidebar = ({
     { name: t("dashboard"), icon: LayoutDashboard, path: "/dashboard" },
     { name: t("students"), icon: Users, path: "/students" },
     { name: t("payments"), icon: Wallet, path: "/payments" },
+    { name: "Fees", icon: Banknote, path: "/fees" },
   ];
   return (
     <>

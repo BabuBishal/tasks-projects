@@ -1,15 +1,6 @@
-import { StudentFull } from "@/lib/@types/prisma";
 import { Student } from "@/lib/@types/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import {
-  Award,
-  BookOpen,
-  Calendar,
-  IdCard,
-  Mail,
-  MapPin,
-  Phone,
-} from "lucide-react";
+import { Award, BookOpen, Calendar, Mail, MapPin, Phone } from "lucide-react";
 
 const StudentInfo = ({ student }: { student: Partial<Student> }) => {
   return (
@@ -51,7 +42,9 @@ const StudentInfo = ({ student }: { student: Partial<Student> }) => {
               <div>
                 <p className="text-sm text-secondary">Program</p>
                 <p className="text-xs text-secondary">
-                  {student?.program?.name}
+                  {typeof student?.program === "object"
+                    ? student.program.name
+                    : student?.program}
                 </p>
               </div>
             </div>

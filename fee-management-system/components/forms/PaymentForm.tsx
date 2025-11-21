@@ -53,7 +53,7 @@ export default function PaymentForm({
           name: "selectedFeeIds",
           value: Array.from(newSelected).join(","),
         },
-      } as any);
+      } as React.ChangeEvent<HTMLInputElement>);
     }
   };
 
@@ -77,13 +77,6 @@ export default function PaymentForm({
     setSelectedFeeIds(new Set());
     setAmount?.(0);
   };
-
-  console.log("selected", selectedStudent);
-  // const resetForm = () => {
-  //   setSelectedStudent(null);
-  //   setSelectedFeeIds(new Set());
-  //   setAmount?.(0);
-  // };
 
   return (
     <div className="bg-background border border-border rounded-lg shadow-lg w-full max-w-4xl mx-auto">
@@ -135,7 +128,9 @@ export default function PaymentForm({
                   Program
                 </p>
                 <p className="text-lg font-bold text-secondary">
-                  {selectedStudent.program}
+                  {typeof selectedStudent.program === "string"
+                    ? selectedStudent.program
+                    : selectedStudent.program?.name || "N/A"}
                 </p>
               </div>
               <div>
@@ -159,7 +154,10 @@ export default function PaymentForm({
                   Total Paid
                 </p>
                 <p className="text-lg font-bold text-green-600 dark:text-green-400">
-                  Rs. {selectedStudent.fees?.paid?.toLocaleString()}
+                  Rs.{" "}
+                  {Array.isArray(selectedStudent.fees)
+                    ? "0"
+                    : selectedStudent.fees?.paid?.toLocaleString() || "0"}
                 </p>
               </div>
               <div>
@@ -167,7 +165,10 @@ export default function PaymentForm({
                   Current Balance
                 </p>
                 <p className="text-lg font-bold text-orange-600 dark:text-orange-400">
-                  Rs. {selectedStudent.fees?.balance?.toLocaleString()}
+                  Rs.{" "}
+                  {Array.isArray(selectedStudent.fees)
+                    ? "0"
+                    : selectedStudent.fees?.balance?.toLocaleString() || "0"}
                 </p>
               </div>
               <div>
@@ -176,7 +177,10 @@ export default function PaymentForm({
                 </p>
                 <p className="text-lg font-bold text-red-600 dark:text-red-400">
                   Rs.{" "}
-                  {selectedStudent.fees?.totalOutstandingAll?.toLocaleString()}
+                  {Array.isArray(selectedStudent.fees)
+                    ? "0"
+                    : selectedStudent.fees?.totalOutstandingAll?.toLocaleString() ||
+                      "0"}
                 </p>
               </div>
             </div>
