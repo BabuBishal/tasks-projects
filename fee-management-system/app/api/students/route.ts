@@ -113,59 +113,66 @@ export async function POST(req: NextRequest) {
     }
 
     // ---------------------------------------------------------
-    // 3️⃣ Create StudentFee records for semesters 1 through currentSemester
-    // KEY CHANGE: Only create fees for semesters the student has completed/is in
+    // 3️⃣ Create StudentFee record ONLY for current semester
+    // IMPROVED: No retroactive fees for past semesters
     // ---------------------------------------------------------
     const studentFeesToCreate = [];
 
-    for (let sem = 1; sem <= studentSemester; sem++) {
-      // Calculate academic year for this semester
-      const academicYear = getAcademicYearForSemester(joinedYear, sem);
-      const startDate = getSemesterStartDate(joinedYear, sem);
-      const dueDate = getDueDate(startDate);
+    // Only create fee for the current semester
+    const sem = studentSemester;
 
-      // Find the fee structure for this program, semester, and academic year
-      const feeStructure = await prisma.feeStructure.findFirst({
-        where: {
-          programSemester: {
-            programId: programId,
-            semesterNo: sem,
-          },
+    // Calculate academic year for this semester
+    const academicYear = getAcademicYearForSemester(joinedYear, sem);
+    const startDate = getSemesterStartDate(joinedYear, sem);
+    const dueDate = getDueDate(startDate);
+
+    // Find the fee structure for this program and semester
+    const feeStructure = await prisma.feeStructure.findFirst({
+      where: {
+        programSemester: {
+          programId: programId,
+          semesterNo: sem,
         },
-      });
+      },
+    });
 
-      if (!feeStructure) {
-        console.warn(
-          `No fee structure found for ${program.name} Semester ${sem} (${academicYear})`
-        );
-        continue; // Skip this semester if no fee structure exists
-      }
-
-      // Calculate discount for this semester
-      let discount = 0;
-      if (scholarship) {
-        if (scholarship.type === "percentage") {
-          discount = Math.floor(
-            (feeStructure.totalFee * scholarship.value) / 100
-          );
-        } else if (scholarship.type === "fixed") {
-          discount = scholarship.value;
-        }
-      }
-
-      const payableFee = Math.max(0, feeStructure.totalFee - discount);
-
-      studentFeesToCreate.push({
-        feeStructureId: feeStructure.id,
-        academicYear: academicYear,
-        originalFee: feeStructure.totalFee,
-        discount: discount,
-        payableFee: payableFee,
-        balance: payableFee,
-        status: "Pending",
-        dueDate: dueDate,
-      });
+    if (!feeStructure) {
+      return NextResponse.json(
+        {
+          error: `No fee structure found for ${program.name} Semester ${sem}. Please configure fee structure first.`,
+        },
+        { status: 400 }
+      );
     }
+
+    // Calculate discount for this semester
+    let discount = 0;
+    if (scholarship) {
+      if (scholarship.type === "percentage") {
+        discount = Math.floor(
+          (feeStructure.totalFee * scholarship.value) / 100
+        );
+      } else if (scholarship.type === "fixed") {
+        discount = scholarship.value;
+      }
+    }
+
+    const payableFee = Math.max(0, feeStructure.totalFee - discount);
+
+    // Determine initial status based on due date
+    const now = new Date();
+    const initialStatus = dueDate < now ? "Overdue" : "Pending";
+
+    studentFeesToCreate.push({
+      feeStructureId: feeStructure.id,
+      academicYear: academicYear,
+      originalFee: feeStructure.totalFee,
+      discount: discount,
+      payableFee: payableFee,
+      balance: payableFee,
+      status: initialStatus,
+      dueDate: dueDate,
+    });
 
     console.log(
       `Creating student in Semester ${studentSemester} with ${studentFeesToCreate.length} fee records`

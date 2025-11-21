@@ -84,7 +84,12 @@ const Students = () => {
             Manage students, fees, and academic records
           </h4>
         </div>
-        <div>
+        <div className="flex gap-2">
+          <Link href="/students/bulk">
+            <Button variant="outline" size="sm">
+              Bulk Operations
+            </Button>
+          </Link>
           <Link href="/students/add">
             <Button variant="primary" size="sm">
               <Plus className="w-4 h-4" /> Add Student

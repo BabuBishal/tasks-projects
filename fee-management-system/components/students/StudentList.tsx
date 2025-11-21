@@ -4,7 +4,16 @@ import React, { useState, useMemo } from "react";
 import { StudentWithFees, Program } from "@/lib/@types/prisma";
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
-import { Eye, Phone, Search, Filter, Pencil, Trash2, X } from "lucide-react";
+import {
+  Eye,
+  Phone,
+  Search,
+  Filter,
+  Pencil,
+  Trash2,
+  X,
+  ArrowRight,
+} from "lucide-react";
 import Link from "next/link";
 import { studentHeaders } from "@/lib/constants";
 import { Modal } from "@/components/ui/modal/Modal";
@@ -27,6 +36,9 @@ const StudentList: React.FC<StudentListProps> = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] =
     useState<StudentWithFees | null>(null);
+  const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
+  const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
+  const [isBulkPromoteOpen, setIsBulkPromoteOpen] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: "",
     email: "",
@@ -168,6 +180,89 @@ const StudentList: React.FC<StudentListProps> = ({
     }));
   };
 
+  // Bulk action handlers
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedStudentIds(paginatedStudents.map((s) => s.id));
+    } else {
+      setSelectedStudentIds([]);
+    }
+  };
+
+  const handleSelectStudent = (studentId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedStudentIds((prev) => [...prev, studentId]);
+    } else {
+      setSelectedStudentIds((prev) => prev.filter((id) => id !== studentId));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedStudentIds.length === 0) return;
+
+    try {
+      const res = await fetch("/api/students/bulk-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ studentIds: selectedStudentIds }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to delete students");
+      }
+
+      notify({
+        title: "Success",
+        description: `Deleted ${data.deleted} students successfully`,
+        type: "success",
+      });
+      setIsBulkDeleteOpen(false);
+      setSelectedStudentIds([]);
+      onRefetch();
+    } catch (error: any) {
+      notify({
+        title: "Error",
+        description: error.message || "Failed to delete students",
+        type: "error",
+      });
+    }
+  };
+
+  const handleBulkPromote = async () => {
+    if (selectedStudentIds.length === 0) return;
+
+    try {
+      const res = await fetch("/api/students/promote-semester", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ studentIds: selectedStudentIds }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to promote students");
+      }
+
+      notify({
+        title: "Success",
+        description: `Promoted ${data.results.success.length} students successfully`,
+        type: "success",
+      });
+      setIsBulkPromoteOpen(false);
+      setSelectedStudentIds([]);
+      onRefetch();
+    } catch (error: any) {
+      notify({
+        title: "Error",
+        description: error.message || "Failed to promote students",
+        type: "error",
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4">
       {/* Toolbar */}
@@ -204,6 +299,36 @@ const StudentList: React.FC<StudentListProps> = ({
         </div>
       </div>
 
+      {/* Bulk Actions Toolbar */}
+      {selectedStudentIds.length > 0 && (
+        <div className="flex gap-3 items-center bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-4 rounded-lg">
+          <span className="text-sm font-medium">
+            {selectedStudentIds.length} student
+            {selectedStudentIds.length > 1 ? "s" : ""} selected
+          </span>
+          <button
+            onClick={() => setIsBulkDeleteOpen(true)}
+            className="px-3 py-1.5 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition-colors flex items-center gap-2"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete Selected
+          </button>
+          <button
+            onClick={() => setIsBulkPromoteOpen(true)}
+            className="px-3 py-1.5 text-sm bg-primary text-white rounded hover:bg-primary/90 transition-colors flex items-center gap-2"
+          >
+            <ArrowRight className="w-4 h-4" />
+            Promote Semester
+          </button>
+          <button
+            onClick={() => setSelectedStudentIds([])}
+            className="ml-auto px-3 py-1.5 text-sm border border-border rounded hover:bg-muted transition-colors"
+          >
+            Clear Selection
+          </button>
+        </div>
+      )}
+
       {/* Table */}
       <div className="w-full flex flex-col gap-5 p-4 border border-border rounded-lg bg-background">
         <div className="flex justify-between items-center">
@@ -232,6 +357,17 @@ const StudentList: React.FC<StudentListProps> = ({
           >
             <Table.Header>
               <Table.Row>
+                <Table.Head>
+                  <input
+                    type="checkbox"
+                    checked={
+                      selectedStudentIds.length === paginatedStudents.length &&
+                      paginatedStudents.length > 0
+                    }
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                    className="cursor-pointer"
+                  />
+                </Table.Head>
                 {studentHeaders?.map((head, index: number) => (
                   <Table.Head key={index}>{head}</Table.Head>
                 ))}
@@ -257,6 +393,16 @@ const StudentList: React.FC<StudentListProps> = ({
 
                 return (
                   <Table.Row key={student.id}>
+                    <Table.Cell dataLabel="">
+                      <input
+                        type="checkbox"
+                        checked={selectedStudentIds.includes(student.id)}
+                        onChange={(e) =>
+                          handleSelectStudent(student.id, e.target.checked)
+                        }
+                        className="cursor-pointer"
+                      />
+                    </Table.Cell>
                     <Table.Cell dataLabel="Name">{student.name}</Table.Cell>
                     <Table.Cell dataLabel="Roll No">
                       {student.rollNo}
@@ -453,6 +599,72 @@ const StudentList: React.FC<StudentListProps> = ({
                   className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
                 >
                   Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Bulk Delete Confirmation Modal */}
+      <Modal defaultOpen={isBulkDeleteOpen}>
+        {isBulkDeleteOpen && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-background p-6 rounded-lg max-w-md w-full mx-4">
+              <h3 className="text-lg font-semibold mb-4">
+                Confirm Bulk Delete
+              </h3>
+              <p className="text-muted mb-6">
+                Are you sure you want to delete {selectedStudentIds.length}{" "}
+                student{selectedStudentIds.length > 1 ? "s" : ""}? This action
+                cannot be undone and will also delete all associated fees and
+                payments.
+              </p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setIsBulkDeleteOpen(false)}
+                  className="px-4 py-2 border rounded-md hover:bg-accent"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleBulkDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                >
+                  Delete All
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Bulk Promote Semester Confirmation Modal */}
+      <Modal defaultOpen={isBulkPromoteOpen}>
+        {isBulkPromoteOpen && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-background p-6 rounded-lg max-w-md w-full mx-4">
+              <h3 className="text-lg font-semibold mb-4">
+                Confirm Semester Promotion
+              </h3>
+              <p className="text-muted mb-6">
+                Are you sure you want to promote {selectedStudentIds.length}{" "}
+                student{selectedStudentIds.length > 1 ? "s" : ""} to the next
+                semester? This will automatically assign fees for the new
+                semester.
+              </p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setIsBulkPromoteOpen(false)}
+                  className="px-4 py-2 border rounded-md hover:bg-accent"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleBulkPromote}
+                  className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                >
+                  Promote All
                 </button>
               </div>
             </div>
