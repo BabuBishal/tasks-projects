@@ -66,8 +66,7 @@ model ProgramSemester {
 // -------------------------------------------------------
 model FeeStructure {
   id                String           @id @default(cuid())
-  programSemesterId String
-  academicYear      String           // 2024/25, 2025/26, etc.
+  programSemesterId String           @unique
   tuitionFee        Int
   labFee            Int
   libraryFee        Int

@@ -7,7 +7,6 @@ import { formatCurrency } from "@/lib/utils";
 
 interface FeeStructure {
   id: string;
-  academicYear: string;
   programSemester: {
     programId: string;
     semesterNo: number;

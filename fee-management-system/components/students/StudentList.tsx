@@ -1,22 +1,52 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { StudentWithFees } from "@/lib/@types/prisma";
+import { StudentWithFees, Program } from "@/lib/@types/prisma";
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
-import { Eye, Phone, Search, Filter } from "lucide-react";
+import { Eye, Phone, Search, Filter, Pencil, Trash2, X } from "lucide-react";
 import Link from "next/link";
 import { studentHeaders } from "@/lib/constants";
+import { Modal } from "@/components/ui/modal/Modal";
+import { useToast } from "@/components/ui/toast";
+import { useQuery } from "@tanstack/react-query";
 
 interface StudentListProps {
   initialStudents: StudentWithFees[];
+  onRefetch: () => void;
 }
 
-const StudentList: React.FC<StudentListProps> = ({ initialStudents }) => {
+const StudentList: React.FC<StudentListProps> = ({
+  initialStudents,
+  onRefetch,
+}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] =
+    useState<StudentWithFees | null>(null);
+  const [editFormData, setEditFormData] = useState({
+    name: "",
+    email: "",
+    programId: "",
+    semester: 1,
+    phone: "",
+    address: "",
+  });
   const itemsPerPage = 10;
+  const { notify } = useToast();
+
+  // Fetch programs for edit form
+  const { data: programs } = useQuery<Program[]>({
+    queryKey: ["programs"],
+    queryFn: async () => {
+      const res = await fetch("/api/programs");
+      if (!res.ok) throw new Error("Failed to fetch programs");
+      return res.json();
+    },
+  });
 
   const filteredStudents = useMemo(() => {
     return initialStudents.filter((student) => {
@@ -46,6 +76,97 @@ const StudentList: React.FC<StudentListProps> = ({ initialStudents }) => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const handleEdit = (student: StudentWithFees) => {
+    setSelectedStudent(student);
+    setEditFormData({
+      name: student.name,
+      email: student.email,
+      programId: student.programId,
+      semester: student.semester,
+      phone: student.phone,
+      address: student.address,
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedStudent) return;
+
+    try {
+      const res = await fetch(`/api/students/${selectedStudent.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editFormData),
+      });
+
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(responseData.error || "Failed to update student");
+      }
+
+      notify({
+        title: "Success",
+        description: "Student updated successfully",
+        type: "success",
+      });
+      setIsEditModalOpen(false);
+      onRefetch();
+    } catch (error: any) {
+      notify({
+        title: "Error",
+        description: error.message || "Failed to update student",
+        type: "error",
+      });
+    }
+  };
+
+  const handleDeleteClick = (student: StudentWithFees) => {
+    setSelectedStudent(student);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedStudent) return;
+
+    try {
+      const res = await fetch(`/api/students/${selectedStudent.id}`, {
+        method: "DELETE",
+      });
+
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(responseData.error || "Failed to delete student");
+      }
+
+      notify({
+        title: "Success",
+        description: "Student deleted successfully",
+        type: "success",
+      });
+      setIsDeleteDialogOpen(false);
+      onRefetch();
+    } catch (error: any) {
+      notify({
+        title: "Error",
+        description: error.message || "Failed to delete student",
+        type: "error",
+      });
+    }
+  };
+
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setEditFormData((prev) => ({
+      ...prev,
+      [name]: name === "semester" ? Number(value) : value,
+    }));
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -171,9 +292,19 @@ const StudentList: React.FC<StudentListProps> = ({ initialStudents }) => {
                       </Badge>
                     </Table.Cell>
                     <Table.Cell dataLabel="Actions">
-                      <Link href={`/students/${student.id}`}>
-                        <Eye className="w-4 h-4 cursor-pointer hover:text-primary" />
-                      </Link>
+                      <div className="flex gap-3 items-center">
+                        <Link href={`/students/${student.id}`}>
+                          <Eye className="w-4 h-4 cursor-pointer hover:text-primary transition-colors" />
+                        </Link>
+                        <Pencil
+                          className="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"
+                          onClick={() => handleEdit(student)}
+                        />
+                        <Trash2
+                          className="w-4 h-4 cursor-pointer hover:text-red-600 transition-colors"
+                          onClick={() => handleDeleteClick(student)}
+                        />
+                      </div>
                     </Table.Cell>
                   </Table.Row>
                 );
@@ -182,6 +313,152 @@ const StudentList: React.FC<StudentListProps> = ({ initialStudents }) => {
           </Table>
         )}
       </div>
+
+      {/* Edit Modal */}
+      <Modal defaultOpen={isEditModalOpen}>
+        {isEditModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div className="bg-background rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center p-6 border-b">
+                <h2 className="text-lg font-bold">Edit Student</h2>
+                <button
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <form onSubmit={handleEditSubmit} className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Name *
+                  </label>
+                  <input
+                    name="name"
+                    value={editFormData.name}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded-md bg-background"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={editFormData.email}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded-md bg-background"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Program *
+                  </label>
+                  <select
+                    name="programId"
+                    value={editFormData.programId}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded-md bg-background"
+                    required
+                  >
+                    <option value="">Select program</option>
+                    {programs?.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Semester *
+                  </label>
+                  <input
+                    type="number"
+                    name="semester"
+                    min={1}
+                    value={editFormData.semester}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded-md bg-background"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Phone
+                  </label>
+                  <input
+                    name="phone"
+                    value={editFormData.phone}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded-md bg-background"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Address
+                  </label>
+                  <input
+                    name="address"
+                    value={editFormData.address}
+                    onChange={handleFormChange}
+                    className="w-full p-2 border rounded-md bg-background"
+                  />
+                </div>
+                <div className="flex gap-3 justify-end pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditModalOpen(false)}
+                    className="px-4 py-2 border rounded-md hover:bg-accent"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Delete Confirmation Dialog */}
+      <Modal defaultOpen={isDeleteDialogOpen}>
+        {isDeleteDialogOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div className="bg-background rounded-lg shadow-lg w-full max-w-md p-6">
+              <h2 className="text-lg font-bold mb-4">Confirm Delete</h2>
+              <p className="text-muted-foreground mb-6">
+                Are you sure you want to delete student{" "}
+                <strong>{selectedStudent?.name}</strong>? This action cannot be
+                undone.
+              </p>
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setIsDeleteDialogOpen(false)}
+                  className="px-4 py-2 border rounded-md hover:bg-accent"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteConfirm}
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };

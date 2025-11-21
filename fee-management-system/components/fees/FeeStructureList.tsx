@@ -3,7 +3,6 @@ import { BookOpen } from "lucide-react";
 
 interface FeeStructure {
   id: string;
-  academicYear: string;
   programSemester: {
     programId: string;
     semesterNo: number;
@@ -57,7 +56,7 @@ export default function FeeStructureList({
               <BookOpen className="w-5 h-5 text-primary" />
             </div>
             <h2 className="text-xl font-bold text-foreground">{programName}</h2>
-            <span className="text-sm text-muted-foreground ml-auto bg-muted px-2 py-1 rounded-full">
+            <span className="text-sm text-background ml-auto bg-muted px-2 py-1 rounded-full">
               {fees.length} Semesters
             </span>
           </div>

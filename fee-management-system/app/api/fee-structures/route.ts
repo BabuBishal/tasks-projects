@@ -32,7 +32,6 @@ export async function POST(req: Request) {
     const {
       programId,
       semesterNo,
-      academicYear,
       tuitionFee,
       labFee,
       libraryFee,
@@ -65,26 +64,46 @@ export async function POST(req: Request) {
       });
     }
 
-    // 2. Create FeeStructure
-    const feeStructure = await prisma.feeStructure.create({
-      data: {
+    // 2. Check if FeeStructure already exists for this semester
+    const existingFeeStructure = await prisma.feeStructure.findFirst({
+      where: {
         programSemesterId: programSemester.id,
-        academicYear,
-        tuitionFee: Number(tuitionFee),
-        labFee: Number(labFee),
-        libraryFee: Number(libraryFee),
-        sportsFee: Number(sportsFee),
-        miscFee: Number(miscFee),
-        totalFee,
       },
     });
 
+    let feeStructure;
+    if (existingFeeStructure) {
+      // Update existing fee structure
+      feeStructure = await prisma.feeStructure.update({
+        where: { id: existingFeeStructure.id },
+        data: {
+          tuitionFee: Number(tuitionFee),
+          labFee: Number(labFee),
+          libraryFee: Number(libraryFee),
+          sportsFee: Number(sportsFee),
+          miscFee: Number(miscFee),
+          totalFee,
+        },
+      });
+    } else {
+      // Create new fee structure
+      feeStructure = await prisma.feeStructure.create({
+        data: {
+          programSemesterId: programSemester.id,
+          tuitionFee: Number(tuitionFee),
+          labFee: Number(labFee),
+          libraryFee: Number(libraryFee),
+          sportsFee: Number(sportsFee),
+          miscFee: Number(miscFee),
+          totalFee,
+        },
+      });
+    }
+
     return NextResponse.json(feeStructure, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating fee structure:", error);
-    return NextResponse.json(
-      { error: "Failed to create fee structure" },
-      { status: 500 }
-    );
+    const errorMessage = error?.message || "Failed to create fee structure";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

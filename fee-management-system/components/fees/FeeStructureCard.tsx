@@ -2,12 +2,11 @@
 
 import { Card, CardContent } from "@/components/ui/card/Card";
 import Badge from "@/components/ui/badges/Badges";
-import { Calendar, Coins } from "lucide-react";
+import { Coins } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
 interface FeeStructure {
   id: string;
-  academicYear: string;
   programSemester: {
     semesterNo: number;
     program: {
@@ -37,10 +36,6 @@ export default function FeeStructureCard({
             <h3 className="font-semibold text-lg">
               Semester {feeStructure.programSemester.semesterNo}
             </h3>
-            <div className="flex items-center text-muted-foreground text-sm mt-1">
-              <Calendar className="w-3 h-3 mr-1" />
-              {feeStructure.academicYear}
-            </div>
           </div>
           <Badge
             variant="info"

@@ -131,7 +131,6 @@ export async function POST(req: NextRequest) {
             programId: programId,
             semesterNo: sem,
           },
-          academicYear: academicYear,
         },
       });
 

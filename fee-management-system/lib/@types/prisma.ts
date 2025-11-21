@@ -30,7 +30,7 @@ export type ProgramSemester = {
 export type FeeStructure = {
   id: string;
   programSemesterId: string;
-  academicYear: string;
+
   tuitionFee: number;
   labFee: number;
   libraryFee: number;
@@ -221,7 +221,7 @@ export type UpdateStudentInput = Partial<CreateStudentInput> & {
 
 export type CreateFeeStructureInput = {
   programSemesterId: string;
-  academicYear: string;
+
   tuitionFee: number;
   labFee: number;
   libraryFee: number;

@@ -12,7 +12,6 @@ import { useQuery } from "@tanstack/react-query";
 
 interface FeeStructure {
   id: string;
-  academicYear: string;
   programSemester: {
     programId: string;
     semesterNo: number;
@@ -65,7 +64,11 @@ export default function FeesPage() {
         body: JSON.stringify(data),
       });
 
-      if (!res.ok) throw new Error("Failed to create fee structure");
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(responseData.error || "Failed to create fee structure");
+      }
 
       notify({
         title: "Success",
@@ -74,10 +77,10 @@ export default function FeesPage() {
       });
       setIsModalOpen(false);
       refetch();
-    } catch (error) {
+    } catch (error: any) {
       notify({
         title: "Error",
-        description: "Failed to create fee structure",
+        description: error.message || "Failed to create fee structure",
         type: "error",
       });
     }
@@ -93,7 +96,11 @@ export default function FeesPage() {
         body: JSON.stringify(data),
       });
 
-      if (!res.ok) throw new Error("Failed to update fee structure");
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(responseData.error || "Failed to update fee structure");
+      }
 
       notify({
         title: "Success",
@@ -103,10 +110,10 @@ export default function FeesPage() {
       setIsModalOpen(false);
       setEditingFee(null);
       refetch();
-    } catch (error) {
+    } catch (error: any) {
       notify({
         title: "Error",
-        description: "Failed to update fee structure",
+        description: error.message || "Failed to update fee structure",
         type: "error",
       });
     }
@@ -118,7 +125,11 @@ export default function FeesPage() {
         method: "DELETE",
       });
 
-      if (!res.ok) throw new Error("Failed to delete fee structure");
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(responseData.error || "Failed to delete fee structure");
+      }
 
       notify({
         title: "Success",
@@ -127,10 +138,10 @@ export default function FeesPage() {
       });
       setIsDetailsOpen(false);
       refetch();
-    } catch (error) {
+    } catch (error: any) {
       notify({
         title: "Error",
-        description: "Failed to delete fee structure",
+        description: error.message || "Failed to delete fee structure",
         type: "error",
       });
     }
@@ -160,7 +171,7 @@ export default function FeesPage() {
             Manage fee structures for different programs
           </p>
         </div>
-        <Button onClick={openCreateModal}>
+        <Button variant="primary" onClick={openCreateModal}>
           <Plus className="w-4 h-4 mr-2" />
           Add Fee Structure
         </Button>
@@ -203,7 +214,7 @@ export default function FeesPage() {
                             programId: editingFee.programSemester.programId,
                             semesterNo: editingFee.programSemester.semesterNo,
                           },
-                          academicYear: editingFee.academicYear,
+
                           tuitionFee: editingFee.tuitionFee,
                           labFee: editingFee.labFee,
                           libraryFee: editingFee.libraryFee,

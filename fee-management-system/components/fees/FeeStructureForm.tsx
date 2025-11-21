@@ -15,7 +15,7 @@ interface FeeStructureFormProps {
       programId: string;
       semesterNo: number;
     };
-    academicYear?: string;
+
     tuitionFee?: number;
     labFee?: number;
     libraryFee?: number;
@@ -38,7 +38,7 @@ export default function FeeStructureForm({
   const [formData, setFormData] = useState({
     programId: initialData?.programSemester?.programId || "",
     semesterNo: initialData?.programSemester?.semesterNo?.toString() || "",
-    academicYear: initialData?.academicYear || "",
+
     tuitionFee: initialData?.tuitionFee || 0,
     labFee: initialData?.labFee || 0,
     libraryFee: initialData?.libraryFee || 0,
@@ -118,22 +118,6 @@ export default function FeeStructureForm({
               </option>
             ))}
           </select>
-        </div>
-
-        {/* Academic Year */}
-        <div>
-          <label className="block text-sm font-medium mb-1">
-            Academic Year
-          </label>
-          <input
-            type="text"
-            name="academicYear"
-            value={formData.academicYear}
-            onChange={handleChange}
-            placeholder="e.g., 2024/25"
-            className="w-full p-2 border rounded-md bg-background"
-            required
-          />
         </div>
 
         {/* Tuition Fee */}
