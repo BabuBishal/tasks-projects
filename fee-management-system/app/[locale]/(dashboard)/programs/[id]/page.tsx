@@ -1,0 +1,288 @@
+"use client";
+
+import { useState, use } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button/Button";
+import { Plus } from "lucide-react";
+import FeeStructureList from "@/components/fees/FeeStructureList";
+import FeeStructureForm from "@/components/fees/FeeStructureForm";
+import FeeDetailsModal from "@/components/fees/FeeDetailsModal";
+import { Modal } from "@/components/ui/modal/Modal";
+import { useToast } from "@/components/ui/toast";
+import { X } from "lucide-react";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+
+interface Program {
+  id: string;
+  name: string;
+  duration: number;
+  semesters: {
+    id: string;
+    semesterNo: number;
+    feeStructures: any[];
+  }[];
+}
+
+interface FeeStructure {
+  id: string;
+  programSemester: {
+    programId: string;
+    semesterNo: number;
+    program: {
+      name: string;
+    };
+  };
+  tuitionFee: number;
+  labFee: number;
+  libraryFee: number;
+  sportsFee: number;
+  miscFee: number;
+  totalFee: number;
+}
+
+export default function ProgramDetailsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+  const { notify } = useToast();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingFee, setEditingFee] = useState<FeeStructure | null>(null);
+  const [selectedFee, setSelectedFee] = useState<FeeStructure | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  const { data: program, isLoading } = useQuery<Program>({
+    queryKey: ["program", id],
+    queryFn: async () => {
+      const res = await fetch(`/api/programs/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch program");
+      return res.json();
+    },
+  });
+
+  const {
+    data: feeStructures,
+    isLoading: isFeesLoading,
+    refetch: refetchFees,
+  } = useQuery<FeeStructure[]>({
+    queryKey: ["feeStructures", id],
+    queryFn: async () => {
+      const res = await fetch(`/api/fee-structures?programId=${id}`);
+      if (!res.ok) throw new Error("Failed to fetch fee structures");
+      return res.json();
+    },
+  });
+
+  const handleCreate = async (data: any) => {
+    try {
+      const res = await fetch("/api/fee-structures", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(responseData.error || "Failed to create fee structure");
+      }
+
+      notify({
+        title: "Success",
+        description: "Fee structure created successfully",
+        type: "success",
+      });
+      setIsModalOpen(false);
+      refetchFees();
+    } catch (error: any) {
+      notify({
+        title: "Error",
+        description: error.message || "Failed to create fee structure",
+        type: "error",
+      });
+    }
+  };
+
+  const handleUpdate = async (data: any) => {
+    if (!editingFee) return;
+
+    try {
+      const res = await fetch(`/api/fee-structures/${editingFee.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(responseData.error || "Failed to update fee structure");
+      }
+
+      notify({
+        title: "Success",
+        description: "Fee structure updated successfully",
+        type: "success",
+      });
+      setIsModalOpen(false);
+      setEditingFee(null);
+      refetchFees();
+    } catch (error: any) {
+      notify({
+        title: "Error",
+        description: error.message || "Failed to update fee structure",
+        type: "error",
+      });
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/fee-structures/${id}`, {
+        method: "DELETE",
+      });
+
+      const responseData = await res.json();
+
+      if (!res.ok) {
+        throw new Error(responseData.error || "Failed to delete fee structure");
+      }
+
+      notify({
+        title: "Success",
+        description: "Fee structure deleted successfully",
+        type: "success",
+      });
+      setIsDetailsOpen(false);
+      refetchFees();
+    } catch (error: any) {
+      notify({
+        title: "Error",
+        description: error.message || "Failed to delete fee structure",
+        type: "error",
+      });
+    }
+  };
+
+  const openCreateModal = () => {
+    setEditingFee(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (fee: FeeStructure) => {
+    setEditingFee(fee);
+    setIsModalOpen(true);
+  };
+
+  const handleSelectFee = (fee: FeeStructure) => {
+    setSelectedFee(fee);
+    setIsDetailsOpen(true);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!program) {
+    return <div>Program not found</div>;
+  }
+
+  // ...
+
+  return (
+    <div className="w-full h-full flex flex-col gap-6">
+      <Breadcrumb
+        items={[
+          { label: "Programs", href: "/programs" },
+          { label: program.name, href: `/programs/${program.id}` },
+        ]}
+      />
+      <div className="flex justify-between items-end gap-5">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">{program.name}</h1>
+          <p className="text-muted-foreground">
+            {program.duration} Semesters • Manage Fee Structures
+          </p>
+        </div>
+        <Button variant="primary" onClick={openCreateModal}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Fee Structure
+        </Button>
+      </div>
+
+      {isFeesLoading ? (
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      ) : (
+        <FeeStructureList
+          feeStructures={feeStructures || []}
+          onSelect={handleSelectFee}
+        />
+      )}
+
+      {/* Create/Edit Modal */}
+      <Modal defaultOpen={isModalOpen}>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div className="bg-background rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center p-6 border-b">
+                <h2 className="text-lg font-bold">
+                  {editingFee ? "Edit Fee Structure" : "Add Fee Structure"}
+                </h2>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <div className="p-6">
+                <FeeStructureForm
+                  key={editingFee ? editingFee.id : "new"}
+                  initialData={
+                    editingFee
+                      ? {
+                          programSemester: {
+                            programId: editingFee.programSemester.programId,
+                            semesterNo: editingFee.programSemester.semesterNo,
+                          },
+                          tuitionFee: editingFee.tuitionFee,
+                          labFee: editingFee.labFee,
+                          libraryFee: editingFee.libraryFee,
+                          sportsFee: editingFee.sportsFee,
+                          miscFee: editingFee.miscFee,
+                        }
+                      : {
+                          programSemester: {
+                            programId: program.id,
+                            semesterNo: 1,
+                          },
+                        }
+                  }
+                  programs={[program]}
+                  onSubmit={editingFee ? handleUpdate : handleCreate}
+                  onCancel={() => setIsModalOpen(false)}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Details Modal */}
+      <FeeDetailsModal
+        isOpen={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
+        feeStructure={selectedFee}
+        onEdit={openEditModal}
+        onDelete={handleDelete}
+      />
+    </div>
+  );
+}

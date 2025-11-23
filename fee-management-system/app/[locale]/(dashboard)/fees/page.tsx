@@ -1,246 +1,196 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button/Button";
-import { Plus, X } from "lucide-react";
-import FeeStructureList from "@/components/fees/FeeStructureList";
-import FeeStructureForm from "@/components/fees/FeeStructureForm";
-import FeeDetailsModal from "@/components/fees/FeeDetailsModal";
-import { Modal } from "@/components/ui/modal/Modal";
-import { useToast } from "@/components/ui/toast";
 import { useQuery } from "@tanstack/react-query";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card/Card";
+import { Table } from "@/components/ui/table/Table";
+import Badge from "@/components/ui/badges/Badges";
+import { formatCurrency, formatDate } from "@/lib/utils";
+import {
+  DollarSign,
+  Users,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
 
-interface FeeStructure {
-  id: string;
-  programSemester: {
-    programId: string;
-    semesterNo: number;
-    program: {
-      name: string;
-    };
+interface DashboardData {
+  dashboardStats: {
+    title: string;
+    value: string;
+    desc: string;
+    icon: string;
+  }[];
+  paymentStats: {
+    paid: number;
+    partial: number;
+    overdue: number;
+    pending: number;
+    total: number;
   };
-  tuitionFee: number;
-  labFee: number;
-  libraryFee: number;
-  sportsFee: number;
-  miscFee: number;
-  totalFee: number;
+  recentPayments: {
+    id: string;
+    studentName: string;
+    amount: number;
+    method: string;
+    date: string;
+    receiptNo: string;
+  }[];
+  overdueFees: {
+    id: string;
+    studentName: string;
+    studentRollNo: string;
+    program: string;
+    balance: number;
+    dueDate: string;
+    daysOverdue: number;
+  }[];
 }
 
 export default function FeesPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingFee, setEditingFee] = useState<FeeStructure | null>(null);
-  const [selectedFee, setSelectedFee] = useState<FeeStructure | null>(null);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const { notify } = useToast();
-
-  const {
-    data: feeStructures,
-    isLoading,
-    refetch,
-  } = useQuery<FeeStructure[]>({
-    queryKey: ["feeStructures"],
+  const { data, isLoading } = useQuery<DashboardData>({
+    queryKey: ["dashboardStats"],
     queryFn: async () => {
-      const res = await fetch("/api/fee-structures");
-      if (!res.ok) throw new Error("Failed to fetch fee structures");
+      const res = await fetch("/api/dashboard-stats");
+      if (!res.ok) throw new Error("Failed to fetch dashboard stats");
       return res.json();
     },
   });
 
-  const { data: programs } = useQuery<any[]>({
-    queryKey: ["programs"],
-    queryFn: async () => {
-      const res = await fetch("/api/programs");
-      if (!res.ok) throw new Error("Failed to fetch programs");
-      return res.json();
-    },
-  });
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
-  const handleCreate = async (data: any) => {
-    try {
-      const res = await fetch("/api/fee-structures", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+  if (!data) return null;
 
-      const responseData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(responseData.error || "Failed to create fee structure");
-      }
-
-      notify({
-        title: "Success",
-        description: "Fee structure created successfully",
-        type: "success",
-      });
-      setIsModalOpen(false);
-      refetch();
-    } catch (error: any) {
-      notify({
-        title: "Error",
-        description: error.message || "Failed to create fee structure",
-        type: "error",
-      });
-    }
-  };
-
-  const handleUpdate = async (data: any) => {
-    if (!editingFee) return;
-
-    try {
-      const res = await fetch(`/api/fee-structures/${editingFee.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const responseData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(responseData.error || "Failed to update fee structure");
-      }
-
-      notify({
-        title: "Success",
-        description: "Fee structure updated successfully",
-        type: "success",
-      });
-      setIsModalOpen(false);
-      setEditingFee(null);
-      refetch();
-    } catch (error: any) {
-      notify({
-        title: "Error",
-        description: error.message || "Failed to update fee structure",
-        type: "error",
-      });
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    try {
-      const res = await fetch(`/api/fee-structures/${id}`, {
-        method: "DELETE",
-      });
-
-      const responseData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(responseData.error || "Failed to delete fee structure");
-      }
-
-      notify({
-        title: "Success",
-        description: "Fee structure deleted successfully",
-        type: "success",
-      });
-      setIsDetailsOpen(false);
-      refetch();
-    } catch (error: any) {
-      notify({
-        title: "Error",
-        description: error.message || "Failed to delete fee structure",
-        type: "error",
-      });
-    }
-  };
-
-  const openCreateModal = () => {
-    setEditingFee(null);
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (fee: FeeStructure) => {
-    setEditingFee(fee);
-    setIsModalOpen(true);
-  };
-
-  const handleSelectFee = (fee: FeeStructure) => {
-    setSelectedFee(fee);
-    setIsDetailsOpen(true);
+  const statsIcons = {
+    "Total Revenue": DollarSign,
+    "Total Students": Users,
+    "Pending Payments": Clock,
+    "Collection Status": CheckCircle,
   };
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Fee Structures</h1>
-          <p className="text-muted-foreground">
-            Manage fee structures for different programs
-          </p>
-        </div>
-        <Button variant="primary" onClick={openCreateModal}>
-          <Plus className="w-4 h-4 mr-2" />
-          Add Fee Structure
-        </Button>
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">
+          Financial Dashboard
+        </h1>
+        <p className="text-muted-foreground">
+          Overview of fee collection and outstanding payments
+        </p>
       </div>
 
-      {isLoading ? (
-        <div className="flex justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      ) : (
-        <FeeStructureList
-          feeStructures={feeStructures || []}
-          onSelect={handleSelectFee}
-        />
-      )}
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {data.dashboardStats.map((stat, index) => {
+          const Icon =
+            statsIcons[stat.title as keyof typeof statsIcons] || DollarSign;
+          return (
+            <Card key={index}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  {stat.title}
+                </CardTitle>
+                <Icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <p className="text-xs text-muted-foreground">{stat.desc}</p>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
 
-      {/* Create/Edit Modal */}
-      <Modal defaultOpen={isModalOpen}>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-background rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center p-6 border-b">
-                <h2 className="text-lg font-bold">
-                  {editingFee ? "Edit Fee Structure" : "Add Fee Structure"}
-                </h2>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-              <div className="p-6">
-                <FeeStructureForm
-                  key={editingFee ? editingFee.id : "new"}
-                  initialData={
-                    editingFee
-                      ? {
-                          programSemester: {
-                            programId: editingFee.programSemester.programId,
-                            semesterNo: editingFee.programSemester.semesterNo,
-                          },
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Payments */}
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle>Recent Payments</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <Table.Header>
+                <Table.Row>
+                  <Table.Head>Student</Table.Head>
+                  <Table.Head>Amount</Table.Head>
+                  <Table.Head>Date</Table.Head>
+                  <Table.Head>Method</Table.Head>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {data.recentPayments.map((payment) => (
+                  <Table.Row key={payment.id}>
+                    <Table.Cell>
+                      <div className="font-medium">{payment.studentName}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {payment.receiptNo}
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>{formatCurrency(payment.amount)}</Table.Cell>
+                    <Table.Cell>{formatDate(payment.date)}</Table.Cell>
+                    <Table.Cell className="capitalize">
+                      {payment.method}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </CardContent>
+        </Card>
 
-                          tuitionFee: editingFee.tuitionFee,
-                          labFee: editingFee.labFee,
-                          libraryFee: editingFee.libraryFee,
-                          sportsFee: editingFee.sportsFee,
-                          miscFee: editingFee.miscFee,
-                        }
-                      : undefined
-                  }
-                  programs={programs || []}
-                  onSubmit={editingFee ? handleUpdate : handleCreate}
-                  onCancel={() => setIsModalOpen(false)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal>
-
-      {/* Details Modal */}
-      <FeeDetailsModal
-        isOpen={isDetailsOpen}
-        onClose={() => setIsDetailsOpen(false)}
-        feeStructure={selectedFee}
-        onEdit={openEditModal}
-        onDelete={handleDelete}
-      />
+        {/* Overdue List */}
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertCircle className="w-5 h-5 text-destructive" />
+              Overdue Payments
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <Table.Header>
+                <Table.Row>
+                  <Table.Head>Student</Table.Head>
+                  <Table.Head>Program</Table.Head>
+                  <Table.Head>Balance</Table.Head>
+                  <Table.Head>Overdue By</Table.Head>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {data.overdueFees.map((fee) => (
+                  <Table.Row key={fee.id}>
+                    <Table.Cell>
+                      <div className="font-medium">{fee.studentName}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {fee.studentRollNo}
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>{fee.program}</Table.Cell>
+                    <Table.Cell className="text-destructive font-medium">
+                      {formatCurrency(fee.balance)}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Badge variant="danger" size="small">
+                        {fee.daysOverdue} days
+                      </Badge>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

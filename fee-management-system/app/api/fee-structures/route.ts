@@ -1,9 +1,21 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const programId = searchParams.get("programId");
+
+    const whereClause = programId
+      ? {
+          programSemester: {
+            programId,
+          },
+        }
+      : {};
+
     const feeStructures = await prisma.feeStructure.findMany({
+      where: whereClause,
       include: {
         programSemester: {
           include: {
@@ -12,7 +24,9 @@ export async function GET() {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        programSemester: {
+          semesterNo: "asc",
+        },
       },
     });
 

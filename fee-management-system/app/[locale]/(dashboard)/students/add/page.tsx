@@ -7,8 +7,9 @@ import useForm from "@/hooks/useForm";
 import { Program, Scholarship } from "@/lib/@types/prisma";
 import { studentSchema } from "@/lib/constants";
 import { validateForm } from "@/lib/validator";
-import { StudentFormInputs } from "@/lib/@types/types";
+import { StudentFormInputs } from "@/lib/@types";
 import { useToast } from "@/components/ui/toast";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -101,9 +102,13 @@ export default function AddStudentPage() {
       router.back();
 
       // router.push("/students");
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error:", err);
-      setError(err.message || "Something went wrong while adding student.");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong while adding student."
+      );
       setLoading(false);
       notify({
         title: "Adding Failed",
@@ -115,19 +120,27 @@ export default function AddStudentPage() {
 
   // console.log("first", scholarships);
   return (
-    <div className=" w-full max-w-xl flex flex-col gap-5 justify-center items-center mx-auto mt-10">
-      <h2 className="text-2xl font-semibold">Add Student</h2>
-      <AddStudentForm
-        programs={programs}
-        formData={formData}
-        formErrors={formErrors}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        error={error}
-        scholarships={scholarships}
-        loading={loading}
+    <div className="w-full max-w-xl mx-auto mt-10">
+      <Breadcrumb
+        items={[
+          { label: "Students", href: "/students" },
+          { label: "Add Student", href: "/students/add" },
+        ]}
       />
+      <div className="flex flex-col gap-5 justify-center items-center">
+        <h2 className="text-2xl font-semibold">Add Student</h2>
+        <AddStudentForm
+          programs={programs}
+          formData={formData}
+          formErrors={formErrors}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          error={error}
+          scholarships={scholarships}
+          loading={loading}
+        />
+      </div>
     </div>
   );
 }

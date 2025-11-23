@@ -31,6 +31,8 @@ const StudentList: React.FC<StudentListProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("All");
+  const [programFilter, setProgramFilter] = useState<string>("all");
+  const [semesterFilter, setSemesterFilter] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -39,6 +41,10 @@ const StudentList: React.FC<StudentListProps> = ({
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
   const [isBulkDeleteOpen, setIsBulkDeleteOpen] = useState(false);
   const [isBulkPromoteOpen, setIsBulkPromoteOpen] = useState(false);
+  const [isEditLoading, setIsEditLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [isBulkDeleteLoading, setIsBulkDeleteLoading] = useState(false);
+  const [isBulkPromoteLoading, setIsBulkPromoteLoading] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: "",
     email: "",
@@ -67,7 +73,14 @@ const StudentList: React.FC<StudentListProps> = ({
         student.rollNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
         student.phone?.includes(searchQuery);
 
-      if (statusFilter === "All") return matchesSearch;
+      const matchesProgram =
+        programFilter === "all" || student.programId === programFilter;
+      const matchesSemester =
+        semesterFilter === "all" ||
+        student.semester.toString() === semesterFilter;
+
+      if (statusFilter === "All")
+        return matchesSearch && matchesProgram && matchesSemester;
 
       // Calculate latest fee status
       const latestFee =
@@ -80,9 +93,20 @@ const StudentList: React.FC<StudentListProps> = ({
           : null;
       const feeStatus = latestFee?.status || "No Fees";
 
-      return matchesSearch && feeStatus === statusFilter;
+      return (
+        matchesSearch &&
+        matchesProgram &&
+        matchesSemester &&
+        feeStatus === statusFilter
+      );
     });
-  }, [initialStudents, searchQuery, statusFilter]);
+  }, [
+    initialStudents,
+    searchQuery,
+    statusFilter,
+    programFilter,
+    semesterFilter,
+  ]);
 
   const paginatedStudents = filteredStudents.slice(
     (currentPage - 1) * itemsPerPage,
@@ -105,6 +129,13 @@ const StudentList: React.FC<StudentListProps> = ({
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedStudent) return;
+
+    setIsEditLoading(true);
+    notify({
+      title: "Processing",
+      description: "Updating student information...",
+      type: "info",
+    });
 
     try {
       const res = await fetch(`/api/students/${selectedStudent.id}`, {
@@ -132,6 +163,8 @@ const StudentList: React.FC<StudentListProps> = ({
         description: error.message || "Failed to update student",
         type: "error",
       });
+    } finally {
+      setIsEditLoading(false);
     }
   };
 
@@ -142,6 +175,13 @@ const StudentList: React.FC<StudentListProps> = ({
 
   const handleDeleteConfirm = async () => {
     if (!selectedStudent) return;
+
+    setIsDeleteLoading(true);
+    notify({
+      title: "Processing",
+      description: "Deleting student...",
+      type: "info",
+    });
 
     try {
       const res = await fetch(`/api/students/${selectedStudent.id}`, {
@@ -167,6 +207,8 @@ const StudentList: React.FC<StudentListProps> = ({
         description: error.message || "Failed to delete student",
         type: "error",
       });
+    } finally {
+      setIsDeleteLoading(false);
     }
   };
 
@@ -200,6 +242,13 @@ const StudentList: React.FC<StudentListProps> = ({
   const handleBulkDelete = async () => {
     if (selectedStudentIds.length === 0) return;
 
+    setIsBulkDeleteLoading(true);
+    notify({
+      title: "Processing",
+      description: `Deleting ${selectedStudentIds.length} students...`,
+      type: "info",
+    });
+
     try {
       const res = await fetch("/api/students/bulk-delete", {
         method: "POST",
@@ -227,11 +276,20 @@ const StudentList: React.FC<StudentListProps> = ({
         description: error.message || "Failed to delete students",
         type: "error",
       });
+    } finally {
+      setIsBulkDeleteLoading(false);
     }
   };
 
   const handleBulkPromote = async () => {
     if (selectedStudentIds.length === 0) return;
+
+    setIsBulkPromoteLoading(true);
+    notify({
+      title: "Processing",
+      description: `Promoting ${selectedStudentIds.length} students...`,
+      type: "info",
+    });
 
     try {
       const res = await fetch("/api/students/promote-semester", {
@@ -260,43 +318,88 @@ const StudentList: React.FC<StudentListProps> = ({
         description: error.message || "Failed to promote students",
         type: "error",
       });
+    } finally {
+      setIsBulkPromoteLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col gap-4">
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-background p-4 rounded-lg border border-border">
-        <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search by name, roll no..."
-            className="w-full pl-9 pr-4 py-2 text-sm border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-background"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setCurrentPage(1);
-            }}
-          />
+      <div className="flex flex-col gap-3 bg-background p-4 rounded-lg border border-border">
+        <div className="flex flex-col sm:flex-row gap-3 items-center">
+          <div className="relative w-full sm:flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search by name, roll no..."
+              className="w-full pl-9 pr-4 py-2 text-sm border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-background"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
+          <div className="flex gap-2 w-full sm:w-auto items-center">
+            <Filter className="w-4 h-4 text-muted-foreground" />
+            <select
+              className="px-3 py-2 text-sm border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-background cursor-pointer"
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="All">All Status</option>
+              <option value="Paid">Paid</option>
+              <option value="Pending">Pending</option>
+              <option value="Overdue">Overdue</option>
+              <option value="No Fees">No Fees</option>
+            </select>
+            <select
+              value={programFilter}
+              onChange={(e) => {
+                setProgramFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 text-sm border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-background cursor-pointer"
+            >
+              <option value="all">All Programs</option>
+              {programs?.map((program) => (
+                <option key={program.id} value={program.id}>
+                  {program.name}
+                </option>
+              ))}
+            </select>
+            <select
+              value={semesterFilter}
+              onChange={(e) => {
+                setSemesterFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="px-3 py-2 text-sm border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-background cursor-pointer"
+            >
+              <option value="all">All Semesters</option>
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+                <option key={sem} value={sem.toString()}>
+                  Sem {sem}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div className="flex gap-2 w-full sm:w-auto items-center">
-          <Filter className="w-4 h-4 text-muted-foreground" />
-          <select
-            className="px-3 py-2 text-sm border border-border rounded-md focus:outline-none focus:ring-1 focus:ring-primary bg-background cursor-pointer"
-            value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
-              setCurrentPage(1);
+        {(programFilter !== "all" || semesterFilter !== "all") && (
+          <button
+            onClick={() => {
+              setProgramFilter("all");
+              setSemesterFilter("all");
             }}
+            className="text-sm text-primary hover:underline self-start"
           >
-            <option value="All">All Status</option>
-            <option value="Paid">Paid</option>
-            <option value="Pending">Pending</option>
-            <option value="Overdue">Overdue</option>
-            <option value="No Fees">No Fees</option>
-          </select>
-        </div>
+            Clear Program/Semester Filters
+          </button>
+        )}
       </div>
 
       {/* Bulk Actions Toolbar */}
@@ -560,14 +663,19 @@ const StudentList: React.FC<StudentListProps> = ({
                     type="button"
                     onClick={() => setIsEditModalOpen(false)}
                     className="px-4 py-2 border rounded-md hover:bg-accent"
+                    disabled={isEditLoading}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                    className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    disabled={isEditLoading}
                   >
-                    Save Changes
+                    {isEditLoading && (
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    )}
+                    {isEditLoading ? "Saving..." : "Save Changes"}
                   </button>
                 </div>
               </form>
@@ -591,14 +699,19 @@ const StudentList: React.FC<StudentListProps> = ({
                 <button
                   onClick={() => setIsDeleteDialogOpen(false)}
                   className="px-4 py-2 border rounded-md hover:bg-accent"
+                  disabled={isDeleteLoading}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleDeleteConfirm}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  disabled={isDeleteLoading}
                 >
-                  Delete
+                  {isDeleteLoading && (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  )}
+                  {isDeleteLoading ? "Deleting..." : "Delete"}
                 </button>
               </div>
             </div>
@@ -624,14 +737,19 @@ const StudentList: React.FC<StudentListProps> = ({
                 <button
                   onClick={() => setIsBulkDeleteOpen(false)}
                   className="px-4 py-2 border rounded-md hover:bg-accent"
+                  disabled={isBulkDeleteLoading}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleBulkDelete}
-                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                  className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  disabled={isBulkDeleteLoading}
                 >
-                  Delete All
+                  {isBulkDeleteLoading && (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  )}
+                  {isBulkDeleteLoading ? "Deleting..." : "Delete All"}
                 </button>
               </div>
             </div>
@@ -657,14 +775,19 @@ const StudentList: React.FC<StudentListProps> = ({
                 <button
                   onClick={() => setIsBulkPromoteOpen(false)}
                   className="px-4 py-2 border rounded-md hover:bg-accent"
+                  disabled={isBulkPromoteLoading}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleBulkPromote}
-                  className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
+                  className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  disabled={isBulkPromoteLoading}
                 >
-                  Promote All
+                  {isBulkPromoteLoading && (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  )}
+                  {isBulkPromoteLoading ? "Promoting..." : "Promote All"}
                 </button>
               </div>
             </div>

@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { validateForm } from "@/lib/validator";
 import { loginSchema } from "@/lib/constants";
 import { signIn } from "next-auth/react";
-import { LoginFormInputs } from "@/lib/@types/types";
+import { LoginFormInputs } from "@/lib/@types";
 import { useState } from "react";
 import { useToast } from "@/components/ui/toast";
 const LoginPage = () => {

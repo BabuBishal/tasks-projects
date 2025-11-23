@@ -1,5 +1,6 @@
 // ============================================
-// Base Models
+// Prisma Base Models
+// Generated from Prisma schema - keep in sync with schema.prisma
 // ============================================
 
 export type User = {
@@ -30,7 +31,6 @@ export type ProgramSemester = {
 export type FeeStructure = {
   id: string;
   programSemesterId: string;
-
   tuitionFee: number;
   labFee: number;
   libraryFee: number;
@@ -44,7 +44,7 @@ export type FeeStructure = {
 export type Scholarship = {
   id: string;
   name: string;
-  type: string;
+  type: "percentage" | "fixed";
   value: number;
   createdAt: Date;
   updatedAt: Date;
@@ -60,6 +60,7 @@ export type Student = {
   phone: string;
   address: string;
   year: number;
+  joinedYear: number;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -80,7 +81,7 @@ export type StudentFee = {
   payableFee: number;
   paid: number;
   balance: number;
-  status: string;
+  status: "Pending" | "Partial" | "Paid" | "Overdue";
   dueDate: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -155,118 +156,32 @@ export type ProgramWithSemesters = Program & {
   semesters: ProgramSemester[];
 };
 
-// ============================================
-// API Response Types
-// ============================================
-
-export type DashboardStats = {
-  title: string;
-  value: string | number;
-  desc: string;
-  icon: string;
+// Extended Student types with computed fields for API responses
+export type StudentWithComputedTotals = Student & {
+  program: Program;
+  totalOriginalFee?: number;
+  totalDiscount?: number;
+  totalPayableFee?: number;
+  totalPaid?: number;
+  totalBalance?: number;
+  totalScholarshipAmount?: number;
+  fees?: (StudentFee & {
+    feeStructure: FeeStructure;
+    payments: Payment[];
+  })[];
+  feesList?: {
+    id: string;
+    academicYear: string;
+    semesterNo: number;
+    originalFee: number;
+    discount: number;
+    payableFee: number;
+    paid: number;
+    balance: number;
+    status: string;
+    dueDate: string | null;
+  }[];
+  scholarships?: (StudentScholarship & {
+    scholarship: Scholarship;
+  })[];
 };
-
-export type PaymentStats = {
-  paid: number;
-  partial: number;
-  overdue: number;
-  pending: number;
-  total: number;
-};
-
-export type RecentPayment = {
-  id: string;
-  studentName: string;
-  amount: number;
-  method: string;
-  date: Date;
-  receiptNo: string;
-};
-
-export type OverdueFee = {
-  id: string;
-  studentName: string;
-  studentRollNo: string;
-  program: string;
-  balance: number;
-  dueDate: Date;
-  daysOverdue: number;
-};
-
-export type DashboardData = {
-  dashboardStats: DashboardStats[];
-  paymentStats: PaymentStats;
-  recentPayments: RecentPayment[];
-  overdueFees: OverdueFee[];
-};
-
-// ============================================
-// Form Types
-// ============================================
-
-export type CreateStudentInput = {
-  name: string;
-  email: string;
-  rollNo: string;
-  programId: string;
-  semester: number;
-  phone: string;
-  address: string;
-  year: number;
-};
-
-export type UpdateStudentInput = Partial<CreateStudentInput> & {
-  id: string;
-};
-
-export type CreateFeeStructureInput = {
-  programSemesterId: string;
-
-  tuitionFee: number;
-  labFee: number;
-  libraryFee: number;
-  sportsFee: number;
-  miscFee: number;
-  totalFee: number;
-};
-
-export type CreatePaymentInput = {
-  studentFeeId: string;
-  method: string;
-  amount: number;
-  receiptNo: string;
-};
-
-export type AssignScholarshipInput = {
-  studentId: string;
-  scholarshipId: string;
-};
-
-export type CreateScholarshipInput = {
-  name: string;
-  type: "percentage" | "fixed";
-  value: number;
-};
-
-// ============================================
-// Status Enums
-// ============================================
-
-export enum FeeStatus {
-  PENDING = "Pending",
-  PARTIAL = "Partial",
-  PAID = "Paid",
-  OVERDUE = "Overdue",
-}
-
-export enum PaymentMethod {
-  CASH = "Cash",
-  ONLINE = "Online",
-  BANK_TRANSFER = "Bank Transfer",
-  CHEQUE = "Cheque",
-}
-
-export enum ScholarshipType {
-  PERCENTAGE = "percentage",
-  FIXED = "fixed",
-}

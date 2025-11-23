@@ -2,7 +2,8 @@
 .table-wrapper {
   container-type: inline-size;
   container-name: table-container;
-  width: 100%;
+  width: min-content; /* Shrink to minimum content width */
+  min-width: 100%; /* But at least full width if content is small */
   max-width: 100%; /* Prevent wrapper from expanding beyond container */
   overflow-x: auto;
   border-radius: 0.5rem;
@@ -16,7 +17,7 @@
 
 /* Table */
 .ui-table {
-  width: 100%;
+  width: 100%; /* Full width of wrapper */
   border-collapse: collapse;
   table-layout: auto;
 }
@@ -119,9 +120,16 @@
 
 /* Responsive Card View - Using Container Query */
 @container table-container (max-width: 640px) {
+  /* Remove wrapper border in card view */
+  .table-wrapper {
+    border: none;
+    width: 100%; /* Full width in card view */
+  }
+
   .ui-table {
     border: 0;
     min-width: 100%;
+    width: 100%;
     display: block;
   }
 

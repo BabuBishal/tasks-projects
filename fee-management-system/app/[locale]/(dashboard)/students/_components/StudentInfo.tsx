@@ -1,4 +1,4 @@
-import { Student } from "@/lib/@types/types";
+import { Student } from "@/lib/@types";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Award, BookOpen, Calendar, Mail, MapPin, Phone } from "lucide-react";
 

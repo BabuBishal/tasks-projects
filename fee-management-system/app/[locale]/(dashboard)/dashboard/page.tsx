@@ -1,12 +1,13 @@
 "use client";
 import PaymentHistory from "@/app/[locale]/(dashboard)/_components/PaymentHistory";
-import { StatusBar } from "@/components/shared/status-bar/StatusBar";
-import { DashboardData } from "@/lib/@types/prisma";
-import { useState, useEffect } from "react";
+// import { StatusBar } from "@/components/shared/status-bar/StatusBar";
+// import { DashboardData } from "@/lib/@types/prisma";
+// import { useState, useEffect } from "react";
 import Overdue from "../_components/Overdue";
 import PaymentStatusOverview from "../_components/PaymentStatusOverview";
 import StatsOverview from "../_components/StatsOverview";
 import { useGetDashboardStats } from "@/lib/services/queries/getDashboardStats.queries";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 
 export default function DashboardPage() {
   // const [data, setData] = useState<DashboardData | null>(null);
@@ -51,30 +52,28 @@ export default function DashboardPage() {
   console.log("ds", dashboardStats);
 
   return (
-    <div className="min-h-screen ">
-      <div className=" mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-primary">Dashboard</h1>
-          <p className="text-secondary mt-1">
-            Welcome to Fee Management System
-          </p>
-        </div>
-
-        {/* Stats Cards */}
-        <StatsOverview dashboardStats={dashboardStats} />
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Payment Status Chart */}
-          <PaymentStatusOverview paymentStats={paymentStats} />
-
-          {/* Recent Payments */}
-          <PaymentHistory paymentData={recentPayments} />
-        </div>
-
-        {/* Overdue Fees */}
-        <Overdue overdueFees={overdueFees} />
+    <div className="w-full h-full flex flex-col gap-6">
+      <Breadcrumb items={[{ label: "Dashboard", href: "/dashboard" }]} />
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+        <p className="text-muted-foreground">
+          Welcome to Fee Management System
+        </p>
       </div>
+
+      {/* Stats Cards */}
+      <StatsOverview dashboardStats={dashboardStats} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Payment Status Chart */}
+        <PaymentStatusOverview paymentStats={paymentStats} />
+
+        {/* Recent Payments */}
+        <PaymentHistory paymentData={recentPayments} />
+      </div>
+
+      {/* Overdue Fees */}
+      <Overdue overdueFees={overdueFees} />
     </div>
   );
 }

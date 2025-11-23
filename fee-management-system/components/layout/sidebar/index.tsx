@@ -1,6 +1,6 @@
 "use client";
 import {
-  // GraduationCap,
+  GraduationCap,
   LayoutDashboard,
   School,
   Settings,
@@ -25,9 +25,9 @@ const Sidebar = ({
 
   const sidebarLinks = [
     { name: t("dashboard"), icon: LayoutDashboard, path: "/dashboard" },
+    { name: "Programs", icon: GraduationCap, path: "/programs" },
     { name: t("students"), icon: Users, path: "/students" },
     { name: t("payments"), icon: Wallet, path: "/payments" },
-    { name: "Fees", icon: Banknote, path: "/fees" },
   ];
   return (
     <>

@@ -1,28 +1,51 @@
 "use client";
 
-import React, { useState } from "react";
-import { Upload, Download, Users, ArrowRight } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Upload, Download } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { useToast } from "@/components/ui/toast";
-import { generateCSVTemplate, parseCSV, exportToCSV } from "@/lib/csv-parser";
-import { useRouter } from "next/navigation";
+import {
+  generateCSVTemplate,
+  parseCSV,
+  exportToCSV,
+  ParseResult,
+  StudentCSVRow,
+} from "@/lib/csv-parser";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+
+interface ImportResult {
+  total: number;
+  success: StudentCSVRow[];
+  failed: { row: number; data: StudentCSVRow; error: string }[];
+}
 
 export default function BulkOperationsPage() {
-  const [activeTab, setActiveTab] = useState<"import" | "export" | "promote">(
-    "import"
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const [activeTab, setActiveTab] = useState<"import" | "export">(
+    tabParam === "export" ? "export" : "import"
   );
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
   const [csvContent, setCsvContent] = useState("");
-  const [parseResult, setParseResult] = useState<any>(null);
+  const [parseResult, setParseResult] = useState<ParseResult | null>(null);
   const [importing, setImporting] = useState(false);
-  const [importResult, setImportResult] = useState<any>(null);
+  const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const { notify } = useToast();
   const router = useRouter();
+
+  useEffect(() => {
+    if (tabParam === "export") {
+      setActiveTab("export");
+    } else if (tabParam === "import") {
+      setActiveTab("import");
+    }
+  }, [tabParam]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      setFile(selectedFile);
+      // setFile(selectedFile);
       const reader = new FileReader();
       reader.onload = (event) => {
         const content = event.target?.result as string;
@@ -80,10 +103,10 @@ export default function BulkOperationsPage() {
       setTimeout(() => {
         router.push("/students");
       }, 3000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       notify({
         title: "Import Failed",
-        description: error.message,
+        description: error instanceof Error ? error.message : "Import failed",
         type: "error",
       });
     } finally {
@@ -114,10 +137,10 @@ export default function BulkOperationsPage() {
         description: `Exported ${students.length} students`,
         type: "success",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       notify({
         title: "Export Failed",
-        description: error.message,
+        description: error instanceof Error ? error.message : "Export failed",
         type: "error",
       });
     }
@@ -125,12 +148,16 @@ export default function BulkOperationsPage() {
 
   return (
     <div className="w-full h-full flex flex-col gap-6">
+      <Breadcrumb
+        items={[
+          { label: "Students", href: "/students" },
+          { label: "Bulk Operations", href: "/students/bulk" },
+        ]}
+      />
       {/* Header */}
       <div>
         <h1 className="text-primary text-2xl font-bold">Bulk Operations</h1>
-        <p className="text-muted text-sm">
-          Import, export, and manage students in bulk
-        </p>
+        <p className="text-muted text-sm">Import and export student data</p>
       </div>
 
       {/* Tabs */}
@@ -156,17 +183,6 @@ export default function BulkOperationsPage() {
         >
           <Download className="w-4 h-4 inline mr-2" />
           Export Students
-        </button>
-        <button
-          onClick={() => setActiveTab("promote")}
-          className={`px-4 py-2 font-medium transition-colors ${
-            activeTab === "promote"
-              ? "text-primary border-b-2 border-primary"
-              : "text-muted hover:text-secondary"
-          }`}
-        >
-          <ArrowRight className="w-4 h-4 inline mr-2" />
-          Promote Semester
         </button>
       </div>
 
@@ -220,13 +236,11 @@ export default function BulkOperationsPage() {
                           ✗ CSV has errors:
                         </p>
                         <ul className="list-disc list-inside text-sm text-red-700 dark:text-red-300">
-                          {parseResult.errors
-                            .slice(0, 5)
-                            .map((err: any, i: number) => (
-                              <li key={i}>
-                                Row {err.row}: {err.message}
-                              </li>
-                            ))}
+                          {parseResult.errors.slice(0, 5).map((err, i) => (
+                            <li key={i}>
+                              Row {err.row}: {err.message}
+                            </li>
+                          ))}
                           {parseResult.errors.length > 5 && (
                             <li>
                               ... and {parseResult.errors.length - 5} more
@@ -289,7 +303,7 @@ export default function BulkOperationsPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {importResult.failed.map((item: any, i: number) => (
+                            {importResult.failed.map((item, i) => (
                               <tr key={i} className="border-b">
                                 <td className="p-2">{item.row}</td>
                                 <td className="p-2">
@@ -323,23 +337,6 @@ export default function BulkOperationsPage() {
             <Button variant="primary" onClick={handleExport}>
               <Download className="w-4 h-4 mr-2" />
               Export All Students
-            </Button>
-          </div>
-        )}
-
-        {activeTab === "promote" && (
-          <div className="bg-background border border-border rounded-lg p-6">
-            <h2 className="text-lg font-semibold mb-4">
-              Promote Students to Next Semester
-            </h2>
-            <p className="text-muted mb-6">
-              Use the student list page to select students and promote them to
-              the next semester. This will automatically assign fees for the new
-              semester.
-            </p>
-            <Button variant="primary" onClick={() => router.push("/students")}>
-              <Users className="w-4 h-4 mr-2" />
-              Go to Student List
             </Button>
           </div>
         )}

@@ -1,14 +1,27 @@
 "use client";
 
 import { Button } from "@/components/ui/button/Button";
-import { Plus, Users, Wallet, AlertCircle } from "lucide-react";
+import {
+  Plus,
+  Users,
+  Wallet,
+  AlertCircle,
+  Upload,
+  Download,
+  ChevronDown,
+} from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { StudentWithFees } from "@/lib/@types/prisma";
 import StatsCard from "@/components/ui/stats-card/StatsCard";
 import StudentList from "@/components/students/StudentList";
 import { useQuery } from "@tanstack/react-query";
+import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { DropdownMenu } from "@/components/ui/dropdown-menu/DropdownMenu";
 
 const Students = () => {
+  const router = useRouter();
+
   const {
     data: students,
     isLoading,
@@ -75,7 +88,9 @@ const Students = () => {
     }).length || 0;
 
   return (
-    <div className="w-full h-full flex flex-col gap-8">
+    <div className="w-full h-full flex flex-col gap-6">
+      <Breadcrumb items={[{ label: "Students", href: "/students" }]} />
+
       {/* Header */}
       <div className="flex justify-between items-end gap-5">
         <div>
@@ -85,11 +100,27 @@ const Students = () => {
           </h4>
         </div>
         <div className="flex gap-2">
-          <Link href="/students/bulk">
-            <Button variant="outline" size="sm">
-              Bulk Operations
-            </Button>
-          </Link>
+          <DropdownMenu
+            trigger={
+              <Button variant="outline" size="sm">
+                Bulk Operations
+                <ChevronDown className="w-4 h-4 ml-1" />
+              </Button>
+            }
+          >
+            <DropdownMenu.Item
+              onClick={() => router.push("/students/bulk?tab=import")}
+              icon={<Upload className="w-4 h-4" />}
+            >
+              Import Students
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              onClick={() => router.push("/students/bulk?tab=export")}
+              icon={<Download className="w-4 h-4" />}
+            >
+              Export Students
+            </DropdownMenu.Item>
+          </DropdownMenu>
           <Link href="/students/add">
             <Button variant="primary" size="sm">
               <Plus className="w-4 h-4" /> Add Student

@@ -1,9 +1,9 @@
 "use client";
 
-import { AddStudentFormProps } from "@/lib/@types/types";
+import { StudentFormProps } from "@/lib/@types";
 import { Program } from "@/lib/@types/prisma";
 
-interface Props extends AddStudentFormProps {
+interface Props extends StudentFormProps {
   error?: string;
   programs: Program[];
   scholarships: { id: string; name: string }[];

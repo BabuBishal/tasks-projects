@@ -87,8 +87,8 @@ export const generateProgramPrefix = (name: string) =>
     .map((word) => word.toUpperCase().substring(0, 4))
     .join("");
 
-export const formatDate = (dateString: string) => {
-  return new Date(dateString)?.toLocaleDateString("en-US", {
+export const formatDate = (date: string | Date) => {
+  return new Date(date)?.toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -99,18 +99,17 @@ export const formatCurrency = (amount: number) => {
   return `Rs ${amount?.toLocaleString()}`;
 };
 
-
 export const getStatusColor = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case "paid":
-        return "bg-green-100 text-green-800";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
-      case "overdue":
-        return "bg-red-100 text-red-800";
-      case "partial":
-        return "bg-orange-100 text-orange-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
+  switch (status?.toLowerCase()) {
+    case "paid":
+      return "bg-green-100 text-green-800";
+    case "pending":
+      return "bg-yellow-100 text-yellow-800";
+    case "overdue":
+      return "bg-red-100 text-red-800";
+    case "partial":
+      return "bg-orange-100 text-orange-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};

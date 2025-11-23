@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import PaymentForm from "../../../../../components/forms/PaymentForm";
-import { Student, PaymentFormInputs } from "@/lib/@types/types";
+import { StudentWithComputedTotals, PaymentFormInputs } from "@/lib/@types";
 import { useToast } from "@/components/ui/toast";
 import { useRouter } from "next/navigation";
 

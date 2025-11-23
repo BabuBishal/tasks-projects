@@ -3,7 +3,7 @@ import useForm from "@/hooks/useForm";
 import { useParams, useRouter } from "next/navigation";
 import { validateForm } from "@/lib/validator";
 import { registerSchema } from "@/lib/constants";
-import { FormInputs } from "@/lib/@types/types";
+
 import RegisterForm from "@/components/forms/RegisterForm";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
@@ -16,13 +16,13 @@ const RegisterPage = () => {
   const { notify } = useToast();
 
   const { formData, formErrors, handleChange, handleSubmit } =
-    useForm<FormInputs>({
+    useForm<RegisterFormInputs>({
       initialValues: { name: "", email: "", password: "" },
       validateForm,
       schema: registerSchema,
     });
 
-  const onSubmit = async (form_data: FormInputs) => {
+  const onSubmit = async (form_data: RegisterFormInputs) => {
     // console.log(data);
     setError("");
     try {

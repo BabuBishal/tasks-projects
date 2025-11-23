@@ -175,6 +175,7 @@ export async function GET(req: NextRequest) {
       paymentStats,
       recentPayments: recentPayments.map((payment: PaymentWithStudent) => ({
         id: payment.id,
+        studentId: payment.studentFee.student.id,
         studentName: payment.studentFee.student.name,
         amount: payment.amount,
         method: payment.method,
@@ -183,6 +184,7 @@ export async function GET(req: NextRequest) {
       })),
       overdueFees: overdueFees.map((fee: StudentFeeWithDetails) => ({
         id: fee.id,
+        studentId: fee.student.id,
         studentName: fee.student.name,
         studentRollNo: fee.student.rollNo,
         program: fee.student.program.name,

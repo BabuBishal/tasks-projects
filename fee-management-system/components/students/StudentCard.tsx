@@ -1,4 +1,4 @@
-import { Student } from "@/lib/@types/types";
+import { Student } from "@/lib/@types";
 import { Book, Calendar, Mail, Phone } from "lucide-react";
 
 const StudentCard = ({
