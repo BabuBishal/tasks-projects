@@ -1,4 +1,4 @@
-import { ValidationErrors, ValidationSchema } from "./@types/types";
+import { ValidationErrors, ValidationSchema } from "@/lib/@types";
 
 export const validateForm = <T extends Record<string, any>>(
   values: T,
@@ -13,7 +13,9 @@ export const validateForm = <T extends Record<string, any>>(
     if (!rules) continue;
 
     if (rules.required && !value) {
-      errors[field as keyof T] = `${field[0].toUpperCase() + field.slice(1)} is required`;
+      errors[field as keyof T] = `${
+        field[0].toUpperCase() + field.slice(1)
+      } is required`;
       continue;
     }
 

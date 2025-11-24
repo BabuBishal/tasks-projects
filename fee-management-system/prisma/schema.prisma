@@ -114,6 +114,7 @@ model Student {
   program     Program              @relation(fields: [programId], references: [id])
   scholarships StudentScholarship[]
   fees        StudentFee[]
+  status      String               @default("Active") // "Active", "Graduated", "Suspended"
 }
 
 // -------------------------------------------------------

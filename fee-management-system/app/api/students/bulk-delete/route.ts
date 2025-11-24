@@ -45,10 +45,10 @@ export async function POST(req: NextRequest) {
       deleted: deleteResult.count,
       students: students,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Bulk delete error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to delete students" },
+      { error: error instanceof Error ? error.message : "Failed to delete students" },
       { status: 500 }
     );
   }

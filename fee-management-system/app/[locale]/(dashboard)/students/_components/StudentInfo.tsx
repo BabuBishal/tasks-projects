@@ -1,8 +1,8 @@
-import { Student } from "@/lib/@types";
+import { StudentWithComputedTotals } from "@/lib/@types";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Award, BookOpen, Calendar, Mail, MapPin, Phone } from "lucide-react";
 
-const StudentInfo = ({ student }: { student: Partial<Student> }) => {
+const StudentInfo = ({ student }: { student: StudentWithComputedTotals }) => {
   return (
     <>
       {/* Student Information */}
@@ -64,6 +64,17 @@ const StudentInfo = ({ student }: { student: Partial<Student> }) => {
                 </p>
               </div>
             </div>
+            {student.status && (
+              <div className="flex items-start gap-3">
+                <Award className="w-5 h-5 text-muted mt-0.5" />
+                <div>
+                  <p className="text-sm text-secondary">Status</p>
+                  <p className="text-xs text-secondary font-semibold">
+                    {student.status}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -93,7 +104,7 @@ const StudentInfo = ({ student }: { student: Partial<Student> }) => {
                         : `${scholarship.scholarship.value}% of Total Fee`}
                     </p> */}
                     <p className="text-lg font-bold text-purple-600 dark:text-purple-400">
-                      {formatCurrency(scholarship.actualAmount)}
+                      {formatCurrency(scholarship.actualAmount || 0)}
                     </p>
                   </div>
                 ))}

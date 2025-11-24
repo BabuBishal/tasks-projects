@@ -1,4 +1,4 @@
-import { LoginFormProps } from "@/lib/@types/types";
+import { LoginFormProps } from "@/lib/@types/components";
 import Link from "next/link";
 
 export default function LoginForm({
@@ -51,7 +51,7 @@ export default function LoginForm({
         Login
       </button>
       <div className="mt-4 flex gap-3 justify-center items-center">
-        <span className="text-xs text-muted">Don't have an account? </span>{" "}
+        <span className="text-xs text-muted">{`Don't have an account?`} </span>{" "}
         <Link
           href={`/register`}
           className="text-xs font-semibold text-secondary underline"

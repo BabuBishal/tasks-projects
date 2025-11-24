@@ -40,14 +40,26 @@ export async function POST(req: NextRequest) {
         const result = await promoteSemester(studentId);
 
         if (result.success) {
-          results.success.push({
-            studentId,
-            name: student.name,
-            rollNo: student.rollNo,
-            oldSemester: student.semester,
-            newSemester: student.semester + 1,
-            feeId: result.feeId,
-          });
+          if (result.isGraduated) {
+            results.success.push({
+              studentId,
+              name: student.name,
+              rollNo: student.rollNo,
+              oldSemester: student.semester,
+              newSemester: null, // Graduated
+              isGraduated: true,
+              message: "Student has graduated successfully!",
+            });
+          } else {
+            results.success.push({
+              studentId,
+              name: student.name,
+              rollNo: student.rollNo,
+              oldSemester: student.semester,
+              newSemester: student.semester + 1,
+              feeId: result.feeId,
+            });
+          }
         } else {
           results.failed.push({
             studentId,
@@ -56,10 +68,10 @@ export async function POST(req: NextRequest) {
             error: result.error,
           });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         results.failed.push({
           studentId,
-          error: error.message || "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
         });
       }
     }
@@ -68,10 +80,10 @@ export async function POST(req: NextRequest) {
       message: "Semester promotion completed",
       results,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Promote semester error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to promote students" },
+      { error: error instanceof Error ? error.message : "Failed to promote students" },
       { status: 500 }
     );
   }

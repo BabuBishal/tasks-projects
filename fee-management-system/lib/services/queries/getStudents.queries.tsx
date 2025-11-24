@@ -20,3 +20,23 @@ export const useGetStudents = () => {
     queryFn: () => getStudents(),
   });
 };
+
+export const getStudentById = async (id: string) => {
+  const res = await fetch(`${baseUrl}${API_ROUTES.studentWithId(id)}`, {
+    next: { revalidate: 600 },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch student");
+  }
+
+  return res.json();
+};
+
+export const useGetStudentById = (id: string) => {
+  return useQuery({
+    queryKey: [API_ROUTES.students, id],
+    queryFn: () => getStudentById(id),
+    enabled: !!id, // Only run query if id is provided
+  });
+};

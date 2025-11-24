@@ -4,12 +4,12 @@ import { API_ROUTES } from "../../api-routes";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Update student mutation function
-export const updateStudent = async ({ 
-  id, 
-  data 
-}: { 
-  id: string; 
-  data: any 
+export const updateStudent = async ({
+  id,
+  data,
+}: {
+  id: string;
+  data: unknown;
 }) => {
   const res = await fetch(`${baseUrl}${API_ROUTES.students}/${id}`, {
     method: "PUT",
@@ -38,7 +38,7 @@ export const useUpdateStudent = () => {
       queryClient.invalidateQueries({
         queryKey: [API_ROUTES.students, variables.id],
       });
-      
+
       // Invalidate students list query
       queryClient.invalidateQueries({
         queryKey: [API_ROUTES.students],

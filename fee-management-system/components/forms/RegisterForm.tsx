@@ -1,4 +1,4 @@
-import { FormProps, LoginFormProps } from "@/lib/@types/types";
+import { RegisterFormProps, LoginFormProps } from "@/lib/@types/components";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
@@ -9,7 +9,7 @@ export default function RegisterForm({
   handleSubmit,
   handleChange,
   error,
-}: FormProps & { error: string }) {
+}: RegisterFormProps & { error: string; isLoading?: boolean }) {
   return (
     <form
       onSubmit={(e) => handleSubmit(e, onSubmit)}

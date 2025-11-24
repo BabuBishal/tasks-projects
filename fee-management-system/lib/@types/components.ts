@@ -82,6 +82,7 @@ export type LoginFormProps = {
     callback: (data: LoginFormInputs) => void
   ) => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  isLoading?: boolean;
 };
 
 export type RegisterFormProps = {
@@ -93,6 +94,7 @@ export type RegisterFormProps = {
     callback: (data: RegisterFormInputs) => void
   ) => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  isLoading?: boolean;
 };
 
 // Stats card props

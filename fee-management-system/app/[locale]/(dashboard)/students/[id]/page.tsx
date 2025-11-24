@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Pencil, Trash2, CreditCard, Award } from "lucide-react";
+import { Pencil, Trash2, CreditCard, Award, ArrowRight } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button/Button";
 import StatsCard from "@/components/shared/stats-card/StatsCard";
@@ -22,6 +22,7 @@ export default function StudentDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [promoteLoading, setPromoteLoading] = useState(false);
   const { notify } = useToast();
 
   const lastRef = useInfiniteScrollObserver({
@@ -79,6 +80,57 @@ export default function StudentDetailsPage() {
     }
   };
 
+  const handlePromote = async () => {
+    if (!student) return;
+    try {
+      setPromoteLoading(true);
+      const response = await fetch("/api/students/promote-semester", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ studentIds: [student.id] }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to promote student");
+      }
+
+      const successResult = data.results.success.find(
+        (s: any) => s.studentId === student.id
+      );
+
+      if (successResult) {
+        if (successResult.isGraduated) {
+          notify({
+            description: "Student graduated successfully!",
+            type: "success",
+          });
+        } else {
+          notify({
+            description: "Student promoted successfully!",
+            type: "success",
+          });
+        }
+        // Refresh data
+        window.location.reload();
+      } else {
+        const errorResult = data.results.failed.find(
+          (s: any) => s.studentId === student.id
+        );
+        throw new Error(errorResult?.error || "Failed to promote student");
+      }
+    } catch (err) {
+      notify({
+        description:
+          err instanceof Error ? err.message : "Failed to promote student",
+        type: "error",
+      });
+    } finally {
+      setPromoteLoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -122,6 +174,17 @@ export default function StudentDetailsPage() {
           <p className="text-muted-foreground">Roll No: {student.rollNo}</p>
         </div>
         <div className="flex gap-3">
+          {student.status !== "Graduated" && (
+            <Button
+              variant="primary"
+              onClick={handlePromote}
+              disabled={promoteLoading}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              <ArrowRight className="w-4 h-4" />
+              {promoteLoading ? "Promoting..." : "Promote"}
+            </Button>
+          )}
           <Button
             variant="primary"
             onClick={() => router.push(`/students/${student.id}/edit`)}

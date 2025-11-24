@@ -1,5 +1,7 @@
+// app/api/auth/[...nextauth]/route.ts
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 export const authOptions: NextAuthOptions = {
@@ -12,19 +14,26 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const { email, password } = credentials ?? {};
-
-        if (!email || !password) return null;
+        
+        if (!email || !password) {
+          throw new Error("Email and password are required");
+        }
 
         // Find user from Prisma
         const user = await prisma.user.findUnique({
           where: { email },
         });
 
-        if (!user) return null;
+        if (!user) {
+          throw new Error("Invalid email or password");
+        }
 
-        // Compare password
-        const isValid = password === user.password;
-        if (!isValid) return null;
+        // Compare hashed password using bcrypt
+        const isValid = await compare(password, user.password);
+
+        if (!isValid) {
+          throw new Error("Invalid email or password");
+        }
 
         return {
           id: user.id,
@@ -44,6 +53,20 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/en/login",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
   },
 };
 

@@ -10,6 +10,7 @@ export interface FeeAssignmentResult {
   success: boolean;
   feeId?: string;
   error?: string;
+  isGraduated?: boolean;
 }
 
 /**
@@ -128,8 +129,8 @@ export async function assignFeeForSemester(
     });
 
     return { success: true, feeId: studentFee.id };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: (error as Error).message };
   }
 }
 
@@ -142,7 +143,10 @@ export async function promoteSemester(
   try {
     const student = await prisma.student.findUnique({
       where: { id: studentId },
-      include: { program: true },
+      include: {
+        program: true,
+        fees: true, // Include fees to check balance
+      },
     });
 
     if (!student) {
@@ -151,11 +155,31 @@ export async function promoteSemester(
 
     const nextSemester = student.semester + 1;
 
-    // Check if student has completed the program
+    // Check if student has completed the program (Graduation Check)
     if (nextSemester > student.program.duration) {
+      // Calculate total outstanding balance
+      const totalOutstanding = student.fees.reduce(
+        (sum, fee) => sum + fee.balance,
+        0
+      );
+
+      if (totalOutstanding > 0) {
+        return {
+          success: false,
+          error: `Cannot graduate student. Outstanding fees: Rs. ${totalOutstanding.toLocaleString()}`,
+        };
+      }
+
+      // Graduate the student
+      await prisma.student.update({
+        where: { id: studentId },
+        data: { status: "Graduated" },
+      });
+
       return {
-        success: false,
-        error: `Student has completed all ${student.program.duration} semesters`,
+        success: true,
+        isGraduated: true,
+        error: "Student has graduated successfully!", // Using error field to pass success message for now, or we can add a message field to interface
       };
     }
 
@@ -167,8 +191,8 @@ export async function promoteSemester(
 
     // Assign fee for next semester
     return await assignFeeForSemester(studentId, nextSemester);
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: (error as Error).message };
   }
 }
 
@@ -185,7 +209,7 @@ export async function updateFeeStatus(
       data: { status },
     });
     return true;
-  } catch (error) {
+  } catch (error: unknown) {
     return false;
   }
 }

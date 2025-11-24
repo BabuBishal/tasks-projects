@@ -8,7 +8,12 @@ import ProgramForm from "@/components/programs/ProgramForm";
 import { Modal } from "@/components/ui/modal/Modal";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import { useToast } from "@/components/ui/toast";
-import { useQuery } from "@tanstack/react-query";
+import { useGetPrograms } from "@/lib/services/queries/getPrograms.queries";
+import {
+  useCreateProgram,
+  useUpdateProgram,
+  useDeleteProgram,
+} from "@/lib/services/mutations/useProgramMutation";
 
 interface Program {
   id: string;
@@ -24,32 +29,15 @@ export default function ProgramsPage() {
   const [editingProgram, setEditingProgram] = useState<Program | null>(null);
   const { notify } = useToast();
 
-  const {
-    data: programs,
-    isLoading,
-    refetch,
-  } = useQuery<Program[]>({
-    queryKey: ["programs"],
-    queryFn: async () => {
-      const res = await fetch("/api/programs");
-      if (!res.ok) throw new Error("Failed to fetch programs");
-      return res.json();
-    },
-  });
+  const { data: programs, isLoading } = useGetPrograms();
+
+  const createProgramMutation = useCreateProgram();
+  const updateProgramMutation = useUpdateProgram();
+  const deleteProgramMutation = useDeleteProgram();
 
   const handleCreate = async (data: { name: string; duration: number }) => {
     try {
-      const res = await fetch("/api/programs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const responseData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(responseData.error || "Failed to create program");
-      }
+      await createProgramMutation.mutateAsync(data);
 
       notify({
         title: "Success",
@@ -57,7 +45,6 @@ export default function ProgramsPage() {
         type: "success",
       });
       setIsModalOpen(false);
-      refetch();
     } catch (error: unknown) {
       notify({
         title: "Error",
@@ -71,17 +58,10 @@ export default function ProgramsPage() {
     if (!editingProgram) return;
 
     try {
-      const res = await fetch(`/api/programs/${editingProgram.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+      await updateProgramMutation.mutateAsync({
+        id: editingProgram.id,
+        data,
       });
-
-      const responseData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(responseData.error || "Failed to update program");
-      }
 
       notify({
         title: "Success",
@@ -90,7 +70,6 @@ export default function ProgramsPage() {
       });
       setIsModalOpen(false);
       setEditingProgram(null);
-      refetch();
     } catch (error: unknown) {
       notify({
         title: "Error",
@@ -102,22 +81,13 @@ export default function ProgramsPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const res = await fetch(`/api/programs/${id}`, {
-        method: "DELETE",
-      });
-
-      const responseData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(responseData.error || "Failed to delete program");
-      }
+      await deleteProgramMutation.mutateAsync(id);
 
       notify({
         title: "Success",
         description: "Program deleted successfully",
         type: "success",
       });
-      refetch();
     } catch (error: unknown) {
       notify({
         title: "Error",

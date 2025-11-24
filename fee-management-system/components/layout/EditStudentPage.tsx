@@ -6,7 +6,7 @@ import useForm from "@/hooks/useForm";
 import { Program, Scholarship } from "@/lib/@types/prisma";
 import { studentSchema } from "@/lib/constants";
 import { validateForm } from "@/lib/validator";
-import { StudentFormInputs } from "@/lib/@types/types";
+import { StudentFormInputs } from "@/lib/@types";
 import { useToast } from "@/components/ui/toast";
 import StudentForm from "../forms/StudentForm";
 

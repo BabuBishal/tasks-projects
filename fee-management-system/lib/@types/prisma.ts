@@ -63,6 +63,7 @@ export type Student = {
   joinedYear: number;
   createdAt: Date;
   updatedAt: Date;
+  status: string;
 };
 
 export type StudentScholarship = {
@@ -188,5 +189,6 @@ export type StudentWithComputedTotals = Student & {
   }[];
   scholarships?: (StudentScholarship & {
     scholarship: Scholarship;
+    actualAmount?: number;
   })[];
 };

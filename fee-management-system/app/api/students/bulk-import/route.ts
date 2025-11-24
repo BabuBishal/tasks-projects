@@ -40,8 +40,8 @@ export async function POST(req: NextRequest) {
     const scholarships = await prisma.scholarship.findMany();
 
     const results = {
-      success: [] as any[],
-      failed: [] as any[],
+      success: [] as unknown[],
+      failed: [] as unknown[],
       total: parseResult.data.length,
     };
 
@@ -191,11 +191,11 @@ export async function POST(req: NextRequest) {
             semester: student.semester,
           },
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         results.failed.push({
           row: rowNumber,
           data: row,
-          error: error.message || "Unknown error",
+          error: error instanceof Error ? error.message : "Unknown error",
         });
       }
     }
@@ -204,10 +204,10 @@ export async function POST(req: NextRequest) {
       message: "Bulk import completed",
       results,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Bulk import error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to import students" },
+      { error: error instanceof Error ? error.message : "Failed to import students" },
       { status: 500 }
     );
   }

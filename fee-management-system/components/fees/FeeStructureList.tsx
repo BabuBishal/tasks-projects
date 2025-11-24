@@ -41,13 +41,11 @@ export default function FeeStructureList({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {feeStructures.map((fee) => (
-        <div
+        <FeeStructureCard
           key={fee.id}
+          feeStructure={fee}
           onClick={() => onSelect(fee)}
-          className="cursor-pointer"
-        >
-          <FeeStructureCard feeStructure={fee} />
-        </div>
+        />
       ))}
     </div>
   );

@@ -83,8 +83,11 @@ const StudentList: React.FC<StudentListProps> = ({
       if (statusFilter === "All")
         return matchesSearch && matchesProgram && matchesSemester;
 
-      // Use centralized status calculation
-      const feeStatus = calculateStudentStatus(student.fees);
+      // Use centralized status calculation, but override if graduated
+      const feeStatus =
+        student.status === "Graduated"
+          ? "Graduated"
+          : calculateStudentStatus(student.fees);
 
       return (
         matchesSearch &&
@@ -150,10 +153,10 @@ const StudentList: React.FC<StudentListProps> = ({
       });
       setIsEditModalOpen(false);
       onRefetch();
-    } catch (error: any) {
+    } catch (error: unknown) {
       notify({
         title: "Error",
-        description: error.message || "Failed to update student",
+        description: (error as Error).message || "Failed to update student",
         type: "error",
       });
     } finally {
@@ -194,10 +197,10 @@ const StudentList: React.FC<StudentListProps> = ({
       });
       setIsDeleteDialogOpen(false);
       onRefetch();
-    } catch (error: any) {
+    } catch (error: unknown) {
       notify({
         title: "Error",
-        description: error.message || "Failed to delete student",
+        description: (error as Error).message || "Failed to delete student",
         type: "error",
       });
     } finally {
@@ -263,10 +266,10 @@ const StudentList: React.FC<StudentListProps> = ({
       setIsBulkDeleteOpen(false);
       setSelectedStudentIds([]);
       onRefetch();
-    } catch (error: any) {
+    } catch (error: unknown) {
       notify({
         title: "Error",
-        description: error.message || "Failed to delete students",
+        description: (error as Error).message || "Failed to delete students",
         type: "error",
       });
     } finally {
@@ -297,18 +300,33 @@ const StudentList: React.FC<StudentListProps> = ({
         throw new Error(data.error || "Failed to promote students");
       }
 
+      const successCount = data.results.success.length;
+      const graduatedCount = data.results.success.filter(
+        (s: any) => s.isGraduated
+      ).length;
+      const promotedCount = successCount - graduatedCount;
+      const failedCount = data.results.failed.length;
+
+      let description = "";
+      if (promotedCount > 0)
+        description += `Promoted ${promotedCount} students. `;
+      if (graduatedCount > 0)
+        description += `Graduated ${graduatedCount} students. `;
+      if (failedCount > 0)
+        description += `Failed to process ${failedCount} students.`;
+
       notify({
-        title: "Success",
-        description: `Promoted ${data.results.success.length} students successfully`,
-        type: "success",
+        title: "Operation Completed",
+        description: description.trim(),
+        type: failedCount > 0 ? "warning" : "success",
       });
       setIsBulkPromoteOpen(false);
       setSelectedStudentIds([]);
       onRefetch();
-    } catch (error: any) {
+    } catch (error: unknown) {
       notify({
         title: "Error",
-        description: error.message || "Failed to promote students",
+        description: (error as Error).message || "Failed to promote students",
         type: "error",
       });
     } finally {
@@ -319,7 +337,7 @@ const StudentList: React.FC<StudentListProps> = ({
   return (
     <div className="flex flex-col gap-4">
       {/* Toolbar */}
-      <div className="flex flex-col gap-3 bg-background p-4 rounded-lg border border-border">
+      <div className="flex flex-col gap-3 bg-accent p-4 rounded-lg ">
         <div className="flex flex-col sm:flex-row gap-3 items-center">
           <div className="relative w-full sm:flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -349,6 +367,7 @@ const StudentList: React.FC<StudentListProps> = ({
               <option value="Pending">Pending</option>
               <option value="Overdue">Overdue</option>
               <option value="No Fees">No Fees</option>
+              <option value="Graduated">Graduated</option>
             </select>
             <select
               value={programFilter}
@@ -411,7 +430,19 @@ const StudentList: React.FC<StudentListProps> = ({
           </button>
           <button
             onClick={() => setIsBulkPromoteOpen(true)}
-            className="px-3 py-1.5 text-sm bg-primary text-white rounded hover:bg-primary/90 transition-colors flex items-center gap-2"
+            className="px-3 py-1.5 text-sm bg-primary text-white rounded hover:bg-primary/90 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={selectedStudentIds.some((id) => {
+              const student = initialStudents.find((s) => s.id === id);
+              return student?.status === "Graduated";
+            })}
+            title={
+              selectedStudentIds.some((id) => {
+                const student = initialStudents.find((s) => s.id === id);
+                return student?.status === "Graduated";
+              })
+                ? "Cannot promote graduated students"
+                : "Promote selected students"
+            }
           >
             <ArrowRight className="w-4 h-4" />
             Promote Semester
@@ -476,8 +507,11 @@ const StudentList: React.FC<StudentListProps> = ({
                   0
                 );
 
-                // Use centralized status calculation
-                const feeStatus = calculateStudentStatus(student.fees);
+                // Use centralized status calculation, but override if graduated
+                const feeStatus =
+                  student.status === "Graduated"
+                    ? "Graduated"
+                    : calculateStudentStatus(student.fees);
 
                 return (
                   <Table.Row key={student.id}>
@@ -518,6 +552,8 @@ const StudentList: React.FC<StudentListProps> = ({
                             : feeStatus === "Overdue"
                             ? "danger"
                             : feeStatus === "Paid"
+                            ? "success"
+                            : feeStatus === "Graduated"
                             ? "success"
                             : "warning"
                         }

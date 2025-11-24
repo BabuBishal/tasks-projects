@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useGetDashboardStats } from "@/lib/services/queries/getDashboardStats.queries";
 import {
   Card,
   CardContent,
@@ -20,18 +20,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/Button";
-import type { DashboardData } from "@/lib/@types/api";
 import { getUrgencyInfo, getPaymentStatusLabel } from "@/lib/urgency-utils";
 
 export default function FeesPage() {
-  const { data, isLoading } = useQuery<DashboardData>({
-    queryKey: ["dashboardStats"],
-    queryFn: async () => {
-      const res = await fetch("/api/dashboard-stats");
-      if (!res.ok) throw new Error("Failed to fetch dashboard stats");
-      return res.json();
-    },
-  });
+  const { data, isLoading } = useGetDashboardStats();
 
   if (isLoading) {
     return (
@@ -69,7 +61,7 @@ export default function FeesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {dashboardStats.map((stat, index) => {
+        {dashboardStats.map((stat: any, index: number) => {
           const Icon =
             statsIcons[stat.title as keyof typeof statsIcons] || DollarSign;
           return (
@@ -106,7 +98,7 @@ export default function FeesPage() {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {recentPayments.map((payment) => (
+                {recentPayments.map((payment: any) => (
                   <Table.Row key={payment.id}>
                     <Table.Cell>
                       <div className="font-medium">{payment.studentName}</div>
@@ -146,7 +138,7 @@ export default function FeesPage() {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {overdueFees.map((fee) => {
+                {overdueFees.map((fee: any) => {
                   const urgency = getUrgencyInfo(fee.daysOverdue);
                   return (
                     <Table.Row key={fee.id}>
