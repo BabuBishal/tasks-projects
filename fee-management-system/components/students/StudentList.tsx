@@ -337,7 +337,7 @@ const StudentList: React.FC<StudentListProps> = ({
   return (
     <div className="flex flex-col gap-4">
       {/* Toolbar */}
-      <div className="flex flex-col gap-3 bg-accent p-4 rounded-lg ">
+      <div className="flex flex-col gap-3 bg-background py-4 rounded-lg ">
         <div className="flex flex-col sm:flex-row gap-3 items-center">
           <div className="relative w-full sm:flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

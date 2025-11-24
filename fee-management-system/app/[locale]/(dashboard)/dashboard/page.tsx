@@ -1,8 +1,6 @@
 "use client";
 import PaymentHistory from "@/app/[locale]/(dashboard)/_components/PaymentHistory";
-// import { StatusBar } from "@/components/shared/status-bar/StatusBar";
-// import { DashboardData } from "@/lib/@types/prisma";
-// import { useState, useEffect } from "react";
+
 import Overdue from "../_components/Overdue";
 import PaymentStatusOverview from "../_components/PaymentStatusOverview";
 import StatsOverview from "../_components/StatsOverview";
@@ -10,26 +8,9 @@ import { useGetDashboardStats } from "@/lib/services/queries/getDashboardStats.q
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 
 export default function DashboardPage() {
-  // const [data, setData] = useState<DashboardData | null>(null);
 
   const { data, isLoading, isError } = useGetDashboardStats();
-  // const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {+
-  //   fetchDashboardData();
-  // }, []);
-
-  // const fetchDashboardData = async () => {
-  //   try {
-  //     const response = await fetch("/api/dashboard-stats");
-  //     const result = await response.json();
-  //     setData(result);
-  //   } catch (error) {
-  //     console.error("Error fetching dashboard data:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+ 
 
   if (isLoading) {
     return (
@@ -54,7 +35,7 @@ export default function DashboardPage() {
     recentPayments = [],
     overdueFees = [],
   } = data || {};
-  console.log("ds", dashboardStats);
+  // console.log("ds", dashboardStats);
 
   return (
     <div className="w-full h-full flex flex-col gap-6">

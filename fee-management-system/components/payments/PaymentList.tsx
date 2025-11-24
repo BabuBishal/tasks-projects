@@ -13,6 +13,8 @@ import {
   Banknote,
   Globe,
   Wallet,
+
+  ReceiptText,
 } from "lucide-react";
 import Link from "next/link";
 import { paymentHeaders } from "@/lib/constants";
@@ -323,7 +325,7 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
                     <Modal>
                       <Modal.Trigger asChild>
                         <Button variant="ghost" size="sm">
-                          Receipt
+                          <ReceiptText className="w-4 h-4   text-blue-500" />
                         </Button>
                       </Modal.Trigger>
                       <Modal.Content>

@@ -15,6 +15,7 @@ import {
   ArrowRight,
   Download,
   Eye,
+  ReceiptText,
 } from "lucide-react";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import StatsCard from "@/components/ui/stats-card/StatsCard";
@@ -249,7 +250,7 @@ export default function PaymentsPage() {
                       <Modal>
                         <Modal.Trigger asChild>
                           <Button variant="ghost" size="sm">
-                            Receipt
+                            <ReceiptText className="w-4 h-4 text-blue-500 " />
                           </Button>
                         </Modal.Trigger>
                         <Modal.Content className="max-w-2xl">
@@ -386,8 +387,8 @@ export default function PaymentsPage() {
                     </Table.Cell>
                     <Table.Cell>
                       <Link href={`/students/${fee.studentId}`}>
-                        <Button variant="ghost" size="icon" className="w-8 h-8">
-                          <Eye className="w-4 h-4" />
+                        <Button variant="ghost" size="sm">
+                          <Eye className="w-4 h-4 text-green-500" />
                         </Button>
                       </Link>
                     </Table.Cell>
