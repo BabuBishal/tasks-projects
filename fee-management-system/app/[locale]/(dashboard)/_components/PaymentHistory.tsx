@@ -1,13 +1,22 @@
 import { Table } from "@/components/ui/table/Table";
 import { RecentPayment } from "@/lib/@types/prisma";
 import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button/Button";
+import { ArrowRight } from "lucide-react";
 
 const PaymentHistory = ({ paymentData }: { paymentData: RecentPayment[] }) => {
   return (
     <div className="bg-card rounded-lg shadow p-6 col-span-2">
-      <h2 className="text-lg font-semibold text-primary mb-4">
-        Recent Payments
-      </h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold text-primary">Recent Payments</h2>
+        <Link href="/payments/history">
+          <Button variant="outline" size="sm">
+            View More
+            <ArrowRight className="w-4 h-4 ml-1" />
+          </Button>
+        </Link>
+      </div>
       {paymentData && paymentData.length > 0 ? (
         <Table className="rounded-md text-xs text-secondary">
           <Table.Header>
@@ -19,7 +28,7 @@ const PaymentHistory = ({ paymentData }: { paymentData: RecentPayment[] }) => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {paymentData.map((payment) => (
+            {paymentData.slice(0, 5).map((payment) => (
               <Table.Row key={payment.id}>
                 <Table.Cell dataLabel="Student">
                   {payment.studentName}

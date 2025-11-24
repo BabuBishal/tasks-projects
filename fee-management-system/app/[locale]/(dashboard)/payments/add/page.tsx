@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import PaymentForm from "../../../../../components/forms/PaymentForm";
-import { StudentWithComputedTotals, PaymentFormInputs } from "@/lib/@types";
+import { PaymentFormInputs, Student } from "@/lib/@types";
 import { useToast } from "@/components/ui/toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function PaymentPage() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -12,6 +12,7 @@ export default function PaymentPage() {
   // const [successMessage, setSuccessMessage] = useState("");
   const { notify } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [formData, setFormData] = useState<PaymentFormInputs>({
     id: "",
@@ -113,6 +114,21 @@ export default function PaymentPage() {
       setLoading(false);
     }
   };
+
+  // Pre-select student from URL parameter
+  useEffect(() => {
+    const studentId = searchParams.get("studentId");
+    if (studentId && students.length > 0) {
+      // Check if the student exists in the loaded students
+      const studentExists = students.find((s) => s.id === studentId);
+      if (studentExists) {
+        setFormData((prev) => ({
+          ...prev,
+          id: studentId,
+        }));
+      }
+    }
+  }, [students, searchParams]);
 
   // Helper to set amount from child component
   const setFormAmount = (value: number) =>

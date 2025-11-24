@@ -94,7 +94,7 @@ const Students = () => {
       {/* Header */}
       <div className="flex justify-between items-end gap-5">
         <div>
-          <h1 className="text-primary text-2xl font-bold">Students Panel</h1>
+          <h1 className="text-primary text-2xl font-bold">Students</h1>
           <h4 className="text-muted text-sm">
             Manage students, fees, and academic records
           </h4>
@@ -103,7 +103,7 @@ const Students = () => {
           <DropdownMenu
             trigger={
               <Button variant="outline" size="sm">
-                Bulk Operations
+                Actions
                 <ChevronDown className="w-4 h-4 ml-1" />
               </Button>
             }
@@ -136,14 +136,13 @@ const Students = () => {
           value={totalStudents}
           icon={Users}
           description="Active students in the system"
-          trend={{ value: 12, label: "vs last month", positive: true }}
+          variant="primary"
         />
         <StatsCard
           title="Paid Fees"
           value={paidStudents}
           icon={Wallet}
           description="Students with fully paid fees"
-          trend={{ value: 5, label: "vs last month", positive: true }}
           variant="success"
         />
         <StatsCard
@@ -151,7 +150,6 @@ const Students = () => {
           value={overdueStudents}
           icon={AlertCircle}
           description="Students with outstanding payments"
-          trend={{ value: 2, label: "vs last month", positive: false }}
           variant="danger"
         />
       </div>

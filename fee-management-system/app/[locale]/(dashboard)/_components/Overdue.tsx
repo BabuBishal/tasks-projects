@@ -2,11 +2,22 @@ import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
 import { OverdueFee } from "@/lib/@types/prisma";
 import React from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button/Button";
+import { ArrowRight } from "lucide-react";
 
 const Overdue = ({ overdueFees }: { overdueFees: OverdueFee[] }) => {
   return (
     <div className="bg-card rounded-lg shadow p-6">
-      <h2 className="text-lg font-semibold text-primary mb-4">Overdue Fees</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-semibold text-primary">Overdue Fees</h2>
+        <Link href="/payments/overdue">
+          <Button variant="outline" size="sm">
+            View More
+            <ArrowRight className="w-4 h-4 ml-1" />
+          </Button>
+        </Link>
+      </div>
       {overdueFees && overdueFees.length > 0 ? (
         <Table className="rounded-md text-xs text-secondary">
           <Table.Header>
@@ -20,7 +31,7 @@ const Overdue = ({ overdueFees }: { overdueFees: OverdueFee[] }) => {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {overdueFees.map((fee) => (
+            {overdueFees.slice(0, 5).map((fee) => (
               <Table.Row key={fee.id}>
                 <Table.Cell dataLabel="Roll No">{fee.studentRollNo}</Table.Cell>
                 <Table.Cell dataLabel="Student Name">

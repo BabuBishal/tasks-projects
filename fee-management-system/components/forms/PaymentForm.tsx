@@ -1,7 +1,7 @@
 "use client";
 import { PaymentFormProps, Student } from "@/lib/@types/types";
 import { paymentMethod } from "@/lib/constants";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../ui/button/Button";
 
 export default function PaymentForm({
@@ -21,6 +21,19 @@ export default function PaymentForm({
 }) {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [selectedFeeIds, setSelectedFeeIds] = useState<Set<string>>(new Set());
+
+  // Sync selectedStudent when formData.id changes (for URL pre-selection)
+  useEffect(() => {
+    if (formData.id && students.length > 0) {
+      const student =
+        students.find((s) => String(s.id) === formData.id) || null;
+      if (student && student.id !== selectedStudent?.id) {
+        setSelectedStudent(student);
+        setSelectedFeeIds(new Set());
+        setAmount?.(0);
+      }
+    }
+  }, [formData.id, students, selectedStudent, setAmount]);
 
   const handleStudentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value;

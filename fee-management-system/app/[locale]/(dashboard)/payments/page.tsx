@@ -1,12 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card/Card";
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -20,8 +14,14 @@ import {
   AlertCircle,
   ArrowRight,
 } from "lucide-react";
-
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import StatsCard from "@/components/ui/stats-card/StatsCard";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card/Card";
 
 interface DashboardData {
   dashboardStats: {
@@ -78,55 +78,74 @@ export default function PaymentsPage() {
 
   if (!data) return null;
 
-  const statsIcons = {
-    "Total Revenue": DollarSign,
-    "Total Students": Users,
-    "Pending Payments": Clock,
-    "Collection Status": CheckCircle,
-  };
-
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <Breadcrumb items={[{ label: "Payments", href: "/payments" }]} />
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Financial Dashboard
-        </h1>
-        <p className="text-muted-foreground">
-          Overview of fee collection and outstanding payments
-        </p>
+
+      {/* Header with Add Payment Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">
+            Financial Dashboard
+          </h1>
+          <p className="text-muted-foreground">
+            Overview of fee collection and outstanding payments
+          </p>
+        </div>
+        <Link href="/payments/add">
+          <Button
+            variant="primary"
+            size="sm"
+            className="flex items-center gap-2"
+          >
+            <DollarSign className="w-4 h-4" />
+            Add Payment
+          </Button>
+        </Link>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {data.dashboardStats.map((stat, index) => {
-          const Icon =
-            statsIcons[stat.title as keyof typeof statsIcons] || DollarSign;
-          return (
-            <Card key={index}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  {stat.title}
-                </CardTitle>
-                <Icon className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-muted-foreground">{stat.desc}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
+        <StatsCard
+          title="Total Revenue"
+          value={data.dashboardStats[0]?.value || "Rs 0"}
+          icon={DollarSign}
+          description={data.dashboardStats[0]?.desc || "Total fees collected"}
+          variant="success"
+        />
+        <StatsCard
+          title="Total Students"
+          value={data.dashboardStats[1]?.value || "0"}
+          icon={Users}
+          description={
+            data.dashboardStats[1]?.desc || "Total students enrolled"
+          }
+          variant="primary"
+        />
+        <StatsCard
+          title="Pending Payments"
+          value={data.dashboardStats[2]?.value || "Rs 0"}
+          icon={Clock}
+          description={data.dashboardStats[2]?.desc || "Awaiting Payments"}
+          variant="warning"
+        />
+        <StatsCard
+          title="Collection Status"
+          value={data.dashboardStats[3]?.value || "0%"}
+          icon={CheckCircle}
+          description={data.dashboardStats[3]?.desc || "Total Payment Success"}
+          variant="primary"
+        />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1  gap-6">
         {/* Recent Payments */}
         <Card className="col-span-1 flex flex-col">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>Recent Payments</CardTitle>
             <Link href="/payments/history">
               <Button
-                variant="ghost"
+                variant="secondary"
                 size="sm"
                 className="text-primary hover:text-primary/80"
               >
@@ -178,7 +197,7 @@ export default function PaymentsPage() {
             </CardTitle>
             <Link href="/payments/overdue">
               <Button
-                variant="ghost"
+                variant="secondary"
                 size="sm"
                 className="text-destructive hover:text-destructive/80"
               >

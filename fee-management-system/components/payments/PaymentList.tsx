@@ -135,22 +135,25 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
     document.body.removeChild(link);
   };
 
- const filteredPayments = initialPayments.filter((payment) => {
-  const matchesSearch =
-    payment.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    payment.id.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredPayments = useMemo(() => {
+    if (!initialPayments) return [];
 
-  const matchesStatus = statusFilter
-    ? payment.status.toLowerCase() === statusFilter.toLowerCase()
-    : true;
+    return initialPayments.filter((payment) => {
+      const matchesSearch =
+        payment.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        payment.id.toLowerCase().includes(searchQuery.toLowerCase());
 
-  const matchesMethod = methodFilter
-    ? payment.method.toLowerCase() === methodFilter.toLowerCase()
-    : true;
+      const matchesStatus = statusFilter
+        ? payment.status.toLowerCase() === statusFilter.toLowerCase()
+        : true;
 
-  return matchesSearch && matchesStatus && matchesMethod;
-});
+      const matchesMethod = methodFilter
+        ? payment.method.toLowerCase() === methodFilter.toLowerCase()
+        : true;
 
+      return matchesSearch && matchesStatus && matchesMethod;
+    });
+  }, [initialPayments, searchQuery, statusFilter, methodFilter]);
 
   const paginatedPayments = filteredPayments.slice(
     (currentPage - 1) * itemsPerPage,
@@ -233,20 +236,20 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
       <div className="flex flex-col gap-3">
         <div className="flex justify-between items-center">
           <div className="text-md font-semibold text-secondary">
-            Payment History ({initialPayments.length})
+            Payment History ({initialPayments?.length})
           </div>
           <div className="text-xs text-muted">
-            Showing {paginatedPayments.length} of {filteredPayments.length}{" "}
+            Showing {paginatedPayments?.length} of {filteredPayments?.length}{" "}
             transactions
           </div>
         </div>
 
-        {paginatedPayments.length > 0 ? (
+        {paginatedPayments?.length > 0 ? (
           <Table
             className="rounded-md text-xs text-secondary"
             pagination={{
               pageSize: itemsPerPage,
-              total: filteredPayments.length,
+              total: filteredPayments?.length,
               onPageChange: setCurrentPage,
             }}
           >
@@ -259,7 +262,7 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {paginatedPayments.map((payment: Payment) => (
+              {paginatedPayments?.map((payment: Payment) => (
                 <Table.Row key={payment.id}>
                   <Table.Cell dataLabel="PaymentID">{payment.id}</Table.Cell>
                   <Table.Cell dataLabel="Student">

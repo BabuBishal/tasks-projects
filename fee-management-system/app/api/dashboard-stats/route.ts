@@ -1,21 +1,24 @@
 // app/api/dashboard-stats/route.ts
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type {
   StudentWithFees,
-  DashboardData,
-  DashboardStats,
-  PaymentStats,
   PaymentWithStudent,
   StudentFeeWithDetails,
 } from "@/lib/@types/prisma";
+import type {
+  DashboardData,
+  DashboardStats,
+  PaymentStats,
+} from "@/lib/@types/api";
+import { calculateStudentStatus } from "@/lib/status-utils";
 
 type StudentPaymentStatus = {
   studentId: string;
   status: "paid" | "partial" | "overdue" | "pending" | "no-fees";
 };
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // Fetch all students with their fees
     const students = (await prisma.student.findMany({
@@ -48,31 +51,25 @@ export async function GET(req: NextRequest) {
     const paymentStatusPercentage =
       totalFee > 0 ? Math.floor((totalRevenue / totalFee) * 100) : 0;
 
-    // Student payment status categorization
+    // Student payment status categorization using centralized function
     const studentPaymentStatus: StudentPaymentStatus[] = students.map(
       (student) => {
-        const studentFees = student.fees;
+        const status = calculateStudentStatus(student.fees);
 
-        // Check if student has any fees
-        if (studentFees.length === 0) {
-          return { studentId: student.id, status: "no-fees" as const };
-        }
+        // Convert to lowercase for internal counting
+        const normalizedStatus =
+          status === "No Fees"
+            ? "no-fees"
+            : (status.toLowerCase() as
+                | "paid"
+                | "partial"
+                | "overdue"
+                | "pending");
 
-        // Get the most recent fee record
-        const latestFee = studentFees.reduce((latest, fee) =>
-          new Date(fee.createdAt) > new Date(latest.createdAt) ? fee : latest
-        );
-
-        // Categorize based on latest fee status
-        if (latestFee.balance === 0) {
-          return { studentId: student.id, status: "paid" as const };
-        } else if (latestFee.paid > 0 && latestFee.balance > 0) {
-          return { studentId: student.id, status: "partial" as const };
-        } else if (new Date(latestFee.dueDate) < new Date()) {
-          return { studentId: student.id, status: "overdue" as const };
-        } else {
-          return { studentId: student.id, status: "pending" as const };
-        }
+        return {
+          studentId: student.id,
+          status: normalizedStatus,
+        };
       }
     );
 

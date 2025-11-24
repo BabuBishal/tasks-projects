@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { calculateFeeStatus } from "@/lib/status-utils";
 
 export async function GET() {
   try {
@@ -28,16 +29,13 @@ export async function GET() {
       const student = payment.studentFee.student;
       const fee = payment.studentFee;
 
-      let paymentStatus;
-
-      // paymentStatus = fee.status;
-
-      // Or if you want to determine based on the payment:
-      if (fee.balance === 0) {
-        paymentStatus = "Paid";
-      } else if (fee.balance > 0 && fee.paid > 0) {
-        paymentStatus = "Partial";
-      }
+      // Use centralized status calculation
+      const paymentStatus = calculateFeeStatus({
+        balance: fee.balance,
+        paid: fee.paid,
+        payableFee: fee.payableFee,
+        dueDate: fee.dueDate,
+      });
 
       return {
         id: payment.id,

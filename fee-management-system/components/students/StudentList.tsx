@@ -19,6 +19,7 @@ import { studentHeaders } from "@/lib/constants";
 import { Modal } from "@/components/ui/modal/Modal";
 import { useToast } from "@/components/ui/toast";
 import { useQuery } from "@tanstack/react-query";
+import { calculateStudentStatus } from "@/lib/status-utils";
 
 interface StudentListProps {
   initialStudents: StudentWithFees[];
@@ -82,16 +83,8 @@ const StudentList: React.FC<StudentListProps> = ({
       if (statusFilter === "All")
         return matchesSearch && matchesProgram && matchesSemester;
 
-      // Calculate latest fee status
-      const latestFee =
-        student.fees.length > 0
-          ? student.fees.reduce((latest, fee) =>
-              new Date(fee.createdAt) > new Date(latest.createdAt)
-                ? fee
-                : latest
-            )
-          : null;
-      const feeStatus = latestFee?.status || "No Fees";
+      // Use centralized status calculation
+      const feeStatus = calculateStudentStatus(student.fees);
 
       return (
         matchesSearch &&
@@ -483,16 +476,8 @@ const StudentList: React.FC<StudentListProps> = ({
                   0
                 );
 
-                const latestFee =
-                  student.fees.length > 0
-                    ? student.fees.reduce((latest, fee) =>
-                        new Date(fee.createdAt) > new Date(latest.createdAt)
-                          ? fee
-                          : latest
-                      )
-                    : null;
-
-                const feeStatus = latestFee?.status || "No Fees";
+                // Use centralized status calculation
+                const feeStatus = calculateStudentStatus(student.fees);
 
                 return (
                   <Table.Row key={student.id}>
@@ -543,14 +528,14 @@ const StudentList: React.FC<StudentListProps> = ({
                     <Table.Cell dataLabel="Actions">
                       <div className="flex gap-3 items-center">
                         <Link href={`/students/${student.id}`}>
-                          <Eye className="w-4 h-4 cursor-pointer hover:text-primary transition-colors" />
+                          <Eye className="w-4 h-4 cursor-pointer text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors" />
                         </Link>
                         <Pencil
-                          className="w-4 h-4 cursor-pointer hover:text-blue-600 transition-colors"
+                          className="w-4 h-4 cursor-pointer text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
                           onClick={() => handleEdit(student)}
                         />
                         <Trash2
-                          className="w-4 h-4 cursor-pointer hover:text-red-600 transition-colors"
+                          className="w-4 h-4 cursor-pointer text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
                           onClick={() => handleDeleteClick(student)}
                         />
                       </div>

@@ -1,6 +1,7 @@
 // app/api/payment/add/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { calculateFeeStatus } from "@/lib/status-utils";
 
 export async function POST(req: NextRequest) {
   try {
@@ -85,31 +86,13 @@ export async function POST(req: NextRequest) {
       const newBalance = fee.balance - paymentForThisFee;
       console.log("newBalance", newBalance);
 
-      // Determine new status
-      let newStatus: string;
-
-      if (newBalance === 0) {
-        // Fee is fully paid
-        newStatus = "Paid";
-      } else if (newBalance > 0 && newPaid > 0) {
-        // Fee has some payment but still has balance
-        // Check if it's overdue
-        if (fee.dueDate && new Date(fee.dueDate) < new Date()) {
-          newStatus = "Overdue";
-        } else {
-          newStatus = "Partial";
-        }
-      } else if (newBalance === fee.payableFee) {
-        // No payment made yet
-        if (fee.dueDate && new Date(fee.dueDate) < new Date()) {
-          newStatus = "Overdue";
-        } else {
-          newStatus = "Pending";
-        }
-      } else {
-        // Default fallback
-        newStatus = "Pending";
-      }
+      // Use centralized status calculation
+      const newStatus = calculateFeeStatus({
+        balance: newBalance,
+        paid: newPaid,
+        payableFee: fee.payableFee,
+        dueDate: fee.dueDate,
+      });
       console.log("status", newStatus);
 
       // Update the fee record

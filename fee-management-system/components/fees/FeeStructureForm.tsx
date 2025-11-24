@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button/Button";
 
 interface Program {
@@ -196,10 +196,10 @@ export default function FeeStructureForm({
 
       {/* Actions */}
       <div className="flex justify-end gap-3 pt-4">
-        <Button type="button" variant="outline" onClick={onCancel}>
+        <Button type="button" variant="secondary" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={loading}>
+        <Button type="submit" variant="primary" disabled={loading}>
           {loading ? "Saving..." : initialData ? "Update" : "Create"}
         </Button>
       </div>

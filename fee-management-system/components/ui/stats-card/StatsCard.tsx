@@ -12,7 +12,7 @@ interface StatsCardProps {
     positive?: boolean;
   };
   className?: string;
-  variant?: "default" | "success" | "warning" | "danger";
+  variant?: "default" | "primary" | "success" | "warning" | "danger";
 }
 
 const StatsCard: React.FC<StatsCardProps> = ({
@@ -26,6 +26,7 @@ const StatsCard: React.FC<StatsCardProps> = ({
 }) => {
   const variantStyles = {
     default: "bg-primary/10 text-primary",
+    primary: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
     success:
       "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
     warning:
@@ -35,15 +36,29 @@ const StatsCard: React.FC<StatsCardProps> = ({
 
   return (
     <div
-      className={`bg-background border border-border rounded-lg p-6 flex flex-col gap-2 shadow-sm ${className}`}
+      className={`bg-background border border-border rounded-lg p-6 flex flex-col gap-3 shadow-sm ${className}`}
     >
-      <div className="flex justify-between items-start">
+      {/* Title and Icon in same row */}
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-muted-foreground font-medium">
+          {title}
+        </span>
         <div className={`p-2 rounded-md ${variantStyles[variant]}`}>
           <Icon className="w-5 h-5" />
         </div>
+      </div>
+
+      {/* Value */}
+      <h3 className="text-3xl font-bold text-foreground">{value}</h3>
+
+      {/* Description and Trend */}
+      <div className="flex items-center justify-between">
+        {description && (
+          <p className="text-xs text-muted-foreground">{description}</p>
+        )}
         {trend && (
           <div
-            className={`text-xs font-medium p-2 text-center rounded-full ${
+            className={`text-xs font-medium px-2 py-1 rounded-full ${
               trend.positive
                 ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                 : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
@@ -52,15 +67,6 @@ const StatsCard: React.FC<StatsCardProps> = ({
             {trend.positive ? "+" : ""}
             {trend.value}% {trend.label}
           </div>
-        )}
-      </div>
-      <div className="flex flex-col gap-1 mt-2">
-        <span className="text-sm text-muted-foreground font-medium">
-          {title}
-        </span>
-        <h3 className="text-2xl font-bold text-foreground">{value}</h3>
-        {description && (
-          <p className="text-xs text-muted-foreground">{description}</p>
         )}
       </div>
     </div>

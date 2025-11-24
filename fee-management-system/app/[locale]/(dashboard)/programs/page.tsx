@@ -147,7 +147,7 @@ export default function ProgramsPage() {
             Manage academic programs and their durations
           </p>
         </div>
-        <Button variant="primary" onClick={openCreateModal}>
+        <Button variant="primary" size="sm" onClick={openCreateModal}>
           <Plus className="w-4 h-4 mr-2" />
           Add Program
         </Button>

@@ -357,6 +357,25 @@ export default function StudentDetailsPage() {
                             </div>
                           </div>
                         )}
+
+                        {/* Make Payment Button - Show only if there's a balance */}
+                        {fee.balance > 0 && (
+                          <div className="mt-4 pt-4 border-t border-border">
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              className="w-full flex items-center justify-center gap-2"
+                              onClick={() =>
+                                router.push(
+                                  `/payments/add?studentId=${student.id}`
+                                )
+                              }
+                            >
+                              <CreditCard className="w-4 h-4" />
+                              Make Payment
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
