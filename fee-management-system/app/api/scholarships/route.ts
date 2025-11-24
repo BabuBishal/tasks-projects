@@ -10,8 +10,12 @@ export async function GET() {
     return NextResponse.json(scholarships);
   } catch (err) {
     console.error("Error fetching scholarships:", err);
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to fetch scholarships" },
+      {
+        error: "Failed to fetch scholarships from database",
+        details: errorMessage,
+      },
       { status: 500 }
     );
   }

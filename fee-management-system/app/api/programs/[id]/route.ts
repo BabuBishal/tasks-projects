@@ -21,8 +21,10 @@ export async function GET(
     return NextResponse.json(program, { status: 200 });
   } catch (error) {
     console.error("Error fetching program:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to fetch program" },
+      { error: "Failed to fetch program details", details: errorMessage },
       { status: 500 }
     );
   }
@@ -102,8 +104,10 @@ export async function PUT(
         { status: 409 }
       );
     }
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to update program" },
+      { error: "Failed to update program", details: errorMessage },
       { status: 500 }
     );
   }
@@ -126,8 +130,10 @@ export async function DELETE(
     );
   } catch (error) {
     console.error("Error deleting program:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to delete program" },
+      { error: "Failed to delete program", details: errorMessage },
       { status: 500 }
     );
   }

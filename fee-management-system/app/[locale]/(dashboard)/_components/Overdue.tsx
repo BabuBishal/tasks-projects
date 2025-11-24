@@ -1,10 +1,11 @@
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
-import { OverdueFee } from "@/lib/@types/prisma";
+import type { OverdueFee } from "@/lib/@types/api";
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/Button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye } from "lucide-react";
+import { getUrgencyInfo, getPaymentStatusLabel } from "@/lib/urgency-utils";
 
 const Overdue = ({ overdueFees }: { overdueFees: OverdueFee[] }) => {
   return (
@@ -22,37 +23,55 @@ const Overdue = ({ overdueFees }: { overdueFees: OverdueFee[] }) => {
         <Table className="rounded-md text-xs text-secondary">
           <Table.Header>
             <Table.Row>
-              <Table.Head>Roll No</Table.Head>
-              <Table.Head>Student Name</Table.Head>
-              <Table.Head>Program</Table.Head>
+              <Table.Head>Student</Table.Head>
+              <Table.Head>Details</Table.Head>
               <Table.Head>Balance</Table.Head>
+              <Table.Head>Status</Table.Head>
               <Table.Head>Due Date</Table.Head>
-              <Table.Head>Days Overdue</Table.Head>
+              <Table.Head>Action</Table.Head>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {overdueFees.slice(0, 5).map((fee) => (
-              <Table.Row key={fee.id}>
-                <Table.Cell dataLabel="Roll No">{fee.studentRollNo}</Table.Cell>
-                <Table.Cell dataLabel="Student Name">
-                  {fee.studentName}
-                </Table.Cell>
-                <Table.Cell dataLabel="Program">{fee.program}</Table.Cell>
-                <Table.Cell dataLabel="Balance">
-                  <span className="font-medium text-red-600 dark:text-red-400">
-                    Rs {fee.balance.toLocaleString()}
-                  </span>
-                </Table.Cell>
-                <Table.Cell dataLabel="Due Date">
-                  {new Date(fee.dueDate).toLocaleDateString()}
-                </Table.Cell>
-                <Table.Cell dataLabel="Days Overdue">
-                  <Badge className="border-red-400! bg-red-100 text-red-500 dark:bg-red-900 dark:text-red-300 dark:border-red-600!">
-                    {fee.daysOverdue} days
-                  </Badge>
-                </Table.Cell>
-              </Table.Row>
-            ))}
+            {overdueFees.slice(0, 5).map((fee) => {
+              const urgency = getUrgencyInfo(fee.daysOverdue);
+              return (
+                <Table.Row key={fee.id}>
+                  <Table.Cell>
+                    <div className="font-medium">{fee.studentName}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {fee.program}
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="text-sm">Semester {fee.semester}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {getPaymentStatusLabel(fee.paymentPercentage)} (
+                      {fee.paymentPercentage}%)
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <span className="font-medium text-red-600 dark:text-red-400">
+                      Rs {fee.balance.toLocaleString()}
+                    </span>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Badge variant={urgency.badgeVariant} size="small">
+                      {urgency.label}
+                    </Badge>
+                  </Table.Cell>
+                  <Table.Cell>
+                    {new Date(fee.dueDate).toLocaleDateString()}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link href={`/students/${fee.studentId}`}>
+                      <Button variant="ghost" size="sm">
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </Table.Cell>
+                </Table.Row>
+              );
+            })}
           </Table.Body>
         </Table>
       ) : (

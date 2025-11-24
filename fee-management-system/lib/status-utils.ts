@@ -88,14 +88,22 @@ export function calculateStudentStatus(
     return STUDENT_STATUS.NO_FEES;
   }
 
-  // Get the latest fee (most recent by due date)
-  const latestFee = fees.reduce((latest, fee) => {
-    const latestDueDate = new Date(latest.dueDate);
-    const currentDueDate = new Date(fee.dueDate);
-    return currentDueDate > latestDueDate ? fee : latest;
+  // Check for any overdue fees first (Highest Priority)
+  const hasOverdue = fees.some((fee) => {
+    const status = calculateFeeStatus(fee);
+    return status === FEE_STATUS.OVERDUE;
   });
+  if (hasOverdue) return STUDENT_STATUS.OVERDUE;
 
-  return calculateFeeStatus(latestFee);
+  // Check for any pending fees (Low Priority)
+  const hasPending = fees.some((fee) => {
+    const status = calculateFeeStatus(fee);
+    return status === FEE_STATUS.PENDING;
+  });
+  if (hasPending) return STUDENT_STATUS.PENDING;
+
+  // If none of the above, all must be paid
+  return STUDENT_STATUS.PAID;
 }
 
 /**

@@ -6,13 +6,22 @@ import Badge from "@/components/ui/badges/Badges";
 import { AlertCircle } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { OverdueFee } from "@/lib/@types/prisma";
+import type { OverdueFee } from "@/lib/@types/api";
+import { getUrgencyInfo, getPaymentStatusLabel } from "@/lib/urgency-utils";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button/Button";
+import Link from "next/link";
+import { Eye } from "lucide-react";
 
 interface OverdueData {
   overdueFees: OverdueFee[];
 }
 
 export default function OverduePaymentsPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   const { data, isLoading, error } = useQuery<OverdueData>({
     queryKey: ["overdue-payments"],
     queryFn: async () => {
@@ -39,6 +48,12 @@ export default function OverduePaymentsPage() {
     );
   }
 
+  const totalItems = data.overdueFees.length;
+  const paginatedFees = data.overdueFees.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <Breadcrumb
@@ -59,42 +74,69 @@ export default function OverduePaymentsPage() {
 
       <div className="bg-card rounded-lg shadow p-6">
         {data.overdueFees && data.overdueFees.length > 0 ? (
-          <Table className="rounded-md text-xs text-secondary">
+          <Table
+            className="rounded-md text-xs text-secondary"
+            pagination={{
+              total: totalItems,
+              pageSize: itemsPerPage,
+              onPageChange: (page) => setCurrentPage(page),
+            }}
+          >
             <Table.Header>
               <Table.Row>
-                <Table.Head>Roll No</Table.Head>
-                <Table.Head>Student Name</Table.Head>
-                <Table.Head>Program</Table.Head>
+                <Table.Head>Student</Table.Head>
+                <Table.Head>Details</Table.Head>
                 <Table.Head>Balance</Table.Head>
+                <Table.Head>Status</Table.Head>
                 <Table.Head>Due Date</Table.Head>
-                <Table.Head>Days Overdue</Table.Head>
+                <Table.Head>Action</Table.Head>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {data.overdueFees.map((fee) => (
-                <Table.Row key={fee.id}>
-                  <Table.Cell dataLabel="Roll No">
-                    {fee.studentRollNo}
-                  </Table.Cell>
-                  <Table.Cell dataLabel="Student Name">
-                    {fee.studentName}
-                  </Table.Cell>
-                  <Table.Cell dataLabel="Program">{fee.program}</Table.Cell>
-                  <Table.Cell dataLabel="Balance">
-                    <span className="font-medium text-red-600 dark:text-red-400">
-                      {formatCurrency(fee.balance)}
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell dataLabel="Due Date">
-                    {new Date(fee.dueDate).toLocaleDateString()}
-                  </Table.Cell>
-                  <Table.Cell dataLabel="Days Overdue">
-                    <Badge variant="danger" size="small">
-                      {fee.daysOverdue} days
-                    </Badge>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+              {paginatedFees.map((fee) => {
+                const urgency = getUrgencyInfo(fee.daysOverdue);
+                return (
+                  <Table.Row key={fee.id}>
+                    <Table.Cell>
+                      <div className="font-medium">{fee.studentName}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {fee.program}
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div className="text-sm">Semester {fee.semester}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {getPaymentStatusLabel(fee.paymentPercentage)} (
+                        {fee.paymentPercentage}%)
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <span className="font-medium text-red-600 dark:text-red-400">
+                        {formatCurrency(fee.balance)}
+                      </span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Badge variant={urgency.badgeVariant} size="small">
+                        {urgency.label}
+                      </Badge>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {new Date(fee.dueDate).toLocaleDateString()}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Link href={`/students/${fee.studentId}`}>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="w-8 h-8"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </Button>
+                      </Link>
+                    </Table.Cell>
+                  </Table.Row>
+                );
+              })}
             </Table.Body>
           </Table>
         ) : (

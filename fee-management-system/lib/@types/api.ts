@@ -30,12 +30,28 @@ export type RecentPayment = {
 
 export type OverdueFee = {
   id: string;
+  studentId: string;
   studentName: string;
   studentRollNo: string;
   program: string;
+
+  // Fee details
+  academicYear: string;
+  semester: number;
+  totalFee: number;
+  paidAmount: number;
   balance: number;
+  paymentPercentage: number;
+
+  // Urgency metrics
   dueDate: Date;
   daysOverdue: number;
+  urgencyLevel: "critical" | "high" | "medium" | "recent";
+
+  // Context
+  currentSemester: number;
+  semestersBehind: number;
+  status: string;
 };
 
 export type DashboardData = {

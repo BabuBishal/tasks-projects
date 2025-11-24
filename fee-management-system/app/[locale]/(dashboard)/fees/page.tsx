@@ -16,40 +16,12 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+  Eye,
 } from "lucide-react";
-
-interface DashboardData {
-  dashboardStats: {
-    title: string;
-    value: string;
-    desc: string;
-    icon: string;
-  }[];
-  paymentStats: {
-    paid: number;
-    partial: number;
-    overdue: number;
-    pending: number;
-    total: number;
-  };
-  recentPayments: {
-    id: string;
-    studentName: string;
-    amount: number;
-    method: string;
-    date: string;
-    receiptNo: string;
-  }[];
-  overdueFees: {
-    id: string;
-    studentName: string;
-    studentRollNo: string;
-    program: string;
-    balance: number;
-    dueDate: string;
-    daysOverdue: number;
-  }[];
-}
+import Link from "next/link";
+import { Button } from "@/components/ui/button/Button";
+import type { DashboardData } from "@/lib/@types/api";
+import { getUrgencyInfo, getPaymentStatusLabel } from "@/lib/urgency-utils";
 
 export default function FeesPage() {
   const { data, isLoading } = useQuery<DashboardData>({
@@ -71,6 +43,12 @@ export default function FeesPage() {
 
   if (!data) return null;
 
+  const {
+    dashboardStats = [],
+    recentPayments = [],
+    overdueFees = [],
+  } = data || {};
+
   const statsIcons = {
     "Total Revenue": DollarSign,
     "Total Students": Users,
@@ -91,7 +69,7 @@ export default function FeesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {data.dashboardStats.map((stat, index) => {
+        {dashboardStats.map((stat, index) => {
           const Icon =
             statsIcons[stat.title as keyof typeof statsIcons] || DollarSign;
           return (
@@ -128,7 +106,7 @@ export default function FeesPage() {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {data.recentPayments.map((payment) => (
+                {recentPayments.map((payment) => (
                   <Table.Row key={payment.id}>
                     <Table.Cell>
                       <div className="font-medium">{payment.studentName}</div>
@@ -161,31 +139,52 @@ export default function FeesPage() {
               <Table.Header>
                 <Table.Row>
                   <Table.Head>Student</Table.Head>
-                  <Table.Head>Program</Table.Head>
+                  <Table.Head>Details</Table.Head>
                   <Table.Head>Balance</Table.Head>
-                  <Table.Head>Overdue By</Table.Head>
+                  <Table.Head>Status</Table.Head>
+                  <Table.Head>Action</Table.Head>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {data.overdueFees.map((fee) => (
-                  <Table.Row key={fee.id}>
-                    <Table.Cell>
-                      <div className="font-medium">{fee.studentName}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {fee.studentRollNo}
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell>{fee.program}</Table.Cell>
-                    <Table.Cell className="text-destructive font-medium">
-                      {formatCurrency(fee.balance)}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Badge variant="danger" size="small">
-                        {fee.daysOverdue} days
-                      </Badge>
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
+                {overdueFees.map((fee) => {
+                  const urgency = getUrgencyInfo(fee.daysOverdue);
+                  return (
+                    <Table.Row key={fee.id}>
+                      <Table.Cell>
+                        <div className="font-medium">{fee.studentName}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {fee.program}
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <div className="text-sm">Semester {fee.semester}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {getPaymentStatusLabel(fee.paymentPercentage)} (
+                          {fee.paymentPercentage}%)
+                        </div>
+                      </Table.Cell>
+                      <Table.Cell className="text-destructive font-medium">
+                        {formatCurrency(fee.balance)}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Badge variant={urgency.badgeVariant} size="small">
+                          {urgency.label}
+                        </Badge>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link href={`/students/${fee.studentId}`}>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="w-8 h-8"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        </Link>
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
               </Table.Body>
             </Table>
           </CardContent>

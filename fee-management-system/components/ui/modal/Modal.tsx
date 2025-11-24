@@ -6,6 +6,7 @@ import {
   useEffect,
   type ReactNode,
   useCallback,
+  default as React,
 } from "react";
 import ReactDOM from "react-dom";
 import { cn } from "@/lib/utils";
@@ -41,12 +42,30 @@ export const Modal = ({
 Modal.Trigger = function ModalTrigger({
   children,
   className,
+  asChild,
 }: {
   children: ReactNode;
   className?: string;
+  asChild?: boolean;
 }) {
   const modal = useContext(ModalContext);
   if (!modal) throw new Error("Modal.Trigger must be used inside <Modal>");
+
+  if (asChild && React.isValidElement(children)) {
+    const child = children as React.ReactElement<{
+      onClick?: (e: React.MouseEvent) => void;
+      className?: string;
+    }>;
+
+    return React.cloneElement(child, {
+      onClick: (e: React.MouseEvent) => {
+        // Call original onClick if it exists
+        child.props.onClick?.(e);
+        modal.open();
+      },
+      className: cn(child.props.className, className),
+    });
+  }
 
   return (
     <button onClick={modal.open} className={cn("modal-trigger", className)}>

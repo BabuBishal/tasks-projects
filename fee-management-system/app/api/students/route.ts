@@ -39,8 +39,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(students);
   } catch (error) {
     console.error("Error fetching students:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Something went wrong while fetching students" },
+      {
+        error: "Failed to fetch students from database",
+        details: errorMessage,
+      },
       { status: 500 }
     );
   }

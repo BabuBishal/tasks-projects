@@ -16,8 +16,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(payments);
   } catch (error) {
     console.error("Error fetching Payments:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Something went wrong while fetching payments" },
+      {
+        error: "Failed to fetch payments from database",
+        details: errorMessage,
+      },
       { status: 500 }
     );
   }

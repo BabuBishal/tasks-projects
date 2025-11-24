@@ -48,7 +48,12 @@ export default function DashboardPage() {
     );
   }
 
-  const { dashboardStats, paymentStats, recentPayments, overdueFees } = data;
+  const {
+    dashboardStats = [],
+    paymentStats = { paid: 0, partial: 0, overdue: 0, pending: 0, total: 0 },
+    recentPayments = [],
+    overdueFees = [],
+  } = data || {};
   console.log("ds", dashboardStats);
 
   return (

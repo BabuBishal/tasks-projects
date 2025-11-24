@@ -1,5 +1,5 @@
 import { StatusBar } from "@/components/shared/status-bar/StatusBar";
-import { PaymentStats } from "@/lib/@types/prisma";
+import { PaymentStats } from "@/lib/@types/api";
 import React from "react";
 
 const PaymentStatusOverview = ({
@@ -19,12 +19,7 @@ const PaymentStatusOverview = ({
           total={paymentStats.total}
           color="bg-green-500"
         />
-        <StatusBar
-          label="Partial"
-          count={paymentStats.partial}
-          total={paymentStats.total}
-          color="bg-yellow-500"
-        />
+
         <StatusBar
           label="Pending"
           count={paymentStats.pending}

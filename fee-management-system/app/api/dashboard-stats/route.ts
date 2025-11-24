@@ -1,4 +1,9 @@
-// app/api/dashboard-stats/route.ts
+import {
+  calculateUrgencyLevel,
+  calculatePaymentPercentage,
+  calculateSemestersBehind,
+  sortByUrgency,
+} from "@/lib/urgency-utils";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type {
@@ -137,16 +142,21 @@ export async function GET() {
         studentFee: {
           include: {
             student: true,
+            feeStructure: {
+              include: {
+                programSemester: true,
+              },
+            },
           },
         },
       },
     });
 
     // Overdue fees
-    const overdueFees = await prisma.studentFee.findMany({
+    const overdueFees = (await prisma.studentFee.findMany({
       where: {
-        balance: {
-          gt: 0,
+        status: {
+          in: ["Overdue", "Partial"],
         },
         dueDate: {
           lt: new Date(),
@@ -158,14 +168,18 @@ export async function GET() {
             program: true,
           },
         },
-        feeStructure: true,
+        feeStructure: {
+          include: {
+            programSemester: true,
+          },
+        },
         payments: true,
       },
       orderBy: {
         dueDate: "asc",
       },
-      take: 10,
-    });
+      take: 50, // Increased from 10 to show more overdue fees
+    })) as unknown as StudentFeeWithDetails[];
 
     return NextResponse.json<DashboardData>({
       dashboardStats,
@@ -178,25 +192,58 @@ export async function GET() {
         method: payment.method,
         date: payment.date,
         receiptNo: payment.receiptNo,
+        semester:
+          payment.studentFee.feeStructure.programSemester?.semesterNo || 1,
       })),
-      overdueFees: overdueFees.map((fee: StudentFeeWithDetails) => ({
-        id: fee.id,
-        studentId: fee.student.id,
-        studentName: fee.student.name,
-        studentRollNo: fee.student.rollNo,
-        program: fee.student.program.name,
-        balance: fee.balance,
-        dueDate: fee.dueDate,
-        daysOverdue: Math.floor(
-          (new Date().getTime() - new Date(fee.dueDate).getTime()) /
-            (1000 * 60 * 60 * 24)
-        ),
-      })),
+      overdueFees: sortByUrgency(
+        overdueFees.map((fee: StudentFeeWithDetails) => {
+          const daysOverdue = Math.floor(
+            (new Date().getTime() - new Date(fee.dueDate).getTime()) /
+              (1000 * 60 * 60 * 24)
+          );
+          const paymentPercentage = calculatePaymentPercentage(
+            fee.paid,
+            fee.payableFee
+          );
+          const semestersBehind = calculateSemestersBehind(
+            fee.student.semester,
+            fee.feeStructure.programSemester?.semesterNo || 1
+          );
+
+          return {
+            id: fee.id,
+            studentId: fee.student.id,
+            studentName: fee.student.name,
+            studentRollNo: fee.student.rollNo,
+            program: fee.student.program.name,
+
+            // Fee details
+            academicYear: fee.academicYear,
+            semester: fee.feeStructure.programSemester?.semesterNo || 1,
+            totalFee: fee.payableFee,
+            paidAmount: fee.paid,
+            balance: fee.balance,
+            paymentPercentage,
+
+            // Urgency metrics
+            dueDate: fee.dueDate,
+            daysOverdue,
+            urgencyLevel: calculateUrgencyLevel(daysOverdue),
+
+            // Context
+            currentSemester: fee.student.semester,
+            semestersBehind,
+            status: fee.status,
+          };
+        })
+      ),
     });
   } catch (error) {
-    console.error("Error fetching dashboard stats:", error);
+    console.error("Error fetching dashboard data:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Error fetching dashboard data" },
+      { error: "Failed to fetch dashboard statistics", details: errorMessage },
       { status: 500 }
     );
   }

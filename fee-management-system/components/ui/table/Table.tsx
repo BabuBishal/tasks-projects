@@ -54,23 +54,41 @@ export const Table = ({
 };
 
 /* Header */
-const Header = ({ children }: { children: ReactNode }) => (
-  <thead className="ui-table-header">{children}</thead>
-);
+const Header = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => <thead className={cn("ui-table-header", className)}>{children}</thead>;
 
 /* Body */
-const Body = ({ children }: { children: ReactNode }) => (
-  <tbody className="ui-table-body">{children}</tbody>
-);
+const Body = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => <tbody className={cn("ui-table-body", className)}>{children}</tbody>;
 
 /* Row */
-const Row = ({ children }: { children: ReactNode }) => (
-  <tr className="ui-table-row">{children}</tr>
-);
+const Row = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => <tr className={cn("ui-table-row", className)}>{children}</tr>;
 
 /* Head Cell */
-const Head = ({ children }: { children: ReactNode }) => (
-  <th scope="col" className="ui-table-head">
+const Head = ({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) => (
+  <th scope="col" className={cn("ui-table-head", className)}>
     {children}
   </th>
 );
@@ -79,11 +97,13 @@ const Head = ({ children }: { children: ReactNode }) => (
 const Cell = ({
   children,
   dataLabel,
+  className,
 }: {
   children: ReactNode;
   dataLabel?: string;
+  className?: string;
 }) => (
-  <td className="ui-table-cell" data-label={dataLabel}>
+  <td className={cn("ui-table-cell", className)} data-label={dataLabel}>
     {children}
   </td>
 );

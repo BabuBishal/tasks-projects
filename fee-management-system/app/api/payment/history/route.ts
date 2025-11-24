@@ -21,7 +21,7 @@ export async function GET() {
       },
     });
 
-    console.log("payments fetched successfully", payments);
+    console.log("payments fetched successfully", payments.length);
 
     type PaymentWithStudent = (typeof payments)[number];
 
@@ -41,7 +41,6 @@ export async function GET() {
         id: payment.id,
         studentId: student.id,
         studentName: student?.name ?? "Unknown",
-        rollNo: student?.rollNo ?? "N/A",
         program: student?.program?.name ?? "N/A",
         amount: payment.amount,
         date: payment.date,
@@ -55,11 +54,39 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json(paymentHistory);
+    // Calculate stats
+    const totalAmount = paymentHistory.reduce(
+      (sum, payment) => sum + payment.amount,
+      0
+    );
+    const totalPayments = paymentHistory.length;
+
+    // Calculate today's payments
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayPayments = paymentHistory
+      .filter((p) => {
+        const paymentDate = new Date(p.date);
+        paymentDate.setHours(0, 0, 0, 0);
+        return paymentDate.getTime() === today.getTime();
+      })
+      .reduce((sum, p) => sum + p.amount, 0);
+
+    return NextResponse.json({
+      payments: paymentHistory,
+      totalAmount,
+      totalPayments,
+      todayPayments,
+    });
   } catch (error) {
     console.error("Error fetching payment history:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to fetch payment history" },
+      {
+        error: "Failed to fetch payment history from database",
+        details: errorMessage,
+      },
       { status: 500 }
     );
   }

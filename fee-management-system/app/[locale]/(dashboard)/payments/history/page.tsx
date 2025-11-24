@@ -6,10 +6,20 @@ import { CreditCard, CheckCircle, Calendar, TrendingUp } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import PaymentList from "@/components/payments/PaymentList";
 import { useQuery } from "@tanstack/react-query";
-import { Payment } from "@/lib/@types/prisma";
+
+interface PaymentWithDetails {
+  id: string;
+  studentName: string;
+  program: string;
+  amount: number;
+  date: string;
+  method: string;
+  status: string;
+  receiptNo: string;
+}
 
 interface PaymentHistoryData {
-  payments: Payment[];
+  payments: PaymentWithDetails[];
   totalAmount: number;
   totalPayments: number;
   todayPayments: number;
@@ -41,7 +51,12 @@ export default function PaymentHistoryPage() {
     );
   }
 
-  const { payments, totalAmount, totalPayments, todayPayments } = data;
+  const {
+    payments = [],
+    totalAmount = 0,
+    totalPayments = 0,
+    todayPayments = 0,
+  } = data || {};
 
   return (
     <div className="w-full h-full flex flex-col gap-6">
@@ -78,7 +93,7 @@ export default function PaymentHistoryPage() {
           value={todayPayments}
           description="Payments received today"
           icon={Calendar}
-          variant="info"
+          variant="primary"
         />
         <StatsCard
           title="Average Payment"

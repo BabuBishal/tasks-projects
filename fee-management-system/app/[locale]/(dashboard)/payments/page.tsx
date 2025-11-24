@@ -13,6 +13,8 @@ import {
   CheckCircle,
   AlertCircle,
   ArrowRight,
+  Download,
+  Eye,
 } from "lucide-react";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import StatsCard from "@/components/ui/stats-card/StatsCard";
@@ -22,6 +24,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/Card";
+import { Modal } from "@/components/ui/modal/Modal";
+import jsPDF from "jspdf";
 
 interface DashboardData {
   dashboardStats: {
@@ -45,6 +49,7 @@ interface DashboardData {
     method: string;
     date: string;
     receiptNo: string;
+    semester: number;
   }[];
   overdueFees: {
     id: string;
@@ -55,6 +60,7 @@ interface DashboardData {
     balance: number;
     dueDate: string;
     daysOverdue: number;
+    semester: number;
   }[];
 }
 
@@ -67,6 +73,67 @@ export default function PaymentsPage() {
       return res.json();
     },
   });
+
+  // Handler for downloading receipt as PDF
+  const handleDownloadReceipt = (
+    payment: DashboardData["recentPayments"][0]
+  ) => {
+    const doc = new jsPDF();
+
+    // Add title
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.text("Payment Receipt", 105, 20, { align: "center" });
+
+    // Add horizontal line
+    doc.setLineWidth(0.5);
+    doc.line(20, 25, 190, 25);
+
+    // Receipt details
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "normal");
+
+    const details = [
+      ["Receipt No:", payment.receiptNo || payment.id],
+      ["Date:", formatDate(payment.date) || "-"],
+      ["Student Name:", payment.studentName],
+      ["Semester:", `Semester ${payment.semester}`],
+      ["Payment Method:", payment.method],
+    ];
+
+    let yPos = 35;
+    details.forEach(([label, value]) => {
+      doc.setFont("helvetica", "bold");
+      doc.text(label, 20, yPos);
+      doc.setFont("helvetica", "normal");
+      doc.text(value, 80, yPos);
+      yPos += 10;
+    });
+
+    // Add line before total
+    doc.setLineWidth(0.5);
+    doc.line(20, yPos, 190, yPos);
+
+    // Total amount
+    yPos += 10;
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("Amount Paid:", 20, yPos);
+    doc.text(`Rs ${payment.amount.toLocaleString()}`, 80, yPos);
+
+    // Footer
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "italic");
+    doc.text(
+      `Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
+      105,
+      280,
+      { align: "center" }
+    );
+
+    // Save PDF
+    doc.save(`receipt-${payment.receiptNo || payment.id}.pdf`);
+  };
 
   if (isLoading) {
     return (
@@ -158,6 +225,7 @@ export default function PaymentsPage() {
               <Table.Header>
                 <Table.Row>
                   <Table.Head>Student</Table.Head>
+                  <Table.Head>Semester</Table.Head>
                   <Table.Head>Amount</Table.Head>
                   <Table.Head>Date</Table.Head>
                   <Table.Head>Action</Table.Head>
@@ -172,14 +240,92 @@ export default function PaymentsPage() {
                         {payment.receiptNo}
                       </div>
                     </Table.Cell>
+                    <Table.Cell>Semester {payment.semester}</Table.Cell>
                     <Table.Cell>{formatCurrency(payment.amount)}</Table.Cell>
-                    <Table.Cell>{formatDate(payment.date)}</Table.Cell>
                     <Table.Cell>
-                      <Link href={`/students/${payment.studentId}`}>
-                        <Button variant="outline" size="sm">
-                          View
-                        </Button>
-                      </Link>
+                      {new Date(payment.date).toLocaleDateString()}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Modal>
+                        <Modal.Trigger asChild>
+                          <Button variant="ghost" size="sm">
+                            Receipt
+                          </Button>
+                        </Modal.Trigger>
+                        <Modal.Content className="max-w-2xl">
+                          <Modal.CloseIcon />
+                          <Modal.Header>
+                            <h2 className="text-xl font-bold text-primary">
+                              Payment Receipt
+                            </h2>
+                          </Modal.Header>
+                          <Modal.Body>
+                            <div className="space-y-3">
+                              <div className="flex justify-between py-2 border-b border-border">
+                                <span className="text-muted font-medium">
+                                  Receipt No:
+                                </span>
+                                <span className="text-primary font-semibold">
+                                  {payment.receiptNo || payment.id}
+                                </span>
+                              </div>
+                              <div className="flex justify-between py-2 border-b border-border">
+                                <span className="text-muted font-medium">
+                                  Date:
+                                </span>
+                                <span className="text-primary">
+                                  {formatDate(payment.date)}
+                                </span>
+                              </div>
+                              <div className="flex justify-between py-2 border-b border-border">
+                                <span className="text-muted font-medium">
+                                  Student Name:
+                                </span>
+                                <span className="text-primary">
+                                  {payment.studentName}
+                                </span>
+                              </div>
+                              <div className="flex justify-between py-2 border-b border-border">
+                                <span className="text-muted font-medium">
+                                  Semester:
+                                </span>
+                                <span className="text-primary">
+                                  Semester {payment.semester}
+                                </span>
+                              </div>
+                              <div className="flex justify-between py-2 border-b border-border">
+                                <span className="text-muted font-medium">
+                                  Payment Method:
+                                </span>
+                                <span className="text-primary capitalize">
+                                  {payment.method}
+                                </span>
+                              </div>
+                              <div className="flex justify-between py-3 border-t-2 border-primary mt-4">
+                                <span className="text-primary font-bold text-lg">
+                                  Amount Paid:
+                                </span>
+                                <span className="text-primary font-bold text-lg">
+                                  {formatCurrency(payment.amount)}
+                                </span>
+                              </div>
+                            </div>
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <div className="flex gap-3">
+                              <Modal.Close>Close</Modal.Close>
+                              <Button
+                                variant="primary"
+                                className="flex-1"
+                                onClick={() => handleDownloadReceipt(payment)}
+                              >
+                                <Download className="w-4 h-4 mr-2" />
+                                Download
+                              </Button>
+                            </div>
+                          </Modal.Footer>
+                        </Modal.Content>
+                      </Modal>
                     </Table.Cell>
                   </Table.Row>
                 ))}
@@ -210,8 +356,10 @@ export default function PaymentsPage() {
               <Table.Header>
                 <Table.Row>
                   <Table.Head>Student</Table.Head>
+                  <Table.Head>Semester</Table.Head>
                   <Table.Head>Balance</Table.Head>
                   <Table.Head>Overdue By</Table.Head>
+                  <Table.Head>Due Date</Table.Head>
                   <Table.Head>Action</Table.Head>
                 </Table.Row>
               </Table.Header>
@@ -224,6 +372,7 @@ export default function PaymentsPage() {
                         {fee.studentRollNo}
                       </div>
                     </Table.Cell>
+                    <Table.Cell>Semester {fee.semester}</Table.Cell>
                     <Table.Cell className="text-destructive font-medium">
                       {formatCurrency(fee.balance)}
                     </Table.Cell>
@@ -233,9 +382,12 @@ export default function PaymentsPage() {
                       </Badge>
                     </Table.Cell>
                     <Table.Cell>
+                      {new Date(fee.dueDate).toLocaleDateString()}
+                    </Table.Cell>
+                    <Table.Cell>
                       <Link href={`/students/${fee.studentId}`}>
-                        <Button variant="outline" size="sm">
-                          View
+                        <Button variant="ghost" size="icon" className="w-8 h-8">
+                          <Eye className="w-4 h-4" />
                         </Button>
                       </Link>
                     </Table.Cell>

@@ -46,7 +46,7 @@ export default function ProgramList({
       {programs.map((program) => (
         <Card
           key={program.id}
-          className="group hover:shadow-md transition-all duration-300 border-l-4 border-l-primary"
+          className="group hover:shadow-md transition-all duration-300"
         >
           <CardContent className="p-6">
             <div className="flex justify-between items-start mb-4">

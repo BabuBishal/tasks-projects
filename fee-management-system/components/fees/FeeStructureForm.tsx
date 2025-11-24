@@ -6,6 +6,7 @@ import { Button } from "../ui/button/Button";
 interface Program {
   id: string;
   name: string;
+  duration: number;
   semesters: { semesterNo: number }[];
 }
 
@@ -46,10 +47,10 @@ export default function FeeStructureForm({
     miscFee: initialData?.miscFee || 0,
   });
 
-  // Derive available semesters directly from props and state
+  // Derive available semesters from program duration
   const selectedProgram = programs.find((p) => p.id === formData.programId);
   const availableSemesters = selectedProgram
-    ? selectedProgram.semesters.map((s) => s.semesterNo)
+    ? Array.from({ length: selectedProgram.duration }, (_, i) => i + 1)
     : [];
 
   const handleChange = (
@@ -107,7 +108,7 @@ export default function FeeStructureForm({
             name="semesterNo"
             value={formData.semesterNo}
             onChange={handleChange}
-            disabled={!formData.programId || !!initialData} // Disable if no program or on edit
+            disabled={!formData.programId}
             className="w-full p-2 border rounded-md bg-background"
             required
           >

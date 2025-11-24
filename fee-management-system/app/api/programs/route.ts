@@ -16,8 +16,13 @@ export async function GET() {
     return NextResponse.json(programs, { status: 200 });
   } catch (error) {
     console.error("Error fetching programs:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to fetch programs" },
+      {
+        error: "Failed to fetch programs from database",
+        details: errorMessage,
+      },
       { status: 500 }
     );
   }
@@ -70,8 +75,10 @@ export async function POST(request: Request) {
         { status: 409 }
       );
     }
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to create program" },
+      { error: "Failed to create program", details: errorMessage },
       { status: 500 }
     );
   }

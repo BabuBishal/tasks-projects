@@ -4,7 +4,16 @@ import React, { useState, useMemo } from "react";
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
 import { Button } from "@/components/ui/button/Button";
-import { Search, Filter, Download, Plus } from "lucide-react";
+import {
+  Search,
+  Filter,
+  Download,
+  Plus,
+  CreditCard,
+  Banknote,
+  Globe,
+  Wallet,
+} from "lucide-react";
 import Link from "next/link";
 import { paymentHeaders } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
@@ -24,6 +33,21 @@ interface Payment {
 interface PaymentListProps {
   initialPayments: Payment[];
 }
+
+const getMethodIcon = (method: string) => {
+  switch (method.toLowerCase()) {
+    case "cash":
+      return <Banknote className="w-3 h-3 mr-1" />;
+    case "card":
+      return <CreditCard className="w-3 h-3 mr-1" />;
+    case "online":
+      return <Globe className="w-3 h-3 mr-1" />;
+    case "bank":
+      return <Wallet className="w-3 h-3 mr-1" />;
+    default:
+      return <CreditCard className="w-3 h-3 mr-1" />;
+  }
+};
 
 const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -273,11 +297,12 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
                     {formatCurrency(payment.amount)}
                   </Table.Cell>
                   <Table.Cell dataLabel="Date">
-                    {formatDate(payment.date) || "-"}
+                    {new Date(payment.date).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell dataLabel="Method">
-                    <span className="px-2 py-1 bg-background rounded text-xs border border-border">
-                      {payment.method}
+                    <span className="flex items-center px-2 py-1 bg-background rounded text-xs border border-border w-fit">
+                      {getMethodIcon(payment.method)}
+                      <span className="capitalize">{payment.method}</span>
                     </span>
                   </Table.Cell>
                   <Table.Cell dataLabel="Status">
@@ -296,7 +321,11 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
                   </Table.Cell>
                   <Table.Cell dataLabel="Actions">
                     <Modal>
-                      <Modal.Trigger>Receipt</Modal.Trigger>
+                      <Modal.Trigger asChild>
+                        <Button variant="ghost" size="sm">
+                          Receipt
+                        </Button>
+                      </Modal.Trigger>
                       <Modal.Content>
                         <Modal.CloseIcon />
                         <Modal.Header>

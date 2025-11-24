@@ -33,8 +33,13 @@ export async function GET(request: Request) {
     return NextResponse.json(feeStructures);
   } catch (error) {
     console.error("Error fetching fee structures:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to fetch fee structures" },
+      {
+        error: "Failed to fetch fee structures from database",
+        details: errorMessage,
+      },
       { status: 500 }
     );
   }

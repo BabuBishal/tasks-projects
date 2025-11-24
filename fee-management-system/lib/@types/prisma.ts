@@ -135,7 +135,9 @@ export type StudentFull = Student & {
 
 export type StudentFeeWithDetails = StudentFee & {
   student: StudentWithProgram;
-  feeStructure: FeeStructure;
+  feeStructure: FeeStructure & {
+    programSemester?: ProgramSemester;
+  };
   payments: Payment[];
 };
 
@@ -143,6 +145,9 @@ export type PaymentWithStudent = Payment & {
   studentFee: {
     id: string;
     student: Student;
+    feeStructure: FeeStructure & {
+      programSemester?: ProgramSemester;
+    };
   };
 };
 

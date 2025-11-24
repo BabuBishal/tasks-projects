@@ -155,6 +155,7 @@ export default function ProgramDetailsPage({
         type: "success",
       });
       setIsDetailsOpen(false);
+      setEditingFee(null); // Clear editing state after deletion
       refetchFees();
     } catch (error: any) {
       notify({
