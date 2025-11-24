@@ -58,10 +58,10 @@ export default function ProgramsPage() {
       });
       setIsModalOpen(false);
       refetch();
-    } catch (error: Error) {
+    } catch (error: unknown) {
       notify({
         title: "Error",
-        description: error.message || "Failed to create program",
+        description: (error as Error).message || "Failed to create program",
         type: "error",
       });
     }
@@ -91,10 +91,10 @@ export default function ProgramsPage() {
       setIsModalOpen(false);
       setEditingProgram(null);
       refetch();
-    } catch (error: any) {
+    } catch (error: unknown) {
       notify({
         title: "Error",
-        description: error.message || "Failed to update program",
+        description: (error as Error).message || "Failed to update program",
         type: "error",
       });
     }
@@ -118,10 +118,10 @@ export default function ProgramsPage() {
         type: "success",
       });
       refetch();
-    } catch (error: any) {
+    } catch (error: unknown) {
       notify({
         title: "Error",
-        description: error.message || "Failed to delete program",
+        description: (error as Error).message || "Failed to delete program",
         type: "error",
       });
     }
