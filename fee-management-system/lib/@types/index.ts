@@ -14,3 +14,6 @@ export * from "./forms";
 
 // Component props types
 export * from "./components";
+
+// Profile and settings types
+export * from "./profile";

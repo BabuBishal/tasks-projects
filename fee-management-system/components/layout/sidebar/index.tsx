@@ -81,10 +81,14 @@ const Sidebar = ({
           <span>Payments</span>
         </div> */}
         </div>
-        <div className="h-16 flex gap-2 justify-start items-center p-4 border-t border-border">
+        <Link
+          href={`/${locale}/settings`}
+          className="h-16 flex gap-2 justify-start items-center p-4 border-t border-border hover:bg-accent transition duration-200 ease cursor-pointer"
+          onClick={() => setIsOpen(false)}
+        >
           <Settings className="w-5 h-5" />
           <span className="font-medium">{t("settings")}</span>
-        </div>
+        </Link>
       </aside>
     </>
   );
