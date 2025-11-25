@@ -66,11 +66,22 @@ interface DashboardData {
 }
 
 export default function PaymentsPage() {
+  // All hooks must be called at the top before any conditional returns
   const { data, isLoading } = useQuery<DashboardData>({
     queryKey: ["dashboardStats"],
     queryFn: async () => {
       const res = await fetch("/api/dashboard-stats");
       if (!res.ok) throw new Error("Failed to fetch dashboard stats");
+      return res.json();
+    },
+  });
+
+  // Fetch payment-specific stats
+  const { data: paymentStats } = useQuery({
+    queryKey: ["paymentStats"],
+    queryFn: async () => {
+      const res = await fetch("/api/payments/stats");
+      if (!res.ok) throw new Error("Failed to fetch payment stats");
       return res.json();
     },
   });
@@ -146,6 +157,12 @@ export default function PaymentsPage() {
 
   if (!data) return null;
 
+  // Calculate stats
+  const todaysCollections = paymentStats?.todaysCollections || 0;
+  const monthCollections = paymentStats?.monthCollections || 0;
+  const pendingAmount = data.dashboardStats[2]?.value || "Rs 0";
+  const successRate = paymentStats?.paymentSuccessRate || 0;
+
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <Breadcrumb items={[{ label: "Payments", href: "/payments" }]} />
@@ -154,10 +171,10 @@ export default function PaymentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            Financial Dashboard
+            Payment Management
           </h1>
           <p className="text-muted-foreground">
-            Overview of fee collection and outstanding payments
+            Track and manage all payment transactions
           </p>
         </div>
         <Link href="/payments/add">
@@ -172,36 +189,34 @@ export default function PaymentsPage() {
         </Link>
       </div>
 
-      {/* Stats Cards */}
+      {/* Payment-Specific Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard
-          title="Total Revenue"
-          value={data.dashboardStats[0]?.value || "Rs 0"}
+          title="Today's Collections"
+          value={`Rs ${todaysCollections.toLocaleString()}`}
           icon={DollarSign}
-          description={data.dashboardStats[0]?.desc || "Total fees collected"}
+          description="Payments received today"
           variant="success"
         />
         <StatsCard
-          title="Total Students"
-          value={data.dashboardStats[1]?.value || "0"}
-          icon={Users}
-          description={
-            data.dashboardStats[1]?.desc || "Total students enrolled"
-          }
+          title="This Month"
+          value={`Rs ${monthCollections.toLocaleString()}`}
+          icon={CheckCircle}
+          description="Current month collections"
           variant="primary"
         />
         <StatsCard
-          title="Pending Payments"
-          value={data.dashboardStats[2]?.value || "Rs 0"}
+          title="Pending Amount"
+          value={pendingAmount}
           icon={Clock}
-          description={data.dashboardStats[2]?.desc || "Awaiting Payments"}
+          description="Outstanding fees to collect"
           variant="warning"
         />
         <StatsCard
-          title="Collection Status"
-          value={data.dashboardStats[3]?.value || "0%"}
+          title="Success Rate"
+          value={`${successRate}%`}
           icon={CheckCircle}
-          description={data.dashboardStats[3]?.desc || "Total Payment Success"}
+          description="On-time payment rate"
           variant="primary"
         />
       </div>
@@ -250,7 +265,7 @@ export default function PaymentsPage() {
                       <Modal>
                         <Modal.Trigger asChild>
                           <Button variant="ghost" size="sm">
-                            <ReceiptText className="w-4 h-4 text-blue-500 " />
+                            <Download className="w-4 h-4 text-blue-500 " />
                           </Button>
                         </Modal.Trigger>
                         <Modal.Content className="max-w-2xl">

@@ -8,7 +8,7 @@ const PaymentStatusOverview = ({
   paymentStats: PaymentStats;
 }) => {
   return (
-    <div className="w-full bg-card rounded-lg shadow p-6 col-span-1">
+    <div className="w-full h-full bg-card rounded-lg shadow p-6 col-span-1">
       <h2 className="text-lg font-semibold text-primary mb-4">
         Payment Status
       </h2>

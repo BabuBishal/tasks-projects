@@ -65,7 +65,7 @@ const Overdue = ({ overdueFees }: { overdueFees: OverdueFee[] }) => {
                   <Table.Cell>
                     <Link href={`/students/${fee.studentId}`}>
                       <Button variant="ghost" size="sm">
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-4 h-4 text-green-500" />
                       </Button>
                     </Link>
                   </Table.Cell>

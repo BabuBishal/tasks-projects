@@ -6,7 +6,7 @@ import {
   Settings,
   Users,
   Wallet,
-  Banknote,
+  FileText,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
@@ -28,6 +28,7 @@ const Sidebar = ({
     { name: "Programs", icon: GraduationCap, path: "/programs" },
     { name: t("students"), icon: Users, path: "/students" },
     { name: t("payments"), icon: Wallet, path: "/payments" },
+    { name: "Reports", icon: FileText, path: "/reports" },
   ];
   return (
     <>
@@ -68,18 +69,7 @@ const Sidebar = ({
               </Link>
             );
           })}
-          {/* <div className={`p-2 flex gap-2 justify-start items-center  rounded-sm ${}`}>
-          <LayoutDashboard className="w-4 h-4" />
-          <span>Dashboard</span>
-        </div>
-        <div className="p-2 flex gap-2 justify-start items-center  rounded-sm">
-          <Users className="w-4 h-4" />
-          <span>Student Details</span>
-        </div>
-        <div className="p-2 flex gap-2 justify-start items-center  rounded-sm">
-          <Wallet className="w-4 h-4" />
-          <span>Payments</span>
-        </div> */}
+        
         </div>
         <Link
           href={`/${locale}/settings`}

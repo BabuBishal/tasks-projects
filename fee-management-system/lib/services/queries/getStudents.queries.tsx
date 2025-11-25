@@ -3,9 +3,7 @@ import { API_ROUTES } from "../../api-routes";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const getStudents = async () => {
-  const res = await fetch(`${baseUrl}${API_ROUTES.students}`, {
-    next: { revalidate: 600 },
-  });
+  const res = await fetch(`${baseUrl}${API_ROUTES.students}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch students");
@@ -22,9 +20,7 @@ export const useGetStudents = () => {
 };
 
 export const getStudentById = async (id: string) => {
-  const res = await fetch(`${baseUrl}${API_ROUTES.studentWithId(id)}`, {
-    next: { revalidate: 600 },
-  });
+  const res = await fetch(`${baseUrl}${API_ROUTES.studentWithId(id)}`);
 
   if (!res.ok) {
     throw new Error("Failed to fetch student");

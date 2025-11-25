@@ -5,7 +5,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 const intlMiddleware = createMiddleware(routing);
 const authPages = ["/login", "/register"];
-const protectedPages = ["/dashboard", "/students", "/payments"];
+const protectedPages = [
+  "/dashboard",
+  "/students",
+  "/payments",
+  "/profile",
+  "/settings",
+  "/reports",
+];
 
 export default withAuth(
   function middleware(req: NextRequest) {

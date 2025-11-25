@@ -2,14 +2,15 @@
 
 import LanguageSwitcher from "@/components/shared/language-switcher/LanguageSwitcher";
 import ThemeToggle from "@/components/shared/theme-toggle/ThemeToggle";
-import { Bell, Menu, UserCircle } from "lucide-react";
-
+import { Bell, Menu, User } from "lucide-react";
 import Profile from "../profile/Profile";
 import { useEffect, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
 
 const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
-  // const session = await getServerSession(authOptions);
+  const { data: session } = useSession();
   const [openDropdown, setOpenDropdown] = useState(false);
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -28,6 +29,25 @@ const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
     };
   }, []);
 
+  // Fetch profile picture
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch("/api/profile");
+        if (res.ok) {
+          const data = await res.json();
+          setProfilePicture(data.profile?.profilePicture || null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+      }
+    };
+
+    if (session?.user) {
+      fetchProfile();
+    }
+  }, [session]);
+
   return (
     <nav className="sticky top-0 z-30 w-full flex px-5 py-4 justify-between items-center h-16 border-b border-border dark:border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="align-start">
@@ -42,12 +62,22 @@ const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
         <Bell className="w-5 h-5 cursor-pointer" />
         <span
           ref={dropdownRef}
-          className=" relative flex gap-3 cursor-pointer "
+          className="relative flex gap-3 cursor-pointer"
           onClick={() => setOpenDropdown(!openDropdown)}
         >
-          <UserCircle className="w-6 h-6" />
-          {/* <span>{session && session.user ? session.user.name : "User"}</span> */}
-          {openDropdown && <Profile />}{" "}
+          {/* Profile Picture or Fallback */}
+          <div className="w-8 h-8 p-1 rounded-full overflow-hidden  flex items-center justify-center border-2 border-border hover:border-primary transition-colors">
+            {profilePicture ? (
+              <img
+                src={profilePicture}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User className="w-5 h-5 text-primary" />
+            )}
+          </div>
+          {openDropdown && <Profile profilePicture={profilePicture} />}
         </span>
       </div>
     </nav>

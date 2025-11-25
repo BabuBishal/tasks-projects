@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 
 const PaymentHistory = ({ paymentData }: { paymentData: RecentPayment[] }) => {
   return (
-    <div className="bg-card rounded-lg shadow p-6 col-span-2">
+    <div className="bg-card rounded-lg shadow p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-primary">Recent Payments</h2>
         <Link href="/payments/history">

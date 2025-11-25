@@ -7,6 +7,8 @@ export const API_ROUTES = {
   programs: "/api/programs",
   feeStructures: "/api/fee-structures",
   scholarships: "/api/scholarships",
+  profile: "/api/profile",
+  profilePhoto: "/api/profile-photo",
   studentWithId: (id: string) => `/api/students/${id}`,
   programWithId: (id: string) => `/api/programs/${id}`,
   feeStructureWithId: (id: string) => `/api/fee-structures/${id}`,

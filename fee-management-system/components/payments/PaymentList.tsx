@@ -13,7 +13,6 @@ import {
   Banknote,
   Globe,
   Wallet,
-
   ReceiptText,
 } from "lucide-react";
 import Link from "next/link";
@@ -161,13 +160,17 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
     document.body.removeChild(link);
   };
 
-  const filteredPayments = useMemo(() => {
+  const filteredPayments = (() => {
     if (!initialPayments) return [];
 
     return initialPayments.filter((payment) => {
-      const matchesSearch =
-        payment.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        payment.id.toLowerCase().includes(searchQuery.toLowerCase());
+      const studentNameMatches = payment.studentName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const idMatches = payment.id
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesSearch = studentNameMatches || idMatches;
 
       const matchesStatus = statusFilter
         ? payment.status.toLowerCase() === statusFilter.toLowerCase()
@@ -179,12 +182,13 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
 
       return matchesSearch && matchesStatus && matchesMethod;
     });
-  }, [initialPayments, searchQuery, statusFilter, methodFilter]);
+  })();
 
-  const paginatedPayments = filteredPayments.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const paginatedPayments = (() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredPayments.slice(startIndex, endIndex);
+  })();
 
   const formatCurrency = (amount: number) => `Rs ${amount.toLocaleString()}`;
 
@@ -325,7 +329,7 @@ const PaymentList: React.FC<PaymentListProps> = ({ initialPayments }) => {
                     <Modal>
                       <Modal.Trigger asChild>
                         <Button variant="ghost" size="sm">
-                          <ReceiptText className="w-4 h-4   text-blue-500" />
+                          <Download className="w-4 h-4   text-blue-500" />
                         </Button>
                       </Modal.Trigger>
                       <Modal.Content>

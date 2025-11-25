@@ -1,16 +1,16 @@
 "use client";
-import PaymentHistory from "@/app/[locale]/(dashboard)/_components/PaymentHistory";
 
 import Overdue from "../_components/Overdue";
 import PaymentStatusOverview from "../_components/PaymentStatusOverview";
 import StatsOverview from "../_components/StatsOverview";
+import QuickActions from "../_components/QuickActions";
+import QuickStats from "../_components/QuickStats";
+import AlertsNotifications from "../_components/AlertsNotifications";
 import { useGetDashboardStats } from "@/lib/services/queries/getDashboardStats.queries";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 
 export default function DashboardPage() {
-
   const { data, isLoading, isError } = useGetDashboardStats();
- 
 
   if (isLoading) {
     return (
@@ -32,10 +32,40 @@ export default function DashboardPage() {
   const {
     dashboardStats = [],
     paymentStats = { paid: 0, partial: 0, overdue: 0, pending: 0, total: 0 },
-    recentPayments = [],
     overdueFees = [],
   } = data || {};
-  // console.log("ds", dashboardStats);
+
+  // Calculate quick stats from existing data
+  const collectionStatusStat = dashboardStats.find(
+    (s) => s.title === "Collection Status"
+  );
+  const collectionRate = collectionStatusStat
+    ? parseInt(collectionStatusStat.value)
+    : 0;
+  const studentsPending = paymentStats.pending + paymentStats.overdue;
+  const upcomingDeadlines = overdueFees.filter(
+    (fee) => fee.daysOverdue < 7 && fee.daysOverdue >= 0
+  ).length;
+
+  // Generate alerts from overdue fees
+  const alerts = overdueFees
+    .filter((fee) => fee.daysOverdue > 30 || fee.paidAmount === 0)
+    .slice(0, 10)
+    .map((fee) => ({
+      id: fee.id,
+      type:
+        fee.daysOverdue > 30
+          ? ("critical_overdue" as const)
+          : ("zero_payment" as const),
+      studentId: fee.studentId,
+      studentName: fee.studentName,
+      message:
+        fee.daysOverdue > 30
+          ? `Critical: ${fee.daysOverdue} days overdue`
+          : "No payment received yet",
+      amount: fee.balance,
+      daysOverdue: fee.daysOverdue,
+    }));
 
   return (
     <div className="w-full h-full flex flex-col gap-6">
@@ -50,16 +80,36 @@ export default function DashboardPage() {
       {/* Stats Cards */}
       <StatsOverview dashboardStats={dashboardStats} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Payment Status Chart */}
-        <PaymentStatusOverview paymentStats={paymentStats} />
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Payment Status & Quick Actions */}
+        <div className="col-span-1 gap-6">
+          <PaymentStatusOverview paymentStats={paymentStats} />
+        </div>
+        <div className="col-span-1 gap-6">
+          <QuickActions />
+        </div>
 
-        {/* Recent Payments */}
-        <PaymentHistory paymentData={recentPayments} />
+        {/* Quick Stats Overview */}
+        <div className="col-span-2">
+          <QuickStats
+            collectionRate={collectionRate}
+            studentsPending={studentsPending}
+            upcomingDeadlines={upcomingDeadlines}
+            programDistribution={[]}
+          />
+        </div>
+
+        {/* Alerts & Critical Overdue */}
+        <div className="col-span-2">
+          <AlertsNotifications alerts={alerts} />
+        </div>
+
+        {/* Overdue Fees Table */}
+        <div className="col-span-2">
+          <Overdue overdueFees={overdueFees} />
+        </div>
       </div>
-
-      {/* Overdue Fees */}
-      <Overdue overdueFees={overdueFees} />
     </div>
   );
 }

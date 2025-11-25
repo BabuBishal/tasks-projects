@@ -86,7 +86,7 @@ const Students = () => {
           : null;
       return latestFee?.status === "Overdue";
     }).length || 0;
-
+  const pendingStudents = totalStudents - paidStudents - overdueStudents;
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <Breadcrumb items={[{ label: "Students", href: "/students" }]} />
@@ -130,7 +130,7 @@ const Students = () => {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         <StatsCard
           title="Total Students"
           value={totalStudents}
@@ -144,6 +144,13 @@ const Students = () => {
           icon={Wallet}
           description="Students with fully paid fees"
           variant="success"
+        />
+        <StatsCard
+          title="Pending Fees"
+          value={pendingStudents}
+          icon={Wallet}
+          description="Students with pending fees"
+          variant="warning"
         />
         <StatsCard
           title="Overdue Fees"
