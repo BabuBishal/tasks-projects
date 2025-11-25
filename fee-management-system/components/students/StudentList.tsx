@@ -53,6 +53,7 @@ const StudentList: React.FC<StudentListProps> = ({
     semester: 1,
     phone: "",
     address: "",
+    graduated: false,
   });
   const itemsPerPage = 10;
   const { notify } = useToast();
@@ -118,6 +119,7 @@ const StudentList: React.FC<StudentListProps> = ({
       semester: student.semester,
       phone: student.phone,
       address: student.address,
+      graduated: student.status === "Graduated",
     });
     setIsEditModalOpen(true);
   };
@@ -306,6 +308,7 @@ const StudentList: React.FC<StudentListProps> = ({
       ).length;
       const promotedCount = successCount - graduatedCount;
       const failedCount = data.results.failed.length;
+      const failedMessage = data?.results?.failed[0]?.message;
 
       let description = "";
       if (promotedCount > 0)
@@ -313,7 +316,9 @@ const StudentList: React.FC<StudentListProps> = ({
       if (graduatedCount > 0)
         description += `Graduated ${graduatedCount} students. `;
       if (failedCount > 0)
-        description += `Failed to process ${failedCount} students.`;
+        description += `Failed to process ${failedCount} students. ${
+          failedMessage ? failedMessage : ""
+        }`;
 
       notify({
         title: "Operation Completed",
@@ -691,7 +696,7 @@ const StudentList: React.FC<StudentListProps> = ({
                   <button
                     type="submit"
                     className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                    disabled={isEditLoading}
+                    disabled={isEditLoading || editFormData.graduated}
                   >
                     {isEditLoading && (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

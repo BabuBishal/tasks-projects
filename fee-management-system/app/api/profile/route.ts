@@ -17,14 +17,6 @@ export async function GET() {
       include: {
         profile: true,
       },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true,
-        updatedAt: true,
-        profile: true,
-      },
     });
 
     if (!user) {
@@ -44,14 +36,6 @@ export async function GET() {
       const updatedUser = await prisma.user.findUnique({
         where: { id: user.id },
         include: { profile: true },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          createdAt: true,
-          updatedAt: true,
-          profile: true,
-        },
       });
 
       return NextResponse.json(updatedUser);

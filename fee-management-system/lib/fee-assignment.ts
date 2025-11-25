@@ -10,6 +10,7 @@ export interface FeeAssignmentResult {
   success: boolean;
   feeId?: string;
   error?: string;
+  message?: string;
   isGraduated?: boolean;
 }
 
@@ -179,7 +180,7 @@ export async function promoteSemester(
       return {
         success: true,
         isGraduated: true,
-        error: "Student has graduated successfully!", // Using error field to pass success message for now, or we can add a message field to interface
+        message: "Student has graduated successfully!",
       };
     }
 

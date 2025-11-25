@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
       success: [] as any[],
       failed: [] as any[],
       total: studentIds.length,
+     
     };
 
     // Process each student

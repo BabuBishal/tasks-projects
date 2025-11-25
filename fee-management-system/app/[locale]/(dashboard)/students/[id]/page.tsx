@@ -174,19 +174,19 @@ export default function StudentDetailsPage() {
           <p className="text-muted-foreground">Roll No: {student.rollNo}</p>
         </div>
         <div className="flex gap-3">
-          {student.status !== "Graduated" && (
-            <Button
-              variant="primary"
-              onClick={handlePromote}
-              disabled={promoteLoading}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              <ArrowRight className="w-4 h-4" />
-              {promoteLoading ? "Promoting..." : "Promote"}
-            </Button>
-          )}
           <Button
             variant="primary"
+            onClick={handlePromote}
+            disabled={promoteLoading || student.status === "Graduated"}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <ArrowRight className="w-4 h-4" />
+            {promoteLoading ? "Promoting..." : "Promote"}
+          </Button>
+
+          <Button
+            variant="primary"
+            disabled={student.status === "Graduated"}
             onClick={() => router.push(`/students/${student.id}/edit`)}
           >
             <Pencil className="w-4 h-4" />
