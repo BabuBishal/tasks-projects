@@ -62,59 +62,42 @@ export const deleteProgram = async (id: string) => {
   return res.json();
 };
 
-// Hook to use create program mutation
 export const useCreateProgram = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createProgram,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [API_ROUTES.programs],
-      });
-    },
-    onError: (error: Error) => {
-      console.error("Create program error:", error.message);
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.programs] });
     },
   });
 };
 
-// Hook to use update program mutation
 export const useUpdateProgram = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateProgram,
     onSuccess: (data, variables) => {
-      // Invalidate specific program query
       queryClient.invalidateQueries({
         queryKey: [API_ROUTES.programs, variables.id],
       });
-
-      // Invalidate programs list query
-      queryClient.invalidateQueries({
-        queryKey: [API_ROUTES.programs],
-      });
-    },
-    onError: (error: Error) => {
-      console.error("Update program error:", error.message);
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.programs] });
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.students] });
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.feeStructures] });
     },
   });
 };
 
-// Hook to use delete program mutation
 export const useDeleteProgram = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: deleteProgram,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [API_ROUTES.programs],
-      });
-    },
-    onError: (error: Error) => {
-      console.error("Delete program error:", error.message);
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.programs] });
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.students] });
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.feeStructures] });
     },
   });
 };

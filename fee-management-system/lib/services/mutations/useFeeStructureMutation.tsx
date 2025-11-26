@@ -59,59 +59,43 @@ export const deleteFeeStructure = async (id: string) => {
   return res.json();
 };
 
-// Hook to use create fee structure mutation
 export const useCreateFeeStructure = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createFeeStructure,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [API_ROUTES.feeStructures],
-      });
-    },
-    onError: (error: Error) => {
-      console.error("Create fee structure error:", error.message);
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.feeStructures] });
+
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.students] });
     },
   });
 };
 
-// Hook to use update fee structure mutation
 export const useUpdateFeeStructure = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateFeeStructure,
     onSuccess: (data, variables) => {
-      // Invalidate specific fee structure query
       queryClient.invalidateQueries({
         queryKey: [API_ROUTES.feeStructures, variables.id],
       });
-
-      // Invalidate fee structures list query
-      queryClient.invalidateQueries({
-        queryKey: [API_ROUTES.feeStructures],
-      });
-    },
-    onError: (error: Error) => {
-      console.error("Update fee structure error:", error.message);
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.feeStructures] });
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.students] });
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.dashboardStats] });
     },
   });
 };
 
-// Hook to use delete fee structure mutation
 export const useDeleteFeeStructure = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: deleteFeeStructure,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [API_ROUTES.feeStructures],
-      });
-    },
-    onError: (error: Error) => {
-      console.error("Delete fee structure error:", error.message);
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.feeStructures] });
+      queryClient.invalidateQueries({ queryKey: [API_ROUTES.students] });
     },
   });
 };

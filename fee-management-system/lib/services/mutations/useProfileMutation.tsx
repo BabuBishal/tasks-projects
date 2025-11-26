@@ -30,7 +30,7 @@ export const useUpdateProfile = () => {
 };
 
 export const changePassword = async (data: PasswordChangeInput) => {
-  const res = await fetch(`${baseUrl}${API_ROUTES.profile}/password`, {
+  const res = await fetch(`${baseUrl}${API_ROUTES.profilePassword}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -54,7 +54,7 @@ export const uploadProfilePhoto = async (file: File) => {
   const formData = new FormData();
   formData.append("photo", file);
 
-  const res = await fetch(`${baseUrl}${API_ROUTES.profile}/photo`, {
+  const res = await fetch(`${baseUrl}${API_ROUTES.profilePhoto}`, {
     method: "POST",
     body: formData,
   });
