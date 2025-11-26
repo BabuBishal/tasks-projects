@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import type {
+  FeeStructuresListResponse,
+  CreateFeeStructureResponse,
+} from "@/lib/types/api";
 
 export async function GET(request: Request) {
   try {
@@ -30,7 +34,9 @@ export async function GET(request: Request) {
       },
     });
 
-    return NextResponse.json(feeStructures);
+    return NextResponse.json<FeeStructuresListResponse>(
+      feeStructures as unknown as FeeStructuresListResponse
+    );
   } catch (error) {
     console.error("Error fetching fee structures:", error);
     const errorMessage =
@@ -120,9 +126,9 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(feeStructure, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating fee structure:", error);
-    const errorMessage = error?.message || "Failed to create fee structure";
+    const errorMessage = error instanceof Error ? error.message : "Failed to create fee structure";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

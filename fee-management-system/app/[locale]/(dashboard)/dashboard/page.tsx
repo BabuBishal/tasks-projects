@@ -11,6 +11,7 @@ import { useGetDashboardStatsQuery } from "@/hooks/query-hooks/dashboard";
 
 export default function DashboardPage() {
   const { data, isLoading, isError } = useGetDashboardStatsQuery();
+  console.log("🚀 ~ DashboardPage ~ data:", data);
 
   if (isLoading) {
     return (
@@ -37,12 +38,17 @@ export default function DashboardPage() {
 
   // Calculate quick stats from existing data
   const collectionStatusStat = dashboardStats.find(
-    (s: { title: string; value: string; desc: string }) =>
-      s.title === "Collection Status"
+    (s) => s.title === "Collection Status"
   );
-  const collectionRate = collectionStatusStat
-    ? parseInt(collectionStatusStat.value)
-    : 0;
+
+  const collectionRate = (() => {
+    if (!collectionStatusStat) return 0;
+
+    const { value } = collectionStatusStat;
+
+    return typeof value === "number" ? value : parseInt(value);
+  })();
+
   const studentsPending = paymentStats.pending + paymentStats.overdue;
   const upcomingDeadlines = overdueFees.filter(
     (fee) => fee.daysOverdue < 7 && fee.daysOverdue >= 0

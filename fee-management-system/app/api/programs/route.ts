@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import type {
+  ProgramsListResponse,
+  CreateProgramResponse,
+} from "@/lib/types/api";
 
 export async function GET() {
   try {
@@ -13,7 +17,7 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(programs, { status: 200 });
+    return NextResponse.json<ProgramsListResponse>(programs, { status: 200 });
   } catch (error) {
     console.error("Error fetching programs:", error);
     const errorMessage =
@@ -66,15 +70,10 @@ export async function POST(request: Request) {
       return newProgram;
     });
 
-    return NextResponse.json(program, { status: 201 });
-  } catch (error: any) {
+    return NextResponse.json<CreateProgramResponse>(program, { status: 201 });
+  } catch (error: unknown) {
     console.error("Error creating program:", error);
-    if (error.code === "P2002") {
-      return NextResponse.json(
-        { error: "Program with this name already exists" },
-        { status: 409 }
-      );
-    }
+
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(

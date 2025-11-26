@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import type { ProfileResponse, UpdateProfileResponse } from "@/lib/types/api";
 
 // GET /api/profile - Get current user profile
 export async function GET() {
@@ -38,10 +39,14 @@ export async function GET() {
         include: { profile: true },
       });
 
-      return NextResponse.json(updatedUser);
+      return NextResponse.json<ProfileResponse>(
+        updatedUser as unknown as ProfileResponse
+      );
     }
 
-    return NextResponse.json(user);
+    return NextResponse.json<ProfileResponse>(
+      user as unknown as ProfileResponse
+    );
   } catch (error) {
     console.error("Error fetching profile:", error);
     return NextResponse.json(
@@ -106,10 +111,10 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({
+    return NextResponse.json<UpdateProfileResponse>({
       ...updatedUser,
       profile,
-    });
+    } as unknown as UpdateProfileResponse);
   } catch (error) {
     console.error("Error updating profile:", error);
     return NextResponse.json(

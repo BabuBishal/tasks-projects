@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import type { PaymentReportStatsResponse } from "@/lib/types/api";
 
 export async function GET(request: Request) {
   try {
@@ -7,7 +8,12 @@ export async function GET(request: Request) {
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
 
-    const whereClause: any = {};
+    const whereClause: {
+      date?: {
+        gte: Date;
+        lte: Date;
+      };
+    } = {};
 
     if (startDate && endDate) {
       whereClause.date = {
@@ -123,7 +129,7 @@ export async function GET(request: Request) {
       stats.amount += payment.amount;
     }
 
-    return NextResponse.json({
+    return NextResponse.json<PaymentReportStatsResponse>({
       byProgram: Array.from(programStats.values()),
       bySemester: Array.from(semesterStats.values()).sort(
         (a, b) => a.semester - b.semester

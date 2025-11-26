@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import type { PaymentStatsResponse } from "@/lib/types/api";
 
 export async function GET() {
   try {
@@ -119,7 +120,7 @@ export async function GET() {
       })
     );
 
-    return NextResponse.json({
+    return NextResponse.json<PaymentStatsResponse>({
       todaysCollections,
       monthCollections,
       pendingAmount,

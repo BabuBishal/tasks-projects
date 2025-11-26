@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import type { ScholarshipsListResponse } from "@/lib/types/api";
 
 export async function GET() {
   try {
@@ -7,7 +8,9 @@ export async function GET() {
       orderBy: { name: "asc" },
     });
 
-    return NextResponse.json(scholarships);
+    return NextResponse.json<ScholarshipsListResponse>(
+      scholarships as unknown as ScholarshipsListResponse
+    );
   } catch (err) {
     console.error("Error fetching scholarships:", err);
     const errorMessage = err instanceof Error ? err.message : "Unknown error";

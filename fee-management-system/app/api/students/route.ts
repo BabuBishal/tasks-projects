@@ -2,6 +2,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type { StudentWithFees } from "@/lib/types/prisma";
+import type {
+  StudentsListResponse,
+  CreateStudentResponse,
+} from "@/lib/types/api";
 import {
   getAcademicYearForSemester,
   getSemesterStartDate,
@@ -36,8 +40,10 @@ export async function GET(req: NextRequest) {
       },
     })) as unknown as StudentWithFees[];
 
-    return NextResponse.json(students);
-  } catch (error) {
+    return NextResponse.json<StudentsListResponse>(
+      students as unknown as StudentsListResponse
+    );
+  } catch (error: unknown) {
     console.error("Error fetching students:", error);
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
@@ -196,7 +202,7 @@ export async function POST(req: NextRequest) {
     // ---------------------------------------------------------
     // 4️⃣ Create student with all fee records and scholarships
     // ---------------------------------------------------------
-    const studentData: any = {
+    const studentData = {
       name,
       email,
       rollNo,
@@ -243,7 +249,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(newStudent, { status: 201 });
+    return NextResponse.json<CreateStudentResponse>(newStudent, {
+      status: 201,
+    });
   } catch (error) {
     console.error("Error creating student:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);

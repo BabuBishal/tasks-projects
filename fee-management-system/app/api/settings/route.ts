@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import type { SettingsResponse, UpdateSettingsResponse } from "@/lib/types/api";
 
 // GET /api/settings - Get system settings
 export async function GET() {
@@ -22,7 +23,9 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json(settings);
+    return NextResponse.json<SettingsResponse>(
+      settings as unknown as SettingsResponse
+    );
   } catch (error) {
     console.error("Error fetching settings:", error);
     return NextResponse.json(
@@ -82,7 +85,9 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(settings);
+    return NextResponse.json<UpdateSettingsResponse>(
+      settings as unknown as UpdateSettingsResponse
+    );
   } catch (error) {
     console.error("Error updating settings:", error);
     return NextResponse.json(

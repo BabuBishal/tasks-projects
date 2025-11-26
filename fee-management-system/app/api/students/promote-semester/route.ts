@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { promoteSemester } from "@/lib/utils/fee-assignment";
+import type { PromoteSemesterResponse } from "@/lib/types/api";
 
 export async function POST(req: NextRequest) {
   try {
@@ -76,7 +77,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({
+    return NextResponse.json<PromoteSemesterResponse>({
       message: "Semester promotion completed",
       results,
     });

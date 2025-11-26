@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hash } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import type { RegisterResponse } from "@/lib/types/api";
 
 export async function POST(req: NextRequest) {
   try {
@@ -49,10 +50,10 @@ export async function POST(req: NextRequest) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _password, ...userWithoutPassword } = user;
 
-    return NextResponse.json(
+    return NextResponse.json<RegisterResponse>(
       {
         message: "User created successfully",
-        user: userWithoutPassword,
+        user: userWithoutPassword as unknown as RegisterResponse["user"],
       },
       { status: 201 }
     );
