@@ -89,9 +89,6 @@ export default function ReportsPage() {
     startDate: dateRange.start.toISOString(),
     endDate: dateRange.end.toISOString(),
   });
-  console.log("🚀 ~ ReportsPage ~ paymentStats:", paymentStats);
-  console.log("🚀 ~ ReportsPage ~ startDate:", dateRange.start);
-  console.log("🚀 ~ ReportsPage ~ endDate:", dateRange.end);
 
   // Generate options for selectors
   const periodOptions = useMemo(() => {
