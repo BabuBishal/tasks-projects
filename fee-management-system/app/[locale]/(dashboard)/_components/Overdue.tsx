@@ -1,11 +1,14 @@
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
-import type { OverdueFee } from "@/lib/@types/api";
+import type { OverdueFee } from "@/lib/types/api";
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/Button";
 import { ArrowRight, Eye } from "lucide-react";
-import { getUrgencyInfo, getPaymentStatusLabel } from "@/lib/urgency-utils";
+import {
+  getUrgencyInfo,
+  getPaymentStatusLabel,
+} from "@/lib/utils/urgency-utils";
 
 const Overdue = ({ overdueFees }: { overdueFees: OverdueFee[] }) => {
   return (

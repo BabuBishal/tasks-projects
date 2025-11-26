@@ -3,20 +3,20 @@ import {
   calculatePaymentPercentage,
   calculateSemestersBehind,
   sortByUrgency,
-} from "@/lib/urgency-utils";
+} from "@/lib/utils/urgency-utils";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type {
   StudentWithFees,
   PaymentWithStudent,
   StudentFeeWithDetails,
-} from "@/lib/@types/prisma";
+} from "@/lib/types/prisma";
 import type {
   DashboardData,
   DashboardStats,
   PaymentStats,
-} from "@/lib/@types/api";
-import { calculateStudentStatus } from "@/lib/status-utils";
+} from "@/lib/types/api";
+import { calculateStudentStatus } from "@/lib/utils/status-utils";
 
 type StudentPaymentStatus = {
   studentId: string;

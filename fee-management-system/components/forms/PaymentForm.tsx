@@ -1,6 +1,6 @@
 "use client";
-import { PaymentFormProps, Student } from "@/lib/@types";
-import { paymentMethod } from "@/lib/constants";
+import { PaymentFormProps, Student } from "@/lib/types";
+import { paymentMethod } from "@/lib/constants/constants";
 import { useState } from "react";
 import { Button } from "../ui/button/Button";
 
@@ -41,10 +41,7 @@ export default function PaymentForm({
   setAmount?: (v: number) => void;
   loading: boolean;
 }) {
-
   const [selectedFeeIds, setSelectedFeeIds] = useState<Set<string>>(new Set());
-
-
 
   const selectedStudent =
     formData.id && students.length > 0

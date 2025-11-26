@@ -1,6 +1,6 @@
 import styles from "./Button.module.css";
 import type { ButtonProps } from "./Button.types";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 export const Button = ({
   className,

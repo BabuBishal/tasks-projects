@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card/Card";
 import { AlertTriangle, UserX, FileWarning } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/Button";
 import Badge from "@/components/ui/badges/Badges";
@@ -72,7 +72,7 @@ export default function AlertsNotifications({
       case "scholarship_pending":
         return "info";
       default:
-        return "default";
+        return "info";
     }
   };
 

@@ -1,18 +1,16 @@
 "use client";
 
-// import Overdue from "../_components/Overdue";
 import PaymentStatusOverview from "../_components/PaymentStatusOverview";
 import QuickActions from "../_components/QuickActions";
 import QuickStats from "../_components/QuickStats";
 import AlertsNotifications from "../_components/AlertsNotifications";
-import { useGetDashboardStats } from "@/lib/services/queries/getDashboardStats.queries";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import StatsCard from "@/components/ui/stats-card/StatsCard";
 import { DollarSign, Users, Clock, TrendingUp } from "lucide-react";
+import { useGetDashboardStatsQuery } from "@/hooks/query-hooks/dashboard";
 
 export default function DashboardPage() {
-  const { data, isLoading, isError } = useGetDashboardStats();
-
+  const { data, isLoading, isError } = useGetDashboardStatsQuery();
 
   if (isLoading) {
     return (
@@ -39,7 +37,8 @@ export default function DashboardPage() {
 
   // Calculate quick stats from existing data
   const collectionStatusStat = dashboardStats.find(
-    (s) => s.title === "Collection Status"
+    (s: { title: string; value: string; desc: string }) =>
+      s.title === "Collection Status"
   );
   const collectionRate = collectionStatusStat
     ? parseInt(collectionStatusStat.value)
@@ -112,7 +111,6 @@ export default function DashboardPage() {
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Payment Status & Quick Actions */}
         <div className="col-span-1 gap-6">
           <PaymentStatusOverview paymentStats={paymentStats} />
         </div>
@@ -120,7 +118,6 @@ export default function DashboardPage() {
           <QuickActions />
         </div>
 
-        {/* Quick Stats Overview */}
         <div className="col-span-2">
           <QuickStats
             collectionRate={collectionRate}
@@ -130,15 +127,9 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Alerts & Critical Overdue */}
         <div className="col-span-2">
           <AlertsNotifications alerts={alerts} />
         </div>
-
-        {/* Overdue Fees Table */}
-        {/* <div className="col-span-2">
-          <Overdue overdueFees={overdueFees} />
-        </div> */}
       </div>
     </div>
   );

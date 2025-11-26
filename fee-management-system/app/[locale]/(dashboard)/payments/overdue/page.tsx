@@ -4,33 +4,29 @@ import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
 import { AlertCircle } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import type { OverdueFee } from "@/lib/@types/api";
-import { getUrgencyInfo, getPaymentStatusLabel } from "@/lib/urgency-utils";
+import { formatCurrency } from "@/lib/utils/utils";
+import { useGetDashboardStatsQuery } from "@/hooks/query-hooks/dashboard";
+import type { OverdueFee } from "@/lib/types/api";
+import {
+  getUrgencyInfo,
+  getPaymentStatusLabel,
+} from "@/lib/utils/urgency-utils";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button/Button";
 import Link from "next/link";
 import { Eye } from "lucide-react";
 
-interface OverdueData {
-  overdueFees: OverdueFee[];
-}
-
 export default function OverduePaymentsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const { data, isLoading, error } = useQuery<OverdueData>({
-    queryKey: ["overdue-payments"],
-    queryFn: async () => {
-      const res = await fetch("/api/dashboard-stats");
-      if (!res.ok) throw new Error("Failed to fetch overdue payments");
-      const dashboardData = await res.json();
-      return { overdueFees: dashboardData.overdueFees };
-    },
-  });
+  const {
+    data: dashboardStats,
+    isLoading,
+    error,
+  } = useGetDashboardStatsQuery();
+  const data = dashboardStats?.overdueFees;
 
   if (isLoading) {
     return (
@@ -48,8 +44,8 @@ export default function OverduePaymentsPage() {
     );
   }
 
-  const totalItems = data.overdueFees.length;
-  const paginatedFees = data.overdueFees.slice(
+  const totalItems = data?.length;
+  const paginatedFees = data?.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -73,7 +69,7 @@ export default function OverduePaymentsPage() {
       </div>
 
       <div className="bg-card rounded-lg shadow p-6">
-        {data.overdueFees && data.overdueFees.length > 0 ? (
+        {data && data.length > 0 ? (
           <Table
             className="rounded-md text-xs text-secondary"
             pagination={{
@@ -93,7 +89,7 @@ export default function OverduePaymentsPage() {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {paginatedFees.map((fee) => {
+              {paginatedFees.map((fee: OverdueFee) => {
                 const urgency = getUrgencyInfo(fee.daysOverdue);
                 return (
                   <Table.Row key={fee.id}>

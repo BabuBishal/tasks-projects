@@ -1,14 +1,14 @@
 // app/api/students/bulk-import/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { parseCSV } from "@/lib/csv-parser";
+import { parseCSV } from "@/lib/utils/csv-parser";
 import {
   getAcademicYearForSemester,
   getSemesterStartDate,
   getDueDate,
   calculateJoinedYear,
   generateProgramPrefix,
-} from "@/lib/utils";
+} from "@/lib/utils/utils";
 
 export async function POST(req: NextRequest) {
   try {
@@ -207,7 +207,10 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Bulk import error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to import students" },
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to import students",
+      },
       { status: 500 }
     );
   }

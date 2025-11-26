@@ -16,8 +16,8 @@ import {
   ReceiptText,
 } from "lucide-react";
 import Link from "next/link";
-import { paymentHeaders } from "@/lib/constants";
-import { formatDate } from "@/lib/utils";
+import { paymentHeaders } from "@/lib/constants/constants";
+import { formatDate } from "@/lib/utils/utils";
 import { Modal } from "@/components/ui/modal/Modal";
 import jsPDF from "jspdf";
 

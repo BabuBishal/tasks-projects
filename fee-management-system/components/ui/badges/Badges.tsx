@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import type { BadgeProps } from "./Badges.types";
 import styles from "./Badges.module.css";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 const Badge: FC<BadgeProps> = ({ children, variant, size, className }) => {
   return (

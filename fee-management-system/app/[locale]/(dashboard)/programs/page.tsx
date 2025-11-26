@@ -8,12 +8,12 @@ import ProgramForm from "@/components/programs/ProgramForm";
 import { Modal } from "@/components/ui/modal/Modal";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import { useToast } from "@/components/ui/toast";
-import { useGetPrograms } from "@/lib/services/queries/getPrograms.queries";
+import { useGetProgramsQuery } from "@/hooks/query-hooks/programs";
 import {
-  useCreateProgram,
-  useUpdateProgram,
-  useDeleteProgram,
-} from "@/lib/services/mutations/useProgramMutation";
+  useCreateProgramMutation,
+  useUpdateProgramMutation,
+  useDeleteProgramMutation,
+} from "@/hooks/query-hooks/programs";
 
 interface Program {
   id: string;
@@ -29,11 +29,11 @@ export default function ProgramsPage() {
   const [editingProgram, setEditingProgram] = useState<Program | null>(null);
   const { notify } = useToast();
 
-  const { data: programs, isLoading } = useGetPrograms();
+  const { data: programs, isLoading } = useGetProgramsQuery();
 
-  const createProgramMutation = useCreateProgram();
-  const updateProgramMutation = useUpdateProgram();
-  const deleteProgramMutation = useDeleteProgram();
+  const createProgramMutation = useCreateProgramMutation();
+  const updateProgramMutation = useUpdateProgramMutation();
+  const deleteProgramMutation = useDeleteProgramMutation();
 
   const handleCreate = async (data: { name: string; duration: number }) => {
     try {

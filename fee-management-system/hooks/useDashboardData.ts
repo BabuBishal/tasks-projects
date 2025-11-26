@@ -1,5 +1,5 @@
 "use client";
-import { DashboardData } from "@/lib/@types/api";
+import { DashboardData } from "@/lib/types/api";
 import { use, useMemo } from "react";
 
 async function fetchDashboardData(): Promise<DashboardData> {

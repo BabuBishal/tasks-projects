@@ -1,5 +1,5 @@
-import { StudentWithComputedTotals } from "@/lib/@types";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { StudentWithComputedTotals } from "@/lib/types";
+import { formatCurrency, formatDate } from "@/lib/utils/utils";
 import { Award, BookOpen, Calendar, Mail, MapPin, Phone } from "lucide-react";
 
 const StudentInfo = ({ student }: { student: StudentWithComputedTotals }) => {

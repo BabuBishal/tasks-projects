@@ -1,7 +1,7 @@
 "use client";
 
-import { StudentFormProps } from "@/lib/@types";
-import { Program } from "@/lib/@types/prisma";
+import { StudentFormProps } from "@/lib/types";
+import { Program } from "@/lib/types/prisma";
 
 interface Props extends StudentFormProps {
   error?: string;

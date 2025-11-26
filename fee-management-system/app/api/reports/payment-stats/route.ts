@@ -1,10 +1,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
+
+    const whereClause: any = {};
+
+    if (startDate && endDate) {
+      whereClause.date = {
+        gte: new Date(startDate),
+        lte: new Date(endDate),
+      };
+    }
+
     // Get payments with studentFee, student, and program information
     const payments = await prisma.payment.findMany({
+      where: whereClause,
       include: {
         studentFee: {
           include: {

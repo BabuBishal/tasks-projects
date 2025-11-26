@@ -1,4 +1,4 @@
-import { StudentWithProgram } from "@/lib/@types";
+import { StudentWithProgram } from "@/lib/types";
 import { Book, Calendar, Mail, Phone } from "lucide-react";
 
 import Badge from "@/components/ui/badges/Badges";

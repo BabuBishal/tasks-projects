@@ -1,7 +1,7 @@
 // app/api/students/promote-semester/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { promoteSemester } from "@/lib/fee-assignment";
+import { promoteSemester } from "@/lib/utils/fee-assignment";
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +19,6 @@ export async function POST(req: NextRequest) {
       success: [] as any[],
       failed: [] as any[],
       total: studentIds.length,
-     
     };
 
     // Process each student
@@ -84,7 +83,10 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     console.error("Promote semester error:", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to promote students" },
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to promote students",
+      },
       { status: 500 }
     );
   }

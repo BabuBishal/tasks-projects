@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { StudentWithFees } from "@/lib/@types/prisma";
+import type { StudentWithFees } from "@/lib/types/prisma";
 import StatsCard from "@/components/ui/stats-card/StatsCard";
 import StudentList from "@/components/students/StudentList";
 import { useQuery } from "@tanstack/react-query";

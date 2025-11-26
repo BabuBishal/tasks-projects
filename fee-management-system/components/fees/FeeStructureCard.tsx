@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card/Card";
 import Badge from "@/components/ui/badges/Badges";
 import { Coins } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils/utils";
 
 interface FeeStructure {
   id: string;

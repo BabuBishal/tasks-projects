@@ -6,10 +6,10 @@ import { setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider } from "@/providers/ThemeContextProvider";
 import { ToastProvider } from "@/components/ui/toast";
 import React from "react";
-import ReactQueryProvider from "@/lib/services/providers/ReactQueryProviders";
+import ReactQueryProvider from "@/providers/ReactQueryProviders";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

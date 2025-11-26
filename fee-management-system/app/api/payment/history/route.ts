@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { calculateFeeStatus } from "@/lib/status-utils";
+import { calculateFeeStatus } from "@/lib/utils/status-utils";
 
 export async function GET() {
   try {

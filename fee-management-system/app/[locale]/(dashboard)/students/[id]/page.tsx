@@ -9,13 +9,13 @@ import {
   ArrowRight,
   Download,
 } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils/utils";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Button } from "@/components/ui/button/Button";
 import StatsCard from "@/components/shared/stats-card/StatsCard";
 import StudentInfo from "../_components/StudentInfo";
-import { StudentWithComputedTotals } from "@/lib/@types";
+import { StudentWithComputedTotals } from "@/lib/types";
 import Badge from "@/components/ui/badges/Badges";
 import { Modal } from "@/components/ui/modal";
 import { useToast } from "@/components/ui/toast";
@@ -471,7 +471,6 @@ export default function StudentDetailsPage() {
               <div className="space-y-5 max-h-[50vh] overflow-y-auto">
                 {Array.isArray(student.fees) &&
                   student.fees.map((fee) => {
-
                     return (
                       <div
                         key={fee.id}

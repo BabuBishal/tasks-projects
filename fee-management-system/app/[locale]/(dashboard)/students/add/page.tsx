@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import AddStudentForm from "@/components/forms/StudentForm";
 import useForm from "@/hooks/useForm";
-import { Program, Scholarship } from "@/lib/@types/prisma";
-import { studentSchema } from "@/lib/constants";
+import { Program, Scholarship } from "@/lib/types/prisma";
+import { studentSchema } from "@/lib/constants/constants";
 import { validateForm } from "@/lib/validator";
-import { StudentFormInputs } from "@/lib/@types";
+import { StudentFormInputs } from "@/lib/types";
 import { useToast } from "@/components/ui/toast";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 

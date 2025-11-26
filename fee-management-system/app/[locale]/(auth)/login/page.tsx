@@ -2,7 +2,7 @@
 import LoginForm from "@/components/forms/LoginForm";
 import { useParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/toast";
-import { useLogin } from "@/lib/services/mutations/useAuthMutation";
+import { useLoginMutation } from "@/hooks/query-hooks/auth/mutation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormData } from "@/lib/schemas/auth.schema";
@@ -12,7 +12,7 @@ const LoginPage = () => {
   const { locale } = useParams() as { locale: string };
   const { notify } = useToast();
 
-  const { mutate: login, isPending, error } = useLogin();
+  const { mutate: login, isPending, error } = useLoginMutation();
 
   const {
     register,

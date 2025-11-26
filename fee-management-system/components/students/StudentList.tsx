@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { StudentWithFees, Program } from "@/lib/@types/prisma";
+import { StudentWithFees, Program } from "@/lib/types/prisma";
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
 import {
@@ -15,11 +15,11 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
-import { studentHeaders } from "@/lib/constants";
+import { studentHeaders } from "@/lib/constants/constants";
 import { Modal } from "@/components/ui/modal/Modal";
 import { useToast } from "@/components/ui/toast";
 import { useQuery } from "@tanstack/react-query";
-import { calculateStudentStatus } from "@/lib/status-utils";
+import { calculateStudentStatus } from "@/lib/utils/status-utils";
 
 interface StudentListProps {
   initialStudents: StudentWithFees[];

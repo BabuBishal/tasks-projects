@@ -1,27 +1,32 @@
 "use client";
 
 import { useState, use } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button/Button";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import FeeStructureList from "@/components/fees/FeeStructureList";
 import FeeStructureForm from "@/components/fees/FeeStructureForm";
 import FeeDetailsModal from "@/components/fees/FeeDetailsModal";
 import { Modal } from "@/components/ui/modal/Modal";
 import { useToast } from "@/components/ui/toast";
-import { X } from "lucide-react";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import {
+  useGetFeeStructuresQuery,
+  useCreateFeeStructureMutation,
+  useUpdateFeeStructureMutation,
+  useDeleteFeeStructureMutation,
+} from "@/hooks/query-hooks/fees";
+import { useGetProgramQuery } from "@/hooks/query-hooks/programs";
 
-interface Program {
-  id: string;
-  name: string;
-  duration: number;
-  semesters: {
-    id: string;
-    semesterNo: number;
-    feeStructures: any[];
-  }[];
-}
+// interface Program {
+//   id: string;
+//   name: string;
+//   duration: number;
+//   semesters: {
+//     id: string;
+//     semesterNo: number;
+//     feeStructures: any[];
+//   }[];
+// }
 
 interface FeeStructure {
   id: string;
@@ -52,118 +57,119 @@ export default function ProgramDetailsPage({
   const [selectedFee, setSelectedFee] = useState<FeeStructure | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
-  const { data: program, isLoading } = useQuery<Program>({
-    queryKey: ["program", id],
-    queryFn: async () => {
-      const res = await fetch(`/api/programs/${id}`);
-      if (!res.ok) throw new Error("Failed to fetch program");
-      return res.json();
-    },
-  });
+  const { data: program, isLoading } = useGetProgramQuery(id);
+  const { data: allFeeStructures, isLoading: isFeesLoading } =
+    useGetFeeStructuresQuery();
 
-  const {
-    data: feeStructures,
-    isLoading: isFeesLoading,
-    refetch: refetchFees,
-  } = useQuery<FeeStructure[]>({
-    queryKey: ["feeStructures", id],
-    queryFn: async () => {
-      const res = await fetch(`/api/fee-structures?programId=${id}`);
-      if (!res.ok) throw new Error("Failed to fetch fee structures");
-      return res.json();
-    },
-  });
+  // Filter fee structures for this program
+  const feeStructures = allFeeStructures?.filter(
+    (fee: FeeStructure) => fee.programSemester.programId === id
+  );
 
-  const handleCreate = async (data: any) => {
-    try {
-      const res = await fetch("/api/fee-structures", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+  // Mutations
+  const createFeeStructure = useCreateFeeStructureMutation();
+  const updateFeeStructure = useUpdateFeeStructureMutation();
+  const deleteFeeStructure = useDeleteFeeStructureMutation();
 
-      const responseData = await res.json();
+  const handleCreate = async (formData: {
+    programSemester: { programId: string; semesterNo: number };
+    tuitionFee: number;
+    labFee: number;
+    libraryFee: number;
+    sportsFee: number;
+    miscFee: number;
+  }) => {
+    const data = {
+      programId: formData.programSemester.programId,
+      semesterNo: formData.programSemester.semesterNo,
+      tuitionFee: formData.tuitionFee,
+      labFee: formData.labFee,
+      libraryFee: formData.libraryFee,
+      sportsFee: formData.sportsFee,
+      miscFee: formData.miscFee,
+    };
 
-      if (!res.ok) {
-        throw new Error(responseData.error || "Failed to create fee structure");
-      }
-
-      notify({
-        title: "Success",
-        description: "Fee structure created successfully",
-        type: "success",
-      });
-      setIsModalOpen(false);
-      refetchFees();
-    } catch (error: any) {
-      notify({
-        title: "Error",
-        description: error.message || "Failed to create fee structure",
-        type: "error",
-      });
-    }
+    createFeeStructure.mutate(data, {
+      onSuccess: () => {
+        notify({
+          title: "Success",
+          description: "Fee structure created successfully",
+          type: "success",
+        });
+        setIsModalOpen(false);
+      },
+      onError: (error: Error) => {
+        notify({
+          title: "Error",
+          description: error.message || "Failed to create fee structure",
+          type: "error",
+        });
+      },
+    });
   };
 
-  const handleUpdate = async (data: any) => {
+  const handleUpdate = async (formData: {
+    programSemester: { programId: string; semesterNo: number };
+    tuitionFee: number;
+    labFee: number;
+    libraryFee: number;
+    sportsFee: number;
+    miscFee: number;
+  }) => {
     if (!editingFee) return;
 
-    try {
-      const res = await fetch(`/api/fee-structures/${editingFee.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+    const data = {
+      programId: formData.programSemester.programId,
+      semesterNo: formData.programSemester.semesterNo,
+      tuitionFee: formData.tuitionFee,
+      labFee: formData.labFee,
+      libraryFee: formData.libraryFee,
+      sportsFee: formData.sportsFee,
+      miscFee: formData.miscFee,
+    };
 
-      const responseData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(responseData.error || "Failed to update fee structure");
+    updateFeeStructure.mutate(
+      { id: editingFee.id, data },
+      {
+        onSuccess: () => {
+          notify({
+            title: "Success",
+            description: "Fee structure updated successfully",
+            type: "success",
+          });
+          setIsModalOpen(false);
+          setEditingFee(null);
+        },
+        onError: (error: Error) => {
+          notify({
+            title: "Error",
+            description: error.message || "Failed to update fee structure",
+            type: "error",
+          });
+        },
       }
-
-      notify({
-        title: "Success",
-        description: "Fee structure updated successfully",
-        type: "success",
-      });
-      setIsModalOpen(false);
-      setEditingFee(null);
-      refetchFees();
-    } catch (error: any) {
-      notify({
-        title: "Error",
-        description: error.message || "Failed to update fee structure",
-        type: "error",
-      });
-    }
+    );
   };
 
   const handleDelete = async (id: string) => {
-    try {
-      const res = await fetch(`/api/fee-structures/${id}`, {
-        method: "DELETE",
-      });
-
-      const responseData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(responseData.error || "Failed to delete fee structure");
-      }
-
-      notify({
-        title: "Success",
-        description: "Fee structure deleted successfully",
-        type: "success",
-      });
-      setIsDetailsOpen(false);
-      setEditingFee(null); // Clear editing state after deletion
-      refetchFees();
-    } catch (error: any) {
-      notify({
-        title: "Error",
-        description: error.message || "Failed to delete fee structure",
-        type: "error",
-      });
-    }
+    deleteFeeStructure.mutate(id, {
+      onSuccess: () => {
+        notify({
+          title: "Success",
+          description: "Fee structure deleted successfully",
+          type: "success",
+        });
+        setIsDetailsOpen(false);
+        setEditingFee(null);
+      },
+      onError: (error: Error) => {
+        notify({
+          title: "Error",
+          description: error.message || "Failed to delete fee structure",
+          type: "error",
+        });
+      },
+    });
   };
 
   const openCreateModal = () => {

@@ -1,14 +1,18 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { validateForm } from "@/lib/validator";
-import { registerSchema, type RegisterFormData } from "@/lib/schemas/auth.schema";
+import {
+  registerSchema,
+  type RegisterFormData,
+} from "@/lib/schemas/auth.schema";
 import RegisterForm from "@/components/forms/RegisterForm";
 import { useToast } from "@/components/ui/toast";
 import {
-  loginUser,
-  useRegister,
-} from "@/lib/services/mutations/useAuthMutation";
-import { RegisterFormInputs } from "@/lib/@types";
+  useLoginMutation,
+  useRegisterMutation,
+} from "@/hooks/query-hooks/auth/mutation";
+import { loginUser } from "@/lib/services/auth/auth";
+import { RegisterFormInputs } from "@/lib/types";
 import { useForm } from "react-hook-form";
 
 const RegisterPage = () => {
@@ -16,7 +20,7 @@ const RegisterPage = () => {
   const { locale } = useParams() as { locale: string };
   const { notify } = useToast();
 
-  const { mutate: registerUser, isPending, error } = useRegister();
+  const { mutate: registerUser, isPending, error } = useRegisterMutation();
 
   // const { formData, formErrors, handleChange, handleSubmit } =
   //   useForm<RegisterFormInputs>({
@@ -25,9 +29,13 @@ const RegisterPage = () => {
   //     schema: registerSchema,
   //   });
 
-    const {register, handleSubmit, formState: {errors}} = useForm<RegisterFormData>({
-      defaultValues: { name: "", email: "", password: "" },
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    defaultValues: { name: "", email: "", password: "" },
+  });
 
   const onSubmit = (data: RegisterFormData) => {
     registerUser(data, {
@@ -47,11 +55,11 @@ const RegisterPage = () => {
           router.push(`/${locale}/dashboard`);
         } catch (error) {
           console.error("Auto-login failed:", error);
-           notify({
-          title: "Redirect Error",
-          description: "Auto-login failed.",
-          type: "error",
-        });
+          notify({
+            title: "Redirect Error",
+            description: "Auto-login failed.",
+            type: "error",
+          });
           // Redirect to login page if auto-login fails
           router.push(`/${locale}/login`);
         }

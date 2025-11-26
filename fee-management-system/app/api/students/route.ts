@@ -1,14 +1,14 @@
 // app/api/students/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import type { StudentWithFees } from "@/lib/@types/prisma";
+import type { StudentWithFees } from "@/lib/types/prisma";
 import {
   getAcademicYearForSemester,
   getSemesterStartDate,
   getDueDate,
   calculateJoinedYear,
   generateProgramPrefix,
-} from "@/lib/utils";
+} from "@/lib/utils/utils";
 
 export async function GET(req: NextRequest) {
   try {

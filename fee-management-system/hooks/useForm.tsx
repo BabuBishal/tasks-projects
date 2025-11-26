@@ -1,4 +1,4 @@
-import { UseFormProps } from "@/lib/@types";
+import { UseFormProps } from "@/lib/types";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 const useForm = <T extends Record<string, any>>({
@@ -7,7 +7,9 @@ const useForm = <T extends Record<string, any>>({
   schema,
 }: UseFormProps<T>) => {
   const [formData, setFormData] = useState<T>(initialValues);
-  const [formErrors, setFormErrors] = useState<Partial<Record<keyof T, string>>>({});
+  const [formErrors, setFormErrors] = useState<
+    Partial<Record<keyof T, string>>
+  >({});
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -29,7 +31,7 @@ const useForm = <T extends Record<string, any>>({
 
     if (Object.keys(errors).length === 0) {
       onSubmit(formData);
-      setFormData(initialValues); 
+      setFormData(initialValues);
     }
   };
 
@@ -43,4 +45,3 @@ const useForm = <T extends Record<string, any>>({
 };
 
 export default useForm;
-

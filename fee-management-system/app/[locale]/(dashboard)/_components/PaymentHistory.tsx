@@ -1,5 +1,5 @@
 import { Table } from "@/components/ui/table/Table";
-import { RecentPayment } from "@/lib/@types/api";
+import { RecentPayment } from "@/lib/types/api";
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/Button";

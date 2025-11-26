@@ -3,9 +3,9 @@
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import StatsCard from "@/components/ui/stats-card/StatsCard";
 import { CreditCard, CheckCircle, Calendar, TrendingUp } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils/utils";
 import PaymentList from "@/components/payments/PaymentList";
-import { useQuery } from "@tanstack/react-query";
+import { useGetPaymentsQuery } from "@/hooks/query-hooks/payments";
 
 interface PaymentWithDetails {
   id: string;
@@ -26,14 +26,7 @@ interface PaymentHistoryData {
 }
 
 export default function PaymentHistoryPage() {
-  const { data, isLoading, error } = useQuery<PaymentHistoryData>({
-    queryKey: ["payment-history"],
-    queryFn: async () => {
-      const res = await fetch("/api/payment/history");
-      if (!res.ok) throw new Error("Failed to fetch payment history");
-      return res.json();
-    },
-  });
+  const { data, isLoading, error } = useGetPaymentsQuery();
 
   if (isLoading) {
     return (

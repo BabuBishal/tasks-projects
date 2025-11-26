@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card/Card";
 import { Activity, UserPlus, DollarSign, Award } from "lucide-react";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils/utils";
 
 interface RecentActivity {
   id: string;

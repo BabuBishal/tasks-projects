@@ -1,11 +1,11 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import PaymentForm from "../../../../../components/forms/PaymentForm";
-import { PaymentFormInputs } from "@/lib/@types";
+import { PaymentFormInputs } from "@/lib/types";
 import { useToast } from "@/components/ui/toast";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useGetStudents } from "@/lib/services/queries/getStudents.queries";
-import { useAddPayment } from "@/lib/services/mutations/usePaymentMutation";
+import { useGetStudentsQuery } from "@/hooks/query-hooks/students/query";
+import { useAddPayment } from "@/hooks/query-hooks/payments/mutation";
 
 export default function PaymentPage() {
   const { notify } = useToast();
@@ -13,7 +13,8 @@ export default function PaymentPage() {
   const searchParams = useSearchParams();
 
   // Use React Query hooks
-  const { data: studentsData, isLoading: loadingStudents } = useGetStudents();
+  const { data: studentsData, isLoading: loadingStudents } =
+    useGetStudentsQuery();
   const addPaymentMutation = useAddPayment();
 
   const [error, setError] = useState("");

@@ -10,7 +10,7 @@ import {
   exportToCSV,
   ParseResult,
   StudentCSVRow,
-} from "@/lib/csv-parser";
+} from "@/lib/utils/csv-parser";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 

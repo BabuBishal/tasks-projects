@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card/Card";
 import { TrendingUp, Users, Calendar, PieChart } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils/utils";
 
 interface QuickStatsProps {
   collectionRate?: number;

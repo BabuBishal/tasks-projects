@@ -22,23 +22,23 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet/sheet";
-import { ProfileUpdateInput, PasswordChangeInput } from "@/lib/@types";
+import { ProfileUpdateInput, PasswordChangeInput } from "@/lib/types";
 import Image from "next/image";
-import { useProfile } from "@/lib/services/queries/useProfile.queries";
+import { useProfileQuery } from "@/hooks/query-hooks/profile";
 import {
-  useUpdateProfile,
-  useChangePassword,
-  useUploadProfilePhoto,
-} from "@/lib/services/mutations/useProfileMutation";
+  useUpdateProfileMutation,
+  useChangePasswordMutation,
+  useUploadProfilePhotoMutation,
+} from "@/hooks/query-hooks/profile/mutation";
 
 export default function ProfilePage() {
   const { notify } = useToast();
 
   // React Query hooks
-  const { data: profile, isLoading } = useProfile();
-  const updateProfileMutation = useUpdateProfile();
-  const changePasswordMutation = useChangePassword();
-  const uploadPhotoMutation = useUploadProfilePhoto();
+  const { data: profile, isLoading } = useProfileQuery();
+  const updateProfileMutation = useUpdateProfileMutation();
+  const changePasswordMutation = useChangePasswordMutation();
+  const uploadPhotoMutation = useUploadProfilePhotoMutation();
 
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
@@ -211,7 +211,7 @@ export default function ProfilePage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
           {/* Profile Photo with Upload */}
           <div className="relative group">
-            <div className="w-28 h-28 p-1 rounded-full overflow-hidden bg-transparent flex items-center justify-center border-2 border-border hover:border-primary transition-colors">
+            <div className="w-28 h-28  rounded-full overflow-hidden bg-transparent flex items-center justify-center border-2 border-border hover:border-primary transition-colors">
               {photoPreview || profile?.profile?.profilePicture ? (
                 <Image
                   src={photoPreview || profile?.profile?.profilePicture || ""}

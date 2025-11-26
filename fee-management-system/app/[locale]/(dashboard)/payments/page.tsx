@@ -1,21 +1,18 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/Button";
 import {
   DollarSign,
-  Users,
   Clock,
   CheckCircle,
   AlertCircle,
   ArrowRight,
   Download,
   Eye,
-  ReceiptText,
 } from "lucide-react";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import StatsCard from "@/components/ui/stats-card/StatsCard";
@@ -27,8 +24,8 @@ import {
 } from "@/components/ui/card/Card";
 import { Modal } from "@/components/ui/modal/Modal";
 import jsPDF from "jspdf";
-import { useGetDashboardStats } from "@/lib/services/queries/getDashboardStats.queries";
-import { useGetPaymentStats } from "@/lib/services/queries/getPaymentStats.queries";
+import { useGetDashboardStatsQuery } from "@/hooks/query-hooks/dashboard";
+import { useGetPaymentStatsQuery } from "@/hooks/query-hooks/payments";
 
 interface DashboardData {
   dashboardStats: {
@@ -68,10 +65,10 @@ interface DashboardData {
 }
 
 export default function PaymentsPage() {
-  const { data, isLoading } = useGetDashboardStats();
+  const { data, isLoading } = useGetDashboardStatsQuery();
 
   const { data: paymentStats, isLoading: paymentStatsLoading } =
-    useGetPaymentStats();
+    useGetPaymentStatsQuery();
 
   // Handler for downloading receipt as PDF
   const handleDownloadReceipt = (

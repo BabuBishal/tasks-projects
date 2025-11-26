@@ -1,4 +1,4 @@
-import { ValidationErrors, ValidationSchema } from "@/lib/@types";
+import { ValidationErrors, ValidationSchema } from "@/lib/types";
 
 export const validateForm = <T extends Record<string, any>>(
   values: T,

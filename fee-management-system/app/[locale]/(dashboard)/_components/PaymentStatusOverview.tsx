@@ -1,5 +1,5 @@
 import { StatusBar } from "@/components/shared/status-bar/StatusBar";
-import { PaymentStats } from "@/lib/@types/api";
+import { PaymentStats } from "@/lib/types/api";
 import React from "react";
 
 const PaymentStatusOverview = ({

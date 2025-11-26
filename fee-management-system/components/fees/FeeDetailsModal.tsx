@@ -3,7 +3,7 @@
 import { Modal } from "@/components/ui/modal/Modal";
 import { Button } from "@/components/ui/button/Button";
 import { Edit, Trash2, X } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils/utils";
 
 interface FeeStructure {
   id: string;

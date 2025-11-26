@@ -1,46 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button/Button";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import {
   Download,
-  FileText,
-  DollarSign,
-  Users,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  TrendingUp,
   BarChart3,
-  FileBarChart,
-  WalletIcon,
+  Calendar,
   CreditCard,
   Banknote,
-  PiggyBank,
-  BanknoteX,
   Landmark,
+  ChevronDown,
 } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import StatsCard from "@/components/ui/stats-card/StatsCard";
-
-interface DashboardData {
-  dashboardStats: {
-    title: string;
-    value: string;
-    desc: string;
-    icon: string;
-  }[];
-  paymentStats: {
-    paid: number;
-    partial: number;
-    overdue: number;
-    pending: number;
-    total: number;
-  };
-}
+import { useGetPaymentReportStatsQuery } from "@/hooks/query-hooks/reports";
 
 interface PaymentStats {
   byProgram: {
@@ -64,129 +38,117 @@ interface PaymentStats {
   }[];
 }
 
-type ReportType = "overview" | "payment-status";
+type TimeFrame = "monthly" | "quarterly" | "half-yearly" | "yearly";
 
 export default function ReportsPage() {
-  const [selectedReport, setSelectedReport] = useState<ReportType>("overview");
+  const [timeFrame, setTimeFrame] = useState<TimeFrame>("monthly");
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(
+    new Date().toISOString().slice(0, 7) // Current month YYYY-MM
+  );
 
-  const { data: dashboardData, isLoading: dashboardLoading } =
-    useQuery<DashboardData>({
-      queryKey: ["dashboardStats"],
-      queryFn: async () => {
-        const res = await fetch("/api/dashboard-stats");
-        if (!res.ok) throw new Error("Failed to fetch dashboard stats");
-        return res.json();
-      },
-    });
+  // Calculate date range based on selection
+  const dateRange = useMemo(() => {
+    const now = new Date();
+    let start = new Date();
+    let end = new Date();
 
-  const { data: paymentStats, isLoading: paymentStatsLoading } =
-    useQuery<PaymentStats>({
-      queryKey: ["paymentStats"],
-      queryFn: async () => {
-        const res = await fetch("/api/reports/payment-stats");
-        if (!res.ok) throw new Error("Failed to fetch payment stats");
-        return res.json();
-      },
-    });
-
-  const generateSystemOverviewReport = () => {
-    if (!dashboardData) return;
-
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    let yPos = 20;
-
-    // Title
-    doc.setFontSize(22);
-    doc.setFont("helvetica", "bold");
-    doc.text("System Overview Report", pageWidth / 2, yPos, {
-      align: "center",
-    });
-
-    // Subtitle with date
-    yPos += 10;
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    doc.setTextColor(100);
-    doc.text(
-      `Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
-      pageWidth / 2,
-      yPos,
-      { align: "center" }
-    );
-
-    doc.setTextColor(0);
-    yPos += 15;
-
-    // Section 1: Overview Statistics
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("Overview Statistics", 20, yPos);
-    yPos += 10;
-
-    const overviewData = [
-      ["Total Revenue", dashboardData.dashboardStats[0]?.value || "Rs 0"],
-      ["Total Students", dashboardData.dashboardStats[1]?.value || "0"],
-      ["Pending Payments", dashboardData.dashboardStats[2]?.value || "Rs 0"],
-      ["Collection Rate", dashboardData.dashboardStats[3]?.value || "0%"],
-    ];
-
-    autoTable(doc, {
-      startY: yPos,
-      head: [["Metric", "Value"]],
-      body: overviewData,
-      theme: "grid",
-      headStyles: { fillColor: [59, 130, 246], fontStyle: "bold" },
-      margin: { left: 20, right: 20 },
-    });
-
-    yPos =
-      (doc as typeof doc & { lastAutoTable: { finalY: number } }).lastAutoTable
-        .finalY + 15;
-
-    // Section 2: Payment Status Breakdown
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("Payment Status Breakdown", 20, yPos);
-    yPos += 10;
-
-    const paymentData = [
-      ["Paid", dashboardData.paymentStats.paid.toString()],
-      ["Partial", dashboardData.paymentStats.partial.toString()],
-      ["Pending", dashboardData.paymentStats.pending.toString()],
-      ["Overdue", dashboardData.paymentStats.overdue.toString()],
-      ["Total Fees", dashboardData.paymentStats.total.toString()],
-    ];
-
-    autoTable(doc, {
-      startY: yPos,
-      head: [["Status", "Count"]],
-      body: paymentData,
-      theme: "grid",
-      headStyles: { fillColor: [59, 130, 246], fontStyle: "bold" },
-      margin: { left: 20, right: 20 },
-    });
-
-    yPos =
-      (doc as typeof doc & { lastAutoTable: { finalY: number } }).lastAutoTable
-        .finalY + 15;
-
-    // Footer
-    const totalPages = doc.getNumberOfPages();
-    for (let i = 1; i <= totalPages; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setFont("helvetica", "italic");
-      doc.setTextColor(150);
-      doc.text(
-        `Page ${i} of ${totalPages} | Fee Management System`,
-        pageWidth / 2,
-        doc.internal.pageSize.getHeight() - 10,
-        { align: "center" }
-      );
+    if (timeFrame === "monthly") {
+      // selectedPeriod is YYYY-MM
+      const [year, month] = selectedPeriod.split("-").map(Number);
+      start = new Date(year, month, 1);
+      end = new Date(year, month + 1, 0); // Last day of month
+    } else if (timeFrame === "quarterly") {
+      // selectedPeriod is YYYY-Qx
+      const [yearStr, quarterStr] = selectedPeriod.split("-");
+      const year = parseInt(yearStr);
+      const quarter = parseInt(quarterStr.replace("Q", ""));
+      start = new Date(year, (quarter - 1) * 3, 1);
+      end = new Date(year, quarter * 3, 0);
+    } else if (timeFrame === "half-yearly") {
+      // selectedPeriod is YYYY-Hx
+      const [yearStr, halfStr] = selectedPeriod.split("-");
+      const year = parseInt(yearStr);
+      const half = parseInt(halfStr.replace("H", ""));
+      start = new Date(year, (half - 1) * 6, 1);
+      end = new Date(year, half * 6, 0);
+    } else if (timeFrame === "yearly") {
+      // selectedPeriod is YYYY
+      const year = parseInt(selectedPeriod);
+      start = new Date(year, 0, 1);
+      end = new Date(year, 11, 31);
     }
 
-    doc.save(`system-overview-${new Date().toISOString().split("T")[0]}.pdf`);
+    // Set times to start/end of day
+    start.setHours(0, 0, 0, 0);
+    end.setHours(23, 59, 59, 999);
+
+    return { start, end };
+  }, [timeFrame, selectedPeriod]);
+
+  const { data: paymentStats, isLoading } = useGetPaymentReportStatsQuery({
+    startDate: dateRange.start.toISOString(),
+    endDate: dateRange.end.toISOString(),
+  });
+  console.log("🚀 ~ ReportsPage ~ paymentStats:", paymentStats);
+  console.log("🚀 ~ ReportsPage ~ startDate:", dateRange.start);
+  console.log("🚀 ~ ReportsPage ~ endDate:", dateRange.end);
+
+  // Generate options for selectors
+  const periodOptions = useMemo(() => {
+    const options = [];
+    const today = new Date();
+    const currentYear = today.getFullYear();
+
+    if (timeFrame === "monthly") {
+      for (let i = 0; i < 12; i++) {
+        const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        const value = d.toISOString().slice(0, 7);
+        const label = d.toLocaleDateString("en-US", {
+          month: "long",
+          year: "numeric",
+        });
+        options.push({ value, label });
+      }
+    } else if (timeFrame === "quarterly") {
+      for (let year = currentYear; year >= currentYear - 1; year--) {
+        for (let q = 4; q >= 1; q--) {
+          if (year === currentYear && q > Math.ceil((today.getMonth() + 1) / 3))
+            continue;
+          options.push({ value: `${year}-Q${q}`, label: `Q${q} ${year}` });
+        }
+      }
+    } else if (timeFrame === "half-yearly") {
+      for (let year = currentYear; year >= currentYear - 1; year--) {
+        for (let h = 2; h >= 1; h--) {
+          if (year === currentYear && h > Math.ceil((today.getMonth() + 1) / 6))
+            continue;
+          options.push({ value: `${year}-H${h}`, label: `H${h} ${year}` });
+        }
+      }
+    } else if (timeFrame === "yearly") {
+      for (let i = 0; i < 3; i++) {
+        const year = currentYear - i;
+        options.push({ value: `${year}`, label: `${year}` });
+      }
+    }
+    return options;
+  }, [timeFrame]);
+
+  // Update selected period when timeframe changes
+  const handleTimeFrameChange = (value: string) => {
+    setTimeFrame(value as TimeFrame);
+    // Reset to current/latest period for the new timeframe
+    if (value === "monthly") {
+      setSelectedPeriod(new Date().toISOString().slice(0, 7));
+    } else if (value === "quarterly") {
+      const q = Math.ceil((new Date().getMonth() + 1) / 3);
+      setSelectedPeriod(`${new Date().getFullYear()}-Q${q}`);
+    } else if (value === "half-yearly") {
+      const h = Math.ceil((new Date().getMonth() + 1) / 6);
+      setSelectedPeriod(`${new Date().getFullYear()}-H${h}`);
+    } else if (value === "yearly") {
+      setSelectedPeriod(`${new Date().getFullYear()}`);
+    }
   };
 
   const generatePaymentStatusReport = () => {
@@ -208,8 +170,26 @@ export default function ReportsPage() {
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100);
+
+    // Format dates as dd/mm/yyyy
+    const formatDate = (date: Date) => {
+      const day = date.getDate().toString().padStart(2, "0");
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+
     doc.text(
-      `Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`,
+      `Period: ${formatDate(dateRange.start)} - ${formatDate(dateRange.end)}`,
+      pageWidth / 2,
+      yPos,
+      { align: "center" }
+    );
+
+    yPos += 6;
+    const now = new Date();
+    doc.text(
+      `Generated on ${formatDate(now)} at ${now.toLocaleTimeString()}`,
       pageWidth / 2,
       yPos,
       { align: "center" }
@@ -224,7 +204,7 @@ export default function ReportsPage() {
     doc.text("Payments by Program", 20, yPos);
     yPos += 10;
 
-    const programData = paymentStats.byProgram.map((p) => [
+    const programData = (paymentStats as PaymentStats).byProgram.map((p) => [
       p.program,
       p.totalPayments.toString(),
       `Rs ${p.totalAmount.toLocaleString()}`,
@@ -250,7 +230,7 @@ export default function ReportsPage() {
     doc.text("Payments by Semester", 20, yPos);
     yPos += 10;
 
-    const semesterData = paymentStats.bySemester.map((s) => [
+    const semesterData = (paymentStats as PaymentStats).bySemester.map((s) => [
       `Semester ${s.semester}`,
       s.totalPayments.toString(),
       `Rs ${s.totalAmount.toLocaleString()}`,
@@ -280,7 +260,7 @@ export default function ReportsPage() {
     doc.text("Payments by Method", 20, yPos);
     yPos += 10;
 
-    const methodData = paymentStats.byMethod.map((m) => [
+    const methodData = (paymentStats as PaymentStats).byMethod.map((m) => [
       m.method,
       m.count.toString(),
       `Rs ${m.amount.toLocaleString()}`,
@@ -310,214 +290,71 @@ export default function ReportsPage() {
       );
     }
 
-    doc.save(`payment-status-${new Date().toISOString().split("T")[0]}.pdf`);
+    doc.save(`payment-report-${selectedPeriod}.pdf`);
   };
-
-  const isLoading = dashboardLoading || paymentStatsLoading;
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (!dashboardData || !paymentStats) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-red-600">Failed to load report data</p>
-      </div>
-    );
-  }
 
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <Breadcrumb items={[{ label: "Reports", href: "/reports" }]} />
 
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Financial Reports
-        </h1>
-        <p className="text-muted-foreground">
-          Generate comprehensive financial and payment status reports
-        </p>
-      </div>
-
-      {/* Report Type Selection */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <button
-          onClick={() => setSelectedReport("overview")}
-          className={`p-6 rounded-lg border-2 transition-all ${
-            selectedReport === "overview"
-              ? "border-primary bg-primary/5"
-              : "border-border hover:border-primary/50"
-          }`}
-        >
-          <div className="flex items-start gap-4">
-            <div
-              className={`p-3 rounded-lg ${
-                selectedReport === "overview"
-                  ? "bg-primary text-white"
-                  : "bg-accent"
-              }`}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">
+            Financial Reports
+          </h1>
+          <p className="text-muted-foreground">
+            Generate time-based payment status reports
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <div className="relative">
+            <select
+              value={timeFrame}
+              onChange={(e) => handleTimeFrameChange(e.target.value)}
+              className="appearance-none w-[140px] h-10 pl-3 pr-8 rounded-md border border-input bg-background text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             >
-              <FileBarChart className="w-6 h-6" />
-            </div>
-            <div className="flex-1 text-left">
-              <h3 className="font-semibold text-lg text-primary mb-1">
-                System Overview Report
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Complete system statistics including revenue, students, payment
-                status, and overdue fees
-              </p>
-            </div>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="half-yearly">Half Yearly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-3 h-4 w-4 opacity-50 pointer-events-none" />
           </div>
-        </button>
 
-        <button
-          onClick={() => setSelectedReport("payment-status")}
-          className={`p-6 rounded-lg border-2 transition-all ${
-            selectedReport === "payment-status"
-              ? "border-primary bg-primary/5"
-              : "border-border hover:border-primary/50"
-          }`}
-        >
-          <div className="flex items-start gap-4">
-            <div
-              className={`p-3 rounded-lg ${
-                selectedReport === "payment-status"
-                  ? "bg-primary text-white"
-                  : "bg-accent"
-              }`}
+          <div className="relative">
+            <select
+              value={selectedPeriod}
+              onChange={(e) => setSelectedPeriod(e.target.value)}
+              className="appearance-none w-[180px] h-10 pl-3 pr-8 rounded-md border border-input bg-background text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
             >
-              <BarChart3 className="w-6 h-6" />
-            </div>
-            <div className="flex-1 text-left">
-              <h3 className="font-semibold text-lg text-primary mb-1">
-                Payment Status Report
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                Detailed payment breakdowns by program, semester, and payment
-                method
-              </p>
-            </div>
-          </div>
-        </button>
-      </div>
-
-      {/* Report Preview */}
-      {selectedReport === "overview" && (
-        <div className="bg-card border border-border rounded-lg p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <FileText className="w-5 h-5 text-primary" />
-              <h2 className="text-lg font-semibold text-primary">
-                System Overview Preview
-              </h2>
-            </div>
-            <Button
-              variant="primary"
-              onClick={generateSystemOverviewReport}
-              className="flex items-center gap-2"
-            >
-              <Download className="w-4 h-4" />
-              Generate Report
-            </Button>
-          </div>
-
-          {/* Overview Statistics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <StatsCard
-              title="Total Revenue"
-              value={dashboardData.dashboardStats[0]?.value || "Rs 0"}
-              icon={DollarSign}
-              description={
-                dashboardData.dashboardStats[0]?.desc || "Total fees collected"
-              }
-              variant="success"
-            />
-            <StatsCard
-              title="Total Students"
-              value={dashboardData.dashboardStats[1]?.value || "0"}
-              icon={Users}
-              description={
-                dashboardData.dashboardStats[1]?.desc ||
-                "Total students enrolled"
-              }
-              variant="primary"
-            />
-            <StatsCard
-              title="Pending Payments"
-              value={dashboardData.dashboardStats[2]?.value || "Rs 0"}
-              icon={Clock}
-              description={
-                dashboardData.dashboardStats[2]?.desc || "Awaiting Payments"
-              }
-              variant="warning"
-            />
-            <StatsCard
-              title="Collection Rate"
-              value={dashboardData.dashboardStats[3]?.value || "0%"}
-              icon={CheckCircle}
-              description={
-                dashboardData.dashboardStats[3]?.desc || "Payment Success Rate"
-              }
-              variant="primary"
-            />
-          </div>
-
-          {/* Payment Status Breakdown */}
-          <div className="bg-accent/50 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-secondary mb-3 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Payment Status Breakdown
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm">
-              <div className="bg-card p-3 rounded border border-border">
-                <p className="text-muted-foreground text-xs">Paid</p>
-                <p className="text-lg font-bold text-green-600">
-                  {dashboardData.paymentStats.paid}
-                </p>
-              </div>
-              <div className="bg-card p-3 rounded border border-border">
-                <p className="text-muted-foreground text-xs">Partial</p>
-                <p className="text-lg font-bold text-blue-600">
-                  {dashboardData.paymentStats.partial}
-                </p>
-              </div>
-              <div className="bg-card p-3 rounded border border-border">
-                <p className="text-muted-foreground text-xs">Pending</p>
-                <p className="text-lg font-bold text-yellow-600">
-                  {dashboardData.paymentStats.pending}
-                </p>
-              </div>
-              <div className="bg-card p-3 rounded border border-border">
-                <p className="text-muted-foreground text-xs">Overdue</p>
-                <p className="text-lg font-bold text-red-600">
-                  {dashboardData.paymentStats.overdue}
-                </p>
-              </div>
-              <div className="bg-card p-3 rounded border border-border">
-                <p className="text-muted-foreground text-xs">Total</p>
-                <p className="text-lg font-bold text-primary">
-                  {dashboardData.paymentStats.total}
-                </p>
-              </div>
-            </div>
+              {periodOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3 top-3 h-4 w-4 opacity-50 pointer-events-none" />
           </div>
         </div>
-      )}
+      </div>
 
-      {selectedReport === "payment-status" && (
+      {isLoading ? (
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      ) : !paymentStats ? (
+        <div className="flex items-center justify-center min-h-[400px]">
+          <p className="text-destructive">Failed to load report data</p>
+        </div>
+      ) : (
         <div className="bg-card border border-border rounded-lg p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-primary" />
               <h2 className="text-lg font-semibold text-primary">
-                Payment Status Preview
+                Report Preview: {dateRange.start.toLocaleDateString("en-GB")} -{" "}
+                {dateRange.end.toLocaleDateString("en-GB")}
               </h2>
             </div>
             <Button
@@ -526,7 +363,7 @@ export default function ReportsPage() {
               className="flex items-center gap-2"
             >
               <Download className="w-4 h-4" />
-              Generate Report
+              Generate PDF
             </Button>
           </div>
 
@@ -544,30 +381,28 @@ export default function ReportsPage() {
                     <th className="text-right p-3 font-semibold">
                       Total Amount
                     </th>
-                    {/* <th className="text-right p-3 font-semibold">Paid</th>
-                    <th className="text-right p-3 font-semibold">Partial</th>
-                    <th className="text-right p-3 font-semibold">Overdue</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {paymentStats.byProgram.map((prog, idx) => (
+                  {(paymentStats as PaymentStats).byProgram.map((prog, idx) => (
                     <tr key={idx} className="border-b border-border">
                       <td className="p-3 font-medium">{prog.program}</td>
                       <td className="p-3 text-right">{prog.totalPayments}</td>
                       <td className="p-3 text-right">
                         Rs {prog.totalAmount.toLocaleString()}
                       </td>
-                      {/* <td className="p-3 text-right text-green-600">
-                        {prog.paidCount}
-                      </td>
-                      <td className="p-3 text-right text-blue-600">
-                        {prog.partialCount}
-                      </td>
-                      <td className="p-3 text-right text-red-600">
-                        {prog.overdueCount}
-                      </td> */}
                     </tr>
                   ))}
+                  {(paymentStats as PaymentStats).byProgram.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={3}
+                        className="p-4 text-center text-muted-foreground"
+                      >
+                        No payments found for this period
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -579,7 +414,7 @@ export default function ReportsPage() {
               Payments by Semester
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {paymentStats.bySemester.map((sem, idx) => (
+              {(paymentStats as PaymentStats).bySemester.map((sem, idx) => (
                 <div
                   key={idx}
                   className="bg-accent/50 p-4 rounded-lg border border-border"
@@ -595,6 +430,11 @@ export default function ReportsPage() {
                   </p>
                 </div>
               ))}
+              {(paymentStats as PaymentStats).bySemester.length === 0 && (
+                <div className="col-span-full p-4 text-center text-muted-foreground bg-accent/20 rounded">
+                  No payments found for this period
+                </div>
+              )}
             </div>
           </div>
 
@@ -604,21 +444,19 @@ export default function ReportsPage() {
               Payments by Method
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {paymentStats.byMethod.map((method, idx) => (
+              {(paymentStats as PaymentStats).byMethod.map((method, idx) => (
                 <div
                   key={idx}
                   className="bg-accent/50 p-4 rounded-lg border border-border"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <p className="font-semibold text-primary flex   items-center">
-                      {method.method === "cash" ? (
+                    <p className="font-semibold text-primary flex items-center">
+                      {method.method.toLowerCase() === "cash" ? (
                         <Banknote className="w-4 h-4 mr-2" />
-                      ) : method.method.toLowerCase() === "bank" ? (
+                      ) : method.method.toLowerCase().includes("bank") ? (
                         <Landmark className="w-4 h-4 mr-2" />
-                      ) : method.method.toLowerCase() === "online" ? (
-                        <CreditCard className="w-4 h-4 mr-2" />
                       ) : (
-                        ""
+                        <CreditCard className="w-4 h-4 mr-2" />
                       )}
                       {method.method}
                     </p>
@@ -631,6 +469,11 @@ export default function ReportsPage() {
                   </p>
                 </div>
               ))}
+              {(paymentStats as PaymentStats).byMethod.length === 0 && (
+                <div className="col-span-full p-4 text-center text-muted-foreground bg-accent/20 rounded">
+                  No payments found for this period
+                </div>
+              )}
             </div>
           </div>
         </div>

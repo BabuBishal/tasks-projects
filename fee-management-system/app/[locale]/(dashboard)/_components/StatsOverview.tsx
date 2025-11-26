@@ -1,4 +1,4 @@
-import { DashboardStats } from "@/lib/@types/api";
+import { DashboardStats } from "@/lib/types/api";
 
 const StatsOverview = ({
   dashboardStats,

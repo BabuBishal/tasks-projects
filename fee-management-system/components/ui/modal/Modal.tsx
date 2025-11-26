@@ -9,7 +9,7 @@ import {
   default as React,
 } from "react";
 import ReactDOM from "react-dom";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import "./modal.css";
 import { type ModalContextType } from "./modal.types";
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import type { StudentFull } from "@/lib/@types/prisma";
+import type { StudentFull } from "@/lib/types/prisma";
 
 // GET single student by ID
 export async function GET(

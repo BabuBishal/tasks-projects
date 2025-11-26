@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import useForm from "@/hooks/useForm";
 
-import { Program, Scholarship } from "@/lib/@types/prisma";
-import { studentSchema } from "@/lib/constants";
+import { Program, Scholarship } from "@/lib/types/prisma";
+import { studentSchema } from "@/lib/constants/constants";
 import { validateForm } from "@/lib/validator";
-import { StudentFormInputs } from "@/lib/@types";
+import { StudentFormInputs } from "@/lib/types";
 import { useToast } from "@/components/ui/toast";
 import StudentForm from "../forms/StudentForm";
 
@@ -142,11 +142,13 @@ export default function EditStudentPage() {
       // router.push(`/students/${studentId}`);
     } catch (err: unknown) {
       console.error("Error:", err);
-      setError((err as Error).message || "Something went wrong while updating student.");
+      setError(
+        (err as Error).message || "Something went wrong while updating student."
+      );
       setLoading(false);
       notify({
         title: "Update Failed",
-        description: error ||"Error updating student.",
+        description: error || "Error updating student.",
         type: "error",
       });
     }

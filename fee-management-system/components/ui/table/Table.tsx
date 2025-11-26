@@ -1,7 +1,7 @@
 "use client";
 import { useState, type ReactNode } from "react";
 import "./table.css";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { TableProps } from "./table.types";
 
 export const Table = ({

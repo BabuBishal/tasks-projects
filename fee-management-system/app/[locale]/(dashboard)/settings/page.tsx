@@ -7,7 +7,7 @@ import { Building2, Globe, DollarSign, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button/Button";
 import { useToast } from "@/components/ui/toast";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
-import { SystemSettings, SettingsUpdateInput } from "@/lib/@types";
+import { SystemSettings, SettingsUpdateInput } from "@/lib/types";
 
 export default function SettingsPage() {
   const { data: session } = useSession();
