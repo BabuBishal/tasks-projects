@@ -1,18 +1,26 @@
-import { LoginFormProps } from "@/lib/@types/components";
 import Link from "next/link";
+import { UseFormRegister, FieldErrors } from "react-hook-form";
+import { LoginFormData } from "@/lib/schemas/auth.schema";
+
+interface LoginFormProps {
+  onSubmit: React.FormEventHandler<HTMLFormElement>;
+  register: UseFormRegister<LoginFormData>;
+  errors: FieldErrors<LoginFormData>;
+  error: string;
+  isLoading?: boolean;
+}
 
 export default function LoginForm({
   onSubmit,
-  formData,
-  formErrors,
-  handleSubmit,
-  handleChange,
+  register,
+  errors,
   error,
-}: LoginFormProps & { error: string }) {
+  isLoading,
+}: LoginFormProps) {
   return (
     <form
-      onSubmit={(e) => handleSubmit(e, onSubmit)}
-      className="bg-background  border-border  p-8 rounded-lg shadow w-full max-w-sm mx-auto shadow-muted"
+      onSubmit={onSubmit}
+      className="bg-background border-border p-8 rounded-lg shadow w-full max-w-sm mx-auto shadow-muted"
     >
       <h2 className="text-secondary text-xl font-semibold mb-6 text-center">
         Login
@@ -21,44 +29,41 @@ export default function LoginForm({
         <label className="block text-sm font-medium mb-1">Email</label>
         <input
           type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-muted  bg-accent"
+          {...register("email")}
+          className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-muted bg-accent"
         />
-        {formErrors.email && (
-          <p className="text-error text-sm mt-1">{formErrors.email}</p>
+        {errors.email && (
+          <p className="text-error text-sm mt-1">{errors.email.message}</p>
         )}
       </div>
       <div className="mb-6">
         <label className="block text-sm font-medium mb-1">Password</label>
         <input
-          name="password"
           type="password"
-          value={formData.password}
-          onChange={handleChange}
+          {...register("password")}
           className="w-full border border-border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-muted bg-accent"
         />
-        {formErrors.password && (
-          <p className="text-red-500 text-sm mt-1">{formErrors.password}</p>
+        {errors.password && (
+          <p className="text-error text-sm mt-1">{errors.password.message}</p>
         )}
       </div>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="text-error text-sm mt-1">{error}</p>}
       <button
         type="submit"
-        className="mt-5 w-full bg-primary text-background py-2 rounded hover:bg-secondary hover:shadow-sm hover:shadow-accent transition duration-200 ease cursor-pointer "
+        disabled={isLoading}
+        className="mt-5 w-full bg-primary text-background py-2 rounded hover:bg-secondary hover:shadow-sm hover:shadow-accent transition duration-200 ease cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        Login
+        {isLoading ? "Logging in..." : "Login"}
       </button>
       <div className="mt-4 flex gap-3 justify-center items-center">
-        <span className="text-xs text-muted">{`Don't have an account?`} </span>{" "}
+        <span className="text-xs text-muted">{`Don't have an account?`}</span>
         <Link
           href={`/register`}
           className="text-xs font-semibold text-secondary underline"
         >
           Register
         </Link>
-      </div>{" "}
+      </div>
     </form>
   );
 }

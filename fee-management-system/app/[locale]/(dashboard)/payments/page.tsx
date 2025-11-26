@@ -27,6 +27,8 @@ import {
 } from "@/components/ui/card/Card";
 import { Modal } from "@/components/ui/modal/Modal";
 import jsPDF from "jspdf";
+import { useGetDashboardStats } from "@/lib/services/queries/getDashboardStats.queries";
+import { useGetPaymentStats } from "@/lib/services/queries/getPaymentStats.queries";
 
 interface DashboardData {
   dashboardStats: {
@@ -66,25 +68,10 @@ interface DashboardData {
 }
 
 export default function PaymentsPage() {
-  // All hooks must be called at the top before any conditional returns
-  const { data, isLoading } = useQuery<DashboardData>({
-    queryKey: ["dashboardStats"],
-    queryFn: async () => {
-      const res = await fetch("/api/dashboard-stats");
-      if (!res.ok) throw new Error("Failed to fetch dashboard stats");
-      return res.json();
-    },
-  });
+  const { data, isLoading } = useGetDashboardStats();
 
-  // Fetch payment-specific stats
-  const { data: paymentStats } = useQuery({
-    queryKey: ["paymentStats"],
-    queryFn: async () => {
-      const res = await fetch("/api/payments/stats");
-      if (!res.ok) throw new Error("Failed to fetch payment stats");
-      return res.json();
-    },
-  });
+  const { data: paymentStats, isLoading: paymentStatsLoading } =
+    useGetPaymentStats();
 
   // Handler for downloading receipt as PDF
   const handleDownloadReceipt = (
@@ -147,7 +134,7 @@ export default function PaymentsPage() {
     doc.save(`receipt-${payment.receiptNo || payment.id}.pdf`);
   };
 
-  if (isLoading) {
+  if (isLoading || paymentStatsLoading) {
     return (
       <div className="flex justify-center py-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>

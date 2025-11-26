@@ -1,16 +1,18 @@
 "use client";
 
-import Overdue from "../_components/Overdue";
+// import Overdue from "../_components/Overdue";
 import PaymentStatusOverview from "../_components/PaymentStatusOverview";
-import StatsOverview from "../_components/StatsOverview";
 import QuickActions from "../_components/QuickActions";
 import QuickStats from "../_components/QuickStats";
 import AlertsNotifications from "../_components/AlertsNotifications";
 import { useGetDashboardStats } from "@/lib/services/queries/getDashboardStats.queries";
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import StatsCard from "@/components/ui/stats-card/StatsCard";
+import { DollarSign, Users, Clock, TrendingUp } from "lucide-react";
 
 export default function DashboardPage() {
   const { data, isLoading, isError } = useGetDashboardStats();
+
 
   if (isLoading) {
     return (
@@ -77,8 +79,36 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats Cards */}
-      <StatsOverview dashboardStats={dashboardStats} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatsCard
+          title="Total Students"
+          value={dashboardStats[1]?.value || "0"}
+          icon={Users}
+          description={dashboardStats[1]?.desc || "Total students enrolled"}
+          variant="primary"
+        />
+        <StatsCard
+          title="Total Revenue"
+          value={dashboardStats[0]?.value || "Rs 0"}
+          icon={DollarSign}
+          description={dashboardStats[0]?.desc || "Total fees collected"}
+          variant="success"
+        />
+        <StatsCard
+          title="Pending Collections"
+          value={dashboardStats[2]?.value || "Rs 0"}
+          icon={Clock}
+          description={dashboardStats[2]?.desc || "Awaiting payments"}
+          variant="warning"
+        />
+        <StatsCard
+          title="Collection Rate"
+          value={dashboardStats[3]?.value || "0%"}
+          icon={TrendingUp}
+          description={dashboardStats[3]?.desc || "Payment success rate"}
+          variant="primary"
+        />
+      </div>
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -106,9 +136,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Overdue Fees Table */}
-        <div className="col-span-2">
+        {/* <div className="col-span-2">
           <Overdue overdueFees={overdueFees} />
-        </div>
+        </div> */}
       </div>
     </div>
   );

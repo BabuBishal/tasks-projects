@@ -50,8 +50,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
 
 function generateBreadcrumbs(pathname: string) {
   const paths = pathname.split("/").filter((path) => path);
-  // Remove locale if present (assuming locale is first)
-  // This is a naive check, might need adjustment based on actual routing
+
   if (["en", "ne"].includes(paths[0])) {
     paths.shift();
   }

@@ -1,6 +1,7 @@
 export const API_ROUTES = {
   students: "/api/students",
   payments: "/api/payments",
+  paymentStats: "/api/payments/stats",
   paymentAdd: "/api/payment/add",
   paymentHistory: "/api/payment/history",
   dashboardStats: "/api/dashboard-stats",

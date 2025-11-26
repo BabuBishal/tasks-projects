@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface ProfileProps {
   profilePicture: string | null;
@@ -11,6 +12,25 @@ interface ProfileProps {
 const Profile = ({ profilePicture }: ProfileProps) => {
   const { data } = useSession();
   const router = useRouter();
+  const [userRole, setUserRole] = useState<string>("Staff");
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const res = await fetch("/api/profile");
+        if (res.ok) {
+          const data = await res.json();
+          setUserRole(data.profile?.role || "Staff");
+        }
+      } catch (error) {
+        console.error("Failed to fetch user role:", error);
+      }
+    };
+
+    if (data?.user) {
+      fetchUserRole();
+    }
+  }, [data]);
 
   const handleLogout = async () => {
     await signOut({
@@ -49,7 +69,7 @@ const Profile = ({ profilePicture }: ProfileProps) => {
         <div className="flex items-center gap-1 mt-2">
           <Shield className="w-3 h-3 text-blue-600 dark:text-blue-400" />
           <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
-            Administrator
+            {userRole}
           </span>
         </div>
       </div>

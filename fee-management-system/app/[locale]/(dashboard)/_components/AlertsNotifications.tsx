@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/Card";
-import { AlertTriangle, DollarSign, UserX, FileWarning } from "lucide-react";
+import { AlertTriangle, UserX, FileWarning } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button/Button";
@@ -66,7 +66,7 @@ export default function AlertsNotifications({
   const getBadgeVariant = (type: string) => {
     switch (type) {
       case "critical_overdue":
-        return "error";
+        return "danger";
       case "zero_payment":
         return "warning";
       case "scholarship_pending":
@@ -97,7 +97,7 @@ export default function AlertsNotifications({
             {alerts.slice(0, 5).map((alert) => (
               <div
                 key={alert.id}
-                className="flex items-start gap-3 p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                className="flex items-start gap-3 p-3 rounded-lg border border-border hover:bg-accent transition-colors"
               >
                 <div
                   className={`p-2 rounded-lg ${getBackgroundColor(alert.type)}`}
@@ -110,7 +110,7 @@ export default function AlertsNotifications({
                       {alert.studentName}
                     </p>
                     {alert.daysOverdue && alert.daysOverdue > 30 && (
-                      <Badge variant={getBadgeVariant(alert.type)} size="sm">
+                      <Badge variant={getBadgeVariant(alert.type)} size="small">
                         {alert.daysOverdue} days overdue
                       </Badge>
                     )}
@@ -123,7 +123,7 @@ export default function AlertsNotifications({
                   )}
                 </div>
                 <Link href={`/students/${alert.studentId}`}>
-                  <Button variant="outline" size="sm">
+                  <Button variant="ghost" size="sm" className="shadow-sm">
                     View
                   </Button>
                 </Link>

@@ -66,12 +66,12 @@ const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
           onClick={() => setOpenDropdown(!openDropdown)}
         >
           {/* Profile Picture or Fallback */}
-          <div className="w-8 h-8 p-1 rounded-full overflow-hidden  flex items-center justify-center border-2 border-border hover:border-primary transition-colors">
+          <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center border-2 border-border hover:border-primary transition-colors">
             {profilePicture ? (
               <img
                 src={profilePicture}
                 alt="Profile"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover rounded-full"
               />
             ) : (
               <User className="w-5 h-5 text-primary" />

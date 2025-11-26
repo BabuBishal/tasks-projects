@@ -43,17 +43,23 @@ export async function GET() {
     const allFees = await prisma.studentFee.findMany();
     const pendingAmount = allFees.reduce((sum, fee) => sum + fee.balance, 0);
 
-    // Payment success rate (on-time payments vs total payments)
-    const totalPayments = await prisma.payment.count();
-    const onTimePayments = await prisma.payment.count({
-      where: {
+    // Payment success rate (payments made before or on due date)
+    const allPayments = await prisma.payment.findMany({
+      include: {
         studentFee: {
-          dueDate: {
-            gte: prisma.payment.fields.date,
+          select: {
+            dueDate: true,
           },
         },
       },
     });
+
+    const totalPayments = allPayments.length;
+    const onTimePayments = allPayments.filter((payment) => {
+      const paymentDate = new Date(payment.date);
+      const dueDate = new Date(payment.studentFee.dueDate);
+      return paymentDate <= dueDate;
+    }).length;
 
     const paymentSuccessRate =
       totalPayments > 0

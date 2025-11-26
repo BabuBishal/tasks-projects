@@ -1,12 +1,11 @@
 "use client";
 import LoginForm from "@/components/forms/LoginForm";
-import useForm from "@/hooks/useForm";
 import { useParams, useRouter } from "next/navigation";
-import { validateForm } from "@/lib/validator";
-import { loginSchema } from "@/lib/constants";
-import { LoginFormInputs } from "@/lib/@types";
 import { useToast } from "@/components/ui/toast";
 import { useLogin } from "@/lib/services/mutations/useAuthMutation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginFormData } from "@/lib/schemas/auth.schema";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -15,13 +14,19 @@ const LoginPage = () => {
 
   const { mutate: login, isPending, error } = useLogin();
 
-  const { formData, formErrors, handleChange, handleSubmit } = useForm({
-    initialValues: { email: "", password: "" },
-    validateForm,
-    schema: loginSchema,
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const onSubmit = (data: LoginFormInputs) => {
+  const onSubmit = (data: LoginFormData) => {
     login(data, {
       onSuccess: () => {
         notify({
@@ -45,11 +50,9 @@ const LoginPage = () => {
     <div className="absolute top-0 left-0 flex flex-col gap-5 justify-center items-center p-20 w-screen h-screen">
       <div className="text-2xl text-primary font-bold">Fee Payment System</div>
       <LoginForm
-        onSubmit={onSubmit}
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-        formData={formData}
-        formErrors={formErrors}
+        onSubmit={handleSubmit(onSubmit)}
+        register={register}
+        errors={errors}
         error={error?.message || ""}
         isLoading={isPending}
       />

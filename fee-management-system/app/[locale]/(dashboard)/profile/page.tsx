@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   User,
   Mail,
@@ -194,7 +194,7 @@ export default function ProfilePage() {
     );
   }
 
-  return (  
+  return (
     <div className="w-full h-full flex flex-col gap-8 pb-8">
       <Breadcrumb items={[{ label: "Profile", href: "/profile" }]} />
 
