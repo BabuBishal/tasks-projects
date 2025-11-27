@@ -42,9 +42,13 @@ type TimeFrame = "monthly" | "quarterly" | "half-yearly" | "yearly";
 
 export default function ReportsPage() {
   const [timeFrame, setTimeFrame] = useState<TimeFrame>("monthly");
-  const [selectedPeriod, setSelectedPeriod] = useState<string>(
-    new Date().toISOString().slice(0, 7) // Current month YYYY-MM
-  );
+  const [selectedPeriod, setSelectedPeriod] = useState<string>(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    return `${year}-${month}`;
+  });
+  console.log("🚀 ~ ReportsPage ~ selectedPeriod:", selectedPeriod);
 
   // Calculate date range based on selection
   const dateRange = useMemo(() => {
@@ -55,8 +59,8 @@ export default function ReportsPage() {
     if (timeFrame === "monthly") {
       // selectedPeriod is YYYY-MM
       const [year, month] = selectedPeriod.split("-").map(Number);
-      start = new Date(year, month, 1);
-      end = new Date(year, month + 1, 0); // Last day of month
+      start = new Date(year, month - 1, 1);
+      end = new Date(year, month, 0); // Last day of month
     } else if (timeFrame === "quarterly") {
       // selectedPeriod is YYYY-Qx
       const [yearStr, quarterStr] = selectedPeriod.split("-");
@@ -99,7 +103,9 @@ export default function ReportsPage() {
     if (timeFrame === "monthly") {
       for (let i = 0; i < 12; i++) {
         const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
-        const value = d.toISOString().slice(0, 7);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        const value = `${year}-${month}`;
         const label = d.toLocaleDateString("en-US", {
           month: "long",
           year: "numeric",
@@ -136,7 +142,10 @@ export default function ReportsPage() {
     setTimeFrame(value as TimeFrame);
     // Reset to current/latest period for the new timeframe
     if (value === "monthly") {
-      setSelectedPeriod(new Date().toISOString().slice(0, 7));
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      setSelectedPeriod(`${year}-${month}`);
     } else if (value === "quarterly") {
       const q = Math.ceil((new Date().getMonth() + 1) / 3);
       setSelectedPeriod(`${new Date().getFullYear()}-Q${q}`);
