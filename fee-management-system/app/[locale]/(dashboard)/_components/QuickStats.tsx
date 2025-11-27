@@ -1,20 +1,35 @@
 "use client";
 
+import Piechart from "@/components/piechart/piechart";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card/Card";
-import { TrendingUp, Users, Calendar, PieChart } from "lucide-react";
-import { formatCurrency } from "@/lib/utils/utils";
+import { COLORS } from "@/lib/constants/constants";
+import { ProgramDistribution } from "@/lib/types";
+import {
+  TrendingUp,
+  Users,
+  Calendar,
+  PieChart as PieChartIcon,
+} from "lucide-react";
+import { useMemo } from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+// import { formatCurrency } from "@/lib/utils/utils";
 
 interface QuickStatsProps {
-  collectionRate?: number;
+  collectionRate?: number | string;
   studentsPending?: number;
   upcomingDeadlines?: number;
-  programDistribution?: { program: string; count: number }[];
+  programDistribution?: ProgramDistribution[];
 }
+
+
+// const tooltipFormatter: TooltipFormatterFn = (value, name, props) => {
+//   return [value, props?.payload?.name ?? name];
+// };
 
 export default function QuickStats({
   collectionRate = 0,
@@ -22,6 +37,19 @@ export default function QuickStats({
   upcomingDeadlines = 0,
   programDistribution = [],
 }: QuickStatsProps) {
+  // const TOOLTIP_CONTENT_STYLE = useMemo(
+  //   () => ({
+  //     backgroundColor: "hsl(var(--card))",
+  //     borderColor: "hsl(var(--border))",
+  //     borderRadius: "8px",
+  //   }),
+  //   []
+  // );
+
+  // const TOOLTIP_ITEM_STYLE = useMemo(
+  //   () => ({ color: "hsl(var(--foreground))" }),
+  //   []
+  // );
   return (
     <Card>
       <CardHeader>
@@ -72,26 +100,40 @@ export default function QuickStats({
           </div>
 
           {/* Program Distribution */}
-          <div className="flex items-start gap-3">
-            <div className="p-3 bg-purple-100 dark:bg-purple-950 rounded-xl">
-              <PieChart className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-purple-100 dark:bg-purple-950 rounded-lg">
+                <PieChartIcon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+              </div>
+              <p className="text-sm font-medium text-muted">
+                Program Distribution
+              </p>
             </div>
-            <div className="flex-1">
-              <p className="text-sm text-muted mb-2">Program Distribution</p>
+            <div className="h-[160px] w-full">
               {programDistribution.length > 0 ? (
-                <div className="space-y-1">
-                  {programDistribution.slice(0, 3).map((prog, idx) => (
-                    <div key={idx} className="flex justify-between text-xs">
-                      <span className="text-muted">{prog.program}</span>
-                      <span className="font-semibold text-primary">
-                        {prog.count}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                <Piechart programDistribution={programDistribution} />
               ) : (
-                <p className="text-xs text-muted">No data</p>
+                <div className="flex items-center justify-center h-full text-xs text-muted">
+                  No data
+                </div>
               )}
+            </div>
+            {/* Legend */}
+            <div className="flex flex-wrap gap-2 text-xs">
+              {programDistribution.slice(0, 4).map((prog, idx) => (
+                <div key={idx} className="flex items-center gap-1">
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ backgroundColor: COLORS[idx % COLORS.length] }}
+                  />
+                  <span
+                    className="text-muted truncate max-w-[80px]"
+                    title={prog.name}
+                  >
+                    {prog.name}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         </div>

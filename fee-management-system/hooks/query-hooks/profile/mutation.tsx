@@ -4,7 +4,7 @@ import {
   changePassword,
   updateProfile,
   uploadProfilePhoto,
-} from "@/lib/services/profile/profile";
+} from "@/lib/api/services/profile/profile";
 
 export const useUpdateProfileMutation = () => {
   const queryClient = useQueryClient();

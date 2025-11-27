@@ -15,6 +15,9 @@ interface FeeStructureFormProps {
     programSemester?: {
       programId: string;
       semesterNo: number;
+      program?: {
+        name: string;
+      };
     };
 
     tuitionFee?: number;

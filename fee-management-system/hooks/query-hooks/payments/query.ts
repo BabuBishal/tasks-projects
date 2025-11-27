@@ -1,17 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
 import { API_ROUTES } from "../../../lib/config/api-routes";
-import { getPayments, getPaymentStats } from "@/lib/services/payments/payments";
+import {
+  getPayments,
+  getPaymentStats,
+} from "@/lib/api/services/payments/payments";
+import { PaymentsResponse, PaymentStatsResponse } from "@/lib/types/api";
 
 export const useGetPaymentsQuery = () => {
-  return useQuery({
+  return useQuery<PaymentsResponse>({
     queryKey: [API_ROUTES.payments],
     queryFn: () => getPayments(),
+    staleTime: 15 * 60 * 1000, // 15 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
+    retry: 2,
+    refetchOnWindowFocus: false,
   });
 };
 
 export const useGetPaymentStatsQuery = () => {
-  return useQuery({
+  return useQuery<PaymentStatsResponse>({
     queryKey: [API_ROUTES.paymentStats],
     queryFn: () => getPaymentStats(),
+    staleTime: 15 * 60 * 1000, // 15 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
+    retry: 2,
+    refetchOnWindowFocus: false,
   });
 };

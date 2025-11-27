@@ -1,8 +1,3 @@
-// ============================================
-// API Response Types
-// Types for API endpoint responses
-// ============================================
-
 // Dashboard API responses
 export type DashboardStats = {
   title: string;
@@ -54,11 +49,17 @@ export type OverdueFee = {
   status: string;
 };
 
+export type ProgramDistribution = {
+  name: string;
+  value: number;
+};
+
 export type DashboardData = {
   dashboardStats: DashboardStats[];
   paymentStats: PaymentStats;
   recentPayments: RecentPayment[];
   overdueFees: OverdueFee[];
+  programDistribution: ProgramDistribution[];
 };
 
 // Bulk operations API responses
@@ -121,3 +122,108 @@ export type ApiError = {
   error: string;
   details?: Record<string, unknown>;
 };
+
+// Payment API responses
+export type PaymentHistoryItem = {
+  id: string;
+  studentId: string;
+  studentName: string;
+  program: string;
+  amount: number;
+  date: Date;
+  method: string;
+  receiptNo: string;
+  status: string;
+  feeBalance: number;
+  feeStatus: string;
+  academicYear: string;
+};
+
+export type PaymentsResponse = {
+  payments: PaymentHistoryItem[];
+  totalAmount: number;
+  totalPayments: number;
+  todayPayments: number;
+};
+
+export type PaymentMethodDistribution = {
+  method: string;
+  amount: number;
+  count: number;
+};
+
+export type MonthlyCollectionTrend = {
+  month: string;
+  amount: number;
+};
+
+export type PaymentStatsResponse = {
+  todaysCollections: number;
+  monthCollections: number;
+  pendingAmount: number;
+  paymentSuccessRate: number;
+  methodDistribution: PaymentMethodDistribution[];
+  monthlyCollectionTrends: MonthlyCollectionTrend[];
+};
+
+export type AddPaymentRequest = {
+  studentId: string;
+  amount: number;
+  method: string;
+  selectedFeeIds: string[];
+};
+
+export type AddPaymentResponse = {
+  message: string;
+  receiptNo: string;
+  totalPaid: number;
+  feesUpdated: number;
+  payments: {
+    id: string;
+    studentFeeId: string;
+    method: string;
+    amount: number;
+    receiptNo: string;
+    date: Date;
+  }[];
+  updatedFees: {
+    id: string;
+    academicYear: string;
+    semesterNo: number;
+    paid: number;
+    balance: number;
+    status: string;
+  }[];
+};
+
+export interface RegisterResponse {
+  id: string;
+  email: string;
+  name: string;
+  message?: string;
+}
+
+export interface LoginResponse {
+  ok?: boolean;
+  error?: string | null;
+  status?: number;
+  url?: string | null;
+}
+
+export interface FeeStructureResponse {
+  id: string;
+  programSemester: FeeResponseProgramSemester;
+  tuitionFee: number;
+  labFee: number;
+  libraryFee: number;
+  sportsFee: number;
+  miscFee: number;
+  totalFee: number;
+}
+export interface FeeResponseProgramSemester {
+  programId: string;
+  semesterNo: number;
+  program?: {
+    name: string;
+  };
+}

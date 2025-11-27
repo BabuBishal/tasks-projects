@@ -2,20 +2,20 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button/Button";
-import { Plus, X } from "lucide-react";
+import { Plus } from "lucide-react";
 import ProgramList from "@/components/programs/ProgramList";
-import ProgramForm from "@/components/programs/ProgramForm";
-import { Modal } from "@/components/ui/modal/Modal";
+
 import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
 import { useToast } from "@/components/ui/toast";
-import { useGetProgramsQuery } from "@/hooks/query-hooks/programs";
 import {
   useCreateProgramMutation,
-  useUpdateProgramMutation,
   useDeleteProgramMutation,
+  useGetProgramsQuery,
+  useUpdateProgramMutation,
 } from "@/hooks/query-hooks/programs";
+import AddProgramModal from "./_components/AddProgramModal";
 
-interface Program {
+export interface Program {
   id: string;
   name: string;
   duration: number;
@@ -25,15 +25,25 @@ interface Program {
 }
 
 export default function ProgramsPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProgram, setEditingProgram] = useState<Program | null>(null);
-  const { notify } = useToast();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: programs, isLoading } = useGetProgramsQuery();
-
   const createProgramMutation = useCreateProgramMutation();
   const updateProgramMutation = useUpdateProgramMutation();
   const deleteProgramMutation = useDeleteProgramMutation();
+
+  const { notify } = useToast();
+
+  const openCreateModal = () => {
+    setEditingProgram(null);
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (program: Program) => {
+    setEditingProgram(program);
+    setIsModalOpen(true);
+  };
 
   const handleCreate = async (data: { name: string; duration: number }) => {
     try {
@@ -68,6 +78,7 @@ export default function ProgramsPage() {
         description: "Program updated successfully",
         type: "success",
       });
+
       setIsModalOpen(false);
       setEditingProgram(null);
     } catch (error: unknown) {
@@ -97,16 +108,6 @@ export default function ProgramsPage() {
     }
   };
 
-  const openCreateModal = () => {
-    setEditingProgram(null);
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (program: Program) => {
-    setEditingProgram(program);
-    setIsModalOpen(true);
-  };
-
   return (
     <div className="w-full h-full flex flex-col gap-6">
       <Breadcrumb items={[{ label: "Programs", href: "/programs" }]} />
@@ -134,8 +135,14 @@ export default function ProgramsPage() {
           onDelete={handleDelete}
         />
       )}
-
-      <Modal defaultOpen={isModalOpen}>
+      <AddProgramModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        editingProgram={editingProgram}
+        handleUpdate={handleUpdate}
+        handleCreate={handleCreate}
+      />
+      {/* <Modal defaultOpen={isModalOpen}>
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="bg-background rounded-lg shadow-lg w-full max-w-md">
@@ -168,7 +175,7 @@ export default function ProgramsPage() {
             </div>
           </div>
         )}
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

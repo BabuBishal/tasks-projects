@@ -7,7 +7,7 @@ import {
   bulkDeleteStudents,
   bulkImportStudents,
   promoteSemester,
-} from "@/lib/services/students/students";
+} from "@/lib/api/services/students/students";
 
 export const useCreateStudentMutation = () => {
   const queryClient = useQueryClient();

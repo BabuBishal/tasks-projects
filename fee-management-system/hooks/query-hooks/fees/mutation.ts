@@ -4,7 +4,7 @@ import {
   createFeeStructure,
   deleteFeeStructure,
   updateFeeStructure,
-} from "../../../lib/services/fees/fees";
+} from "../../../lib/api/services/fees/fees";
 
 export const useCreateFeeStructureMutation = () => {
   const queryClient = useQueryClient();

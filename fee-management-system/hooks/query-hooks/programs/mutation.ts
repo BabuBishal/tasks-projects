@@ -4,7 +4,7 @@ import {
   createProgram,
   deleteProgram,
   updateProgram,
-} from "../../../lib/services/programs/programs";
+} from "../../../lib/api/services/programs/programs";
 
 export const useCreateProgramMutation = () => {
   const queryClient = useQueryClient();

@@ -92,3 +92,7 @@ export const paymentHeaders = [
 
 export const programList = ["BBA", "BBM", "BIM", "BSc CSIT"];
 export const paymentMethod = ["Cash", "Bank", "Online"];
+
+
+
+export const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE"];

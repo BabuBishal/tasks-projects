@@ -16,6 +16,8 @@ import {
   useDeleteFeeStructureMutation,
 } from "@/hooks/query-hooks/fees";
 import { useGetProgramQuery } from "@/hooks/query-hooks/programs";
+import { FeeStructureResponse } from "@/lib/types";
+import { FeeStructure } from "@prisma/client";
 
 // interface Program {
 //   id: string;
@@ -28,23 +30,6 @@ import { useGetProgramQuery } from "@/hooks/query-hooks/programs";
 //   }[];
 // }
 
-interface FeeStructure {
-  id: string;
-  programSemester: {
-    programId: string;
-    semesterNo: number;
-    program: {
-      name: string;
-    };
-  };
-  tuitionFee: number;
-  labFee: number;
-  libraryFee: number;
-  sportsFee: number;
-  miscFee: number;
-  totalFee: number;
-}
-
 export default function ProgramDetailsPage({
   params,
 }: {
@@ -53,8 +38,10 @@ export default function ProgramDetailsPage({
   const { id } = use(params);
   const { notify } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingFee, setEditingFee] = useState<FeeStructure | null>(null);
-  const [selectedFee, setSelectedFee] = useState<FeeStructure | null>(null);
+  const [editingFee, setEditingFee] =
+    useState<Partial<FeeStructureResponse> | null>(null);
+  const [selectedFee, setSelectedFee] =
+    useState<Partial<FeeStructureResponse> | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const { data: program, isLoading } = useGetProgramQuery(id);
@@ -63,7 +50,7 @@ export default function ProgramDetailsPage({
 
   // Filter fee structures for this program
   const feeStructures = allFeeStructures?.filter(
-    (fee: FeeStructure) => fee.programSemester.programId === id
+    (fee: FeeStructureResponse) => fee.programSemester.programId === id
   );
 
   // Mutations
@@ -129,7 +116,7 @@ export default function ProgramDetailsPage({
     };
 
     updateFeeStructure.mutate(
-      { id: editingFee.id, data },
+      { id: editingFee.id!, data },
       {
         onSuccess: () => {
           notify({
@@ -177,12 +164,12 @@ export default function ProgramDetailsPage({
     setIsModalOpen(true);
   };
 
-  const openEditModal = (fee: FeeStructure) => {
+  const openEditModal = (fee: FeeStructureResponse) => {
     setEditingFee(fee);
     setIsModalOpen(true);
   };
 
-  const handleSelectFee = (fee: FeeStructure) => {
+  const handleSelectFee = (fee: FeeStructureResponse) => {
     setSelectedFee(fee);
     setIsDetailsOpen(true);
   };
@@ -256,13 +243,13 @@ export default function ProgramDetailsPage({
                     editingFee
                       ? {
                           programSemester: {
-                            programId: editingFee.programSemester.programId,
-                            semesterNo: editingFee.programSemester.semesterNo,
+                            programId: editingFee?.programSemester?.programId,
+                            semesterNo: editingFee?.programSemester?.semesterNo,
                           },
-                          tuitionFee: editingFee.tuitionFee,
-                          labFee: editingFee.labFee,
-                          libraryFee: editingFee.libraryFee,
-                          sportsFee: editingFee.sportsFee,
+                          tuitionFee: editingFee?.tuitionFee,
+                          labFee: editingFee?.labFee,
+                          libraryFee: editingFee?.libraryFee,
+                          sportsFee: editingFee?.sportsFee,
                           miscFee: editingFee.miscFee,
                         }
                       : {

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { UserWithProfile } from "@/lib/types";
 import { API_ROUTES } from "@/lib/config/api-routes";
-import { getProfile } from "@/lib/services/profile/profile";
+import { getProfile } from "@/lib/api/services/profile/profile";
 
 export const useProfileQuery = () => {
   return useQuery<UserWithProfile>({

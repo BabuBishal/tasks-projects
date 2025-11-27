@@ -11,7 +11,7 @@ import {
   useLoginMutation,
   useRegisterMutation,
 } from "@/hooks/query-hooks/auth/mutation";
-import { loginUser } from "@/lib/services/auth/auth";
+import { loginUser } from "@/lib/api/services/auth/auth";
 import { RegisterFormInputs } from "@/lib/types";
 import { useForm } from "react-hook-form";
 

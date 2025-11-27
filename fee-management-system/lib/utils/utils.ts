@@ -23,15 +23,6 @@ export function calculateJoinedYear(semester: number) {
   return joinedYear;
 }
 
-export const validatePaymentAmount = (
-  amount: number,
-  balance: number
-): string => {
-  if (amount <= 0) return "Amount must be greater than 0";
-  if (amount > balance) return `Amount cannot exceed balance of ${balance}`;
-  return "";
-};
-
 export const generateReceiptNumber = (): string => {
   return `RCPT-${Date.now()}-${Math.random()
     .toString(36)

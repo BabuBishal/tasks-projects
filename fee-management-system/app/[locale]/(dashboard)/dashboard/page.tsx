@@ -33,16 +33,17 @@ export default function DashboardPage() {
     dashboardStats = [],
     paymentStats = { paid: 0, partial: 0, overdue: 0, pending: 0, total: 0 },
     overdueFees = [],
+    programDistribution = [],
   } = data || {};
 
   // Calculate quick stats from existing data
   const collectionStatusStat = dashboardStats.find(
-    (s: { title: string; value: string; desc: string }) =>
-      s.title === "Collection Status"
+    (s) => s.title === "Collection Status"
   );
-  const collectionRate = collectionStatusStat
-    ? parseInt(collectionStatusStat.value)
-    : 0;
+  const collectionRate =
+    collectionStatusStat && typeof collectionStatusStat.value === "string"
+      ? parseInt(collectionStatusStat.value) ?? 0
+      : collectionStatusStat?.value || 0;
   const studentsPending = paymentStats.pending + paymentStats.overdue;
   const upcomingDeadlines = overdueFees.filter(
     (fee) => fee.daysOverdue < 7 && fee.daysOverdue >= 0
@@ -123,7 +124,7 @@ export default function DashboardPage() {
             collectionRate={collectionRate}
             studentsPending={studentsPending}
             upcomingDeadlines={upcomingDeadlines}
-            programDistribution={[]}
+            programDistribution={programDistribution}
           />
         </div>
 

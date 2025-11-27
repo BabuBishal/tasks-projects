@@ -16,9 +16,7 @@ export const API_ROUTES = {
   // Payments
   payments: "/api/payments",
   paymentStats: "/api/payments/stats",
-  paymentAdd: "/api/payment/add",
-  paymentHistory: "/api/payment/history",
-  payment: "/api/payment",
+  paymentAdd: "/api/payments/add",
 
   // Dashboard
   dashboardStats: "/api/dashboard-stats",

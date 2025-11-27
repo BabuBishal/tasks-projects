@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ROUTES } from "@/lib/config/api-routes";
-import { updateSettings } from "@/lib/services/settings/settings";
+import { updateSettings } from "@/lib/api/services/settings/settings";
 
 export const useUpdateSettingsMutation = () => {
   const queryClient = useQueryClient();

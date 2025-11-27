@@ -6,6 +6,7 @@ import {
   WalletCardsIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { memo } from "react";
 
 const QuickActions = () => {
   return (
@@ -57,4 +58,4 @@ const QuickActions = () => {
   );
 };
 
-export default QuickActions;
+export default memo(QuickActions);

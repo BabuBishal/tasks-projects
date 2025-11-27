@@ -181,63 +181,81 @@ export async function GET() {
       take: 50, // Increased from 10 to show more overdue fees
     })) as unknown as StudentFeeWithDetails[];
 
-    return NextResponse.json<DashboardData>({
-      dashboardStats,
-      paymentStats,
-      recentPayments: recentPayments.map((payment: PaymentWithStudent) => ({
-        id: payment.id,
-        studentId: payment.studentFee.student.id,
-        studentName: payment.studentFee.student.name,
-        amount: payment.amount,
-        method: payment.method,
-        date: payment.date,
-        receiptNo: payment.receiptNo,
-        semester:
-          payment.studentFee.feeStructure.programSemester?.semesterNo || 1,
-      })),
-      overdueFees: sortByUrgency(
-        overdueFees.map((fee: StudentFeeWithDetails) => {
-          const daysOverdue = Math.floor(
-            (new Date().getTime() - new Date(fee.dueDate).getTime()) /
-              (1000 * 60 * 60 * 24)
-          );
-          const paymentPercentage = calculatePaymentPercentage(
-            fee.paid,
-            fee.payableFee
-          );
-          const semestersBehind = calculateSemestersBehind(
-            fee.student.semester,
-            fee.feeStructure.programSemester?.semesterNo || 1
-          );
-
-          return {
-            id: fee.id,
-            studentId: fee.student.id,
-            studentName: fee.student.name,
-            studentRollNo: fee.student.rollNo,
-            program: fee.student.program.name,
-
-            // Fee details
-            academicYear: fee.academicYear,
-            semester: fee.feeStructure.programSemester?.semesterNo || 1,
-            totalFee: fee.payableFee,
-            paidAmount: fee.paid,
-            balance: fee.balance,
-            paymentPercentage,
-
-            // Urgency metrics
-            dueDate: fee.dueDate,
-            daysOverdue,
-            urgencyLevel: calculateUrgencyLevel(daysOverdue),
-
-            // Context
-            currentSemester: fee.student.semester,
-            semestersBehind,
-            status: fee.status,
-          };
-        })
-      ),
+    // Calculate program distribution
+    const programDistributionMap = new Map<string, number>();
+    students.forEach((student) => {
+      const programName = student.program.name;
+      programDistributionMap.set(
+        programName,
+        (programDistributionMap.get(programName) || 0) + 1
+      );
     });
+
+    const programDistribution = Array.from(
+      programDistributionMap.entries()
+    ).map(([name, value]) => ({ name, value }));
+
+    return NextResponse.json<DashboardData>(
+      {
+        dashboardStats,
+        paymentStats,
+        programDistribution,
+        recentPayments: recentPayments.map((payment: PaymentWithStudent) => ({
+          id: payment.id,
+          studentId: payment.studentFee.student.id,
+          studentName: payment.studentFee.student.name,
+          amount: payment.amount,
+          method: payment.method,
+          date: payment.date,
+          receiptNo: payment.receiptNo,
+          semester:
+            payment.studentFee.feeStructure.programSemester?.semesterNo || 1,
+        })),
+        overdueFees: sortByUrgency(
+          overdueFees.map((fee: StudentFeeWithDetails) => {
+            const daysOverdue = Math.floor(
+              (new Date().getTime() - new Date(fee.dueDate).getTime()) /
+                (1000 * 60 * 60 * 24)
+            );
+            const paymentPercentage = calculatePaymentPercentage(
+              fee.paid,
+              fee.payableFee
+            );
+            const semestersBehind = calculateSemestersBehind(
+              fee.student.semester,
+              fee.feeStructure.programSemester?.semesterNo || 1
+            );
+
+            return {
+              id: fee.id,
+              studentId: fee.student.id,
+              studentName: fee.student.name,
+              studentRollNo: fee.student.rollNo,
+              program: fee.student.program.name,
+
+              // Fee details
+              academicYear: fee.academicYear,
+              semester: fee.feeStructure.programSemester?.semesterNo || 1,
+              totalFee: fee.payableFee,
+              paidAmount: fee.paid,
+              balance: fee.balance,
+              paymentPercentage,
+
+              // Urgency metrics
+              dueDate: fee.dueDate,
+              daysOverdue,
+              urgencyLevel: calculateUrgencyLevel(daysOverdue),
+
+              // Context
+              currentSemester: fee.student.semester,
+              semestersBehind,
+              status: fee.status,
+            };
+          })
+        ),
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error fetching dashboard data:", error);
     const errorMessage =
