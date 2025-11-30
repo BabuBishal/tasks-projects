@@ -4,21 +4,22 @@ import { Card, CardContent } from "@/components/ui/card/Card";
 import Badge from "@/components/ui/badges/Badges";
 import { Coins } from "lucide-react";
 import { formatCurrency } from "@/lib/utils/utils";
+import { FeeStructureResponse } from "@/lib/types";
 
-interface FeeStructure {
-  id: string;
-  programSemester: {
-    semesterNo: number;
-    program: {
-      name: string;
-    };
-  };
-  tuitionFee: number;
-  totalFee: number;
-}
+// interface FeeStructure {
+//   id: string;
+//   programSemester: {
+//     semesterNo: number;
+//     program: {
+//       name: string;
+//     };
+//   };
+//   tuitionFee: number;
+//   totalFee: number;
+// }
 
 interface FeeStructureCardProps {
-  feeStructure: FeeStructure;
+  feeStructure: FeeStructureResponse;
   onClick: () => void;
 }
 
@@ -37,10 +38,10 @@ export default function FeeStructureCard({
         <div className="flex justify-between items-start">
           <div>
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-1">
-              {feeStructure.programSemester.program.name}
+              {feeStructure?.programSemester?.program?.name}
             </p>
             <h3 className="font-bold text-xl text-foreground">
-              Semester {feeStructure.programSemester.semesterNo}
+              Semester {feeStructure?.programSemester?.semesterNo}
             </h3>
           </div>
           <Badge

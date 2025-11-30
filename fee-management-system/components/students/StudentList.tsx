@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { StudentWithFees, Program } from "@/lib/types/prisma";
+import {
+  StudentWithFees,
+  Program,
+  StudentWithComputedTotals,
+} from "@/lib/types/prisma";
 import { Table } from "@/components/ui/table/Table";
 import Badge from "@/components/ui/badges/Badges";
 import {
@@ -18,17 +22,18 @@ import Link from "next/link";
 import { studentHeaders } from "@/lib/constants/constants";
 import { Modal } from "@/components/ui/modal/Modal";
 import { useToast } from "@/components/ui/toast";
-import { useQuery } from "@tanstack/react-query";
 import { calculateStudentStatus } from "@/lib/utils/status-utils";
+import { useGetProgramsQuery } from "@/hooks/query-hooks/programs";
+import { StudentResponse } from "@/lib/types/api";
 
 interface StudentListProps {
-  initialStudents: StudentWithFees[];
-  onRefetch: () => void;
+  initialStudents: StudentResponse[];
+  // onRefetch: () => void;
 }
 
 const StudentList: React.FC<StudentListProps> = ({
   initialStudents,
-  onRefetch,
+  // onRefetch,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("All");
@@ -59,14 +64,16 @@ const StudentList: React.FC<StudentListProps> = ({
   const { notify } = useToast();
 
   // Fetch programs for edit form
-  const { data: programs } = useQuery<Program[]>({
-    queryKey: ["programs"],
-    queryFn: async () => {
-      const res = await fetch("/api/programs");
-      if (!res.ok) throw new Error("Failed to fetch programs");
-      return res.json();
-    },
-  });
+
+  const { data: programs } = useGetProgramsQuery();
+  // const { data: programs } = useQuery<Program[]>({
+  //   queryKey: ["programs"],
+  //   queryFn: async () => {
+  //     const res = await fetch("/api/programs");
+  //     if (!res.ok) throw new Error("Failed to fetch programs");
+  //     return res.json();
+  //   },
+  // });
 
   const filteredStudents = useMemo(() => {
     return initialStudents.filter((student) => {
@@ -154,7 +161,7 @@ const StudentList: React.FC<StudentListProps> = ({
         type: "success",
       });
       setIsEditModalOpen(false);
-      onRefetch();
+      // onRefetch();
     } catch (error: unknown) {
       notify({
         title: "Error",
@@ -198,7 +205,7 @@ const StudentList: React.FC<StudentListProps> = ({
         type: "success",
       });
       setIsDeleteDialogOpen(false);
-      onRefetch();
+      // onRefetch();
     } catch (error: unknown) {
       notify({
         title: "Error",
@@ -267,7 +274,7 @@ const StudentList: React.FC<StudentListProps> = ({
       });
       setIsBulkDeleteOpen(false);
       setSelectedStudentIds([]);
-      onRefetch();
+      // onRefetch();
     } catch (error: unknown) {
       notify({
         title: "Error",
@@ -304,7 +311,7 @@ const StudentList: React.FC<StudentListProps> = ({
 
       const successCount = data.results.success.length;
       const graduatedCount = data.results.success.filter(
-        (s: any) => s.isGraduated
+        (s) => s.isGraduated
       ).length;
       const promotedCount = successCount - graduatedCount;
       const failedCount = data.results.failed.length;
@@ -327,7 +334,7 @@ const StudentList: React.FC<StudentListProps> = ({
       });
       setIsBulkPromoteOpen(false);
       setSelectedStudentIds([]);
-      onRefetch();
+      // onRefetch();
     } catch (error: unknown) {
       notify({
         title: "Error",

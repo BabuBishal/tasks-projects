@@ -87,7 +87,7 @@ export const formatDate = (date: string | Date) => {
 };
 
 export const formatCurrency = (amount: number) => {
-  return `Rs ${amount?.toLocaleString()}`;
+  return `Rs ${amount?.toFixed(2).toLocaleString()}`;
 };
 
 export const getStatusColor = (status: string) => {

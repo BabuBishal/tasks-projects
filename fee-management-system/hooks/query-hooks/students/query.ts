@@ -4,10 +4,11 @@ import {
   getStudents,
   getStudentById,
 } from "../../../lib/api/services/students/students";
-import { StudentWithComputedTotals } from "@/lib/types/prisma";
+import { StudentResponse } from "@/lib/types/api";
+import { StudentWithComputedTotals } from "@/lib/types";
 
 export const useGetStudentsQuery = () => {
-  return useQuery<StudentWithComputedTotals[]>({
+  return useQuery<StudentResponse[]>({
     queryKey: [API_ROUTES.students],
     queryFn: () => getStudents(),
     staleTime: 15 * 60 * 1000, // 15 minutes

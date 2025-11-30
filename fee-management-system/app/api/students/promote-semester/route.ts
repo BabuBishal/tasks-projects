@@ -1,7 +1,29 @@
-// app/api/students/promote-semester/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { promoteSemester } from "@/lib/utils/fee-assignment";
+interface Success {
+  studentId: string;
+  name?: string;
+  rollNo?: string;
+  oldSemester?: number;
+  newSemester?: number | null;
+  isGraduated?: boolean;
+  feeId?: string;
+  message?: string;
+}
+
+interface Failed {
+  studentId: string;
+  name?: string;
+  rollNo?: string;
+  error?: string;
+}
+
+interface Results {
+  success: Success[];
+  failed: Failed[];
+  total: number;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,9 +37,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const results = {
-      success: [] as any[],
-      failed: [] as any[],
+    const results: Results = {
+      success: [] as Success[],
+      failed: [] as Failed[],
       total: studentIds.length,
     };
 
@@ -57,6 +79,7 @@ export async function POST(req: NextRequest) {
               rollNo: student.rollNo,
               oldSemester: student.semester,
               newSemester: student.semester + 1,
+              isGraduated: false,
               feeId: result.feeId,
             });
           }

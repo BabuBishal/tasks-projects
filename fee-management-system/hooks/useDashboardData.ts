@@ -1,9 +1,9 @@
 "use client";
 import { DashboardData } from "@/lib/types/api";
 import { use, useMemo } from "react";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 async function fetchDashboardData(): Promise<DashboardData> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const response = await fetch(`${baseUrl}/api/dashboard-stats`, {
     cache: "no-store",
   });

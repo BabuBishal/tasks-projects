@@ -3,6 +3,8 @@
 // Generated from Prisma schema - keep in sync with schema.prisma
 // ============================================
 
+import { FeeStructureResponse } from "./api";
+
 export type User = {
   id: string;
   email: string;
@@ -172,23 +174,25 @@ export type StudentWithComputedTotals = Student & {
   totalBalance?: number;
   totalScholarshipAmount?: number;
   fees?: (StudentFee & {
-    feeStructure: FeeStructure;
+    feeStructure: FeeStructureResponse;
     payments: Payment[];
   })[];
-  feesList?: {
-    id: string;
-    academicYear: string;
-    semesterNo: number;
-    originalFee: number;
-    discount: number;
-    payableFee: number;
-    paid: number;
-    balance: number;
-    status: string;
-    dueDate: string | null;
-  }[];
+  feesList?: Fee[];
   scholarships?: (StudentScholarship & {
     scholarship: Scholarship;
     actualAmount?: number;
   })[];
+};
+
+export type Fee = {
+  id: string;
+  academicYear: string;
+  semesterNo: number;
+  originalFee: number;
+  discount: number;
+  payableFee: number;
+  paid: number;
+  balance: number;
+  status: string;
+  dueDate: string | null;
 };

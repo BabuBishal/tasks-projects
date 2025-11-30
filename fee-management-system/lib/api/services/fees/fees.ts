@@ -1,7 +1,8 @@
 import { API_ROUTES } from "@/lib/config/api-routes";
 import httpClient from "../../api";
-import { FeeStructureResponse } from "@/lib/types/api";
+import { FeeStructureResponse, OverdueFee } from "@/lib/types/api";
 import { FeeStructure } from "@prisma/client";
+import { StudentFeeWithDetails } from "@/lib/types";
 
 export const getFeeStructures = async (): Promise<FeeStructureResponse[]> => {
   return await httpClient.get(API_ROUTES.feeStructures);
@@ -31,4 +32,9 @@ export const updateFeeStructure = async ({
 
 export const deleteFeeStructure = async (id: string): Promise<void> => {
   await httpClient.delete(API_ROUTES.feeStructureWithId(id));
+};
+
+
+export const getOverdueFees = async (): Promise<OverdueFee[]> => {
+  return await httpClient.get(API_ROUTES.overdueFees);
 };

@@ -25,6 +25,9 @@ export const API_ROUTES = {
   programs: "/api/programs",
   programWithId: (id: string) => `/api/programs/${id}`,
 
+  //overdue fees
+  overdueFees: "/api/payments/overdue",
+
   // Fee Structures
   feeStructures: "/api/fee-structures",
   feeStructureWithId: (id: string) => `/api/fee-structures/${id}`,

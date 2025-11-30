@@ -58,7 +58,7 @@ export type DashboardData = {
   dashboardStats: DashboardStats[];
   paymentStats: PaymentStats;
   recentPayments: RecentPayment[];
-  overdueFees: OverdueFee[];
+  overdueFees?: OverdueFee[];
   programDistribution: ProgramDistribution[];
 };
 
@@ -92,21 +92,26 @@ export type BulkDeleteResult = {
 };
 
 export type BulkPromoteResult = {
-  success: {
-    studentId: string;
-    name: string;
-    rollNo: string;
-    oldSemester: number;
-    newSemester: number;
-    feeId?: string;
-  }[];
-  failed: {
-    studentId: string;
-    name?: string;
-    rollNo?: string;
-    error: string;
-  }[];
-  total: number;
+  message: string;
+  results: {
+    success: {
+      studentId: string;
+      name: string;
+      rollNo: string;
+      oldSemester: number;
+      newSemester: number;
+      isGraduated?: boolean;
+      feeId?: string;
+      message?: string;
+    }[];
+    failed: {
+      studentId: string;
+      name?: string;
+      rollNo?: string;
+      error: string;
+    }[];
+    total: number;
+  };
 };
 
 // Generic API response wrapper
@@ -134,6 +139,7 @@ export type PaymentHistoryItem = {
   method: string;
   receiptNo: string;
   status: string;
+  semester?: number;
   feeBalance: number;
   feeStatus: string;
   academicYear: string;
@@ -227,3 +233,134 @@ export interface FeeResponseProgramSemester {
     name: string;
   };
 }
+
+export interface StudentResponse {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  rollNo: string;
+  year: number;
+  joinedYear: number;
+  semester: number;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  programId: string;
+  program: ProgramResponse;
+  fees: StudentFee[];
+  scholarships: StudentScholarship[];
+}
+
+export interface ProgramResponse {
+  id: string;
+  name: string;
+  duration: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface StudentFee {
+  id: string;
+  studentId: string;
+  feeStructureId: string;
+  academicYear: string;
+  dueDate: string;
+  status: "Pending" | "Paid" | "Overdue";
+  originalFee: number;
+  totalFee: number;
+  payableFee: number;
+  discount: number;
+  balance: number;
+  paid: number;
+  createdAt: string;
+  updatedAt: string;
+  feeStructure: FeeStructure;
+  payments: Payment[];
+}
+
+export interface FeeStructure {
+  id: string;
+  programSemesterId: string;
+  tuitionFee: number;
+  labFee: number;
+  libraryFee: number;
+  miscFee: number;
+  sportsFee: number;
+  totalFee: number;
+  createdAt: string;
+  updatedAt: string;
+  programSemester: ProgramSemester;
+}
+
+export interface ProgramSemester {
+  id: string;
+  programId: string;
+  semesterNo: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Payment {
+  id: string;
+  feeId: string;
+  amount: number;
+  date: string;
+  method: string;
+}
+
+export interface StudentScholarship {
+  id: string;
+  studentId: string;
+  scholarshipId: string;
+  createdAt: string;
+  updatedAt: string;
+  scholarship: Scholarship;
+}
+
+export interface Scholarship {
+  id: string;
+  name: string;
+  type: "percentage" | "fixed";
+  value: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// interface DashboardData {
+//   dashboardStats: {
+//     title: string;
+//     value: string;
+//     desc: string;
+//     icon: string;
+//   }[];
+//   paymentStats: {
+//     paid: number;
+//     partial: number;
+//     overdue: number;
+//     pending: number;
+//     total: number;
+//   };
+//   recentPayments: {
+//     id: string;
+//     studentId: string;
+//     studentName: string;
+//     amount: number;
+//     method: string;
+//     date: string;
+//     receiptNo: string;
+//     semester: number;
+//   }[];
+//   overdueFees: {
+//     id: string;
+//     studentId: string;
+//     studentName: string;
+//     studentRollNo: string;
+//     program: string;
+//     balance: number;
+//     dueDate: string;
+//     daysOverdue: number;
+//     semester: number;
+//   }[];
+// }

@@ -7,7 +7,7 @@ interface Props extends StudentFormProps {
   error?: string;
   programs: Program[];
   scholarships: { id: string; name: string }[];
-  loading: boolean;
+  loading?: boolean;
 }
 
 export default function StudentForm({
@@ -26,11 +26,6 @@ export default function StudentForm({
       onSubmit={(e) => handleSubmit(e, onSubmit)}
       className="bg-background border border-border p-8 rounded-lg shadow max-w-2xl w-full mx-auto shadow-muted"
     >
-      {/* <h2 className="text-secondary text-xl font-semibold mb-6 text-center">
-        Add Student
-      </h2> */}
-
-      {/* Name */}
       <div className="mb-4">
         <label className="block text-sm mb-1">Name *</label>
         <input
@@ -58,18 +53,6 @@ export default function StudentForm({
           <p className="text-red-500 text-sm">{formErrors.email}</p>
         )}
       </div>
-
-      {/* Roll No */}
-      {/* <div className="mb-4">
-        <label className="block text-sm mb-1">Roll No *</label>
-        <input
-          name="rollNo"
-          value={formData.rollNo}
-          onChange={handleChange}
-          className="w-full border border-border rounded px-3 py-2 bg-accent"
-        />
-        {formErrors.rollNo && <p className="text-red-500 text-sm">{formErrors.rollNo}</p>}
-      </div> */}
 
       {/* Program */}
       <div className="mb-4">
@@ -156,26 +139,6 @@ export default function StudentForm({
           <p className="text-red-500 text-sm">{formErrors.scholarshipId}</p>
         )}
       </div>
-
-      {/* Fee Preview */}
-      {/* {feeStructure && (
-        <div className="mb-6 p-4 bg-accent rounded border">
-          <p className="text-sm flex justify-between">
-            <span>Total Fee:</span>
-            <strong>Rs {feePreview.originalFee}</strong>
-          </p>
-          {feePreview.discount > 0 && (
-            <p className="text-sm flex justify-between text-green-600">
-              <span>Discount:</span>
-              <strong>- Rs {feePreview.discount}</strong>
-            </p>
-          )}
-          <p className="text-sm flex justify-between mt-2 text-blue-600">
-            <span>Payable Fee:</span>
-            <strong>Rs {feePreview.payableFee}</strong>
-          </p>
-        </div>
-      )} */}
 
       {/* Error Message */}
       {error && <p className="text-red-500 text-sm mb-3">{error}</p>}

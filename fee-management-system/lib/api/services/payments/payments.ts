@@ -6,9 +6,16 @@ import {
   AddPaymentRequest,
   AddPaymentResponse,
 } from "@/lib/types/api";
+import { PaymentQueryParams } from "@/hooks/query-hooks/payments";
 
-export const getPayments = async (): Promise<PaymentsResponse> => {
-  return await httpClient.get<PaymentsResponse>(API_ROUTES.payments);
+export const getPayments = async ({
+  params,
+}: {
+  params: PaymentQueryParams;
+}): Promise<PaymentsResponse> => {
+  return await httpClient.get<PaymentsResponse>(API_ROUTES.payments, {
+    params,
+  });
 };
 
 export const getPaymentStats = async (): Promise<PaymentStatsResponse> => {

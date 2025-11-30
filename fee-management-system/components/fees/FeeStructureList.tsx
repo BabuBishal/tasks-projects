@@ -1,27 +1,28 @@
 "use client";
 
+import { FeeStructureResponse } from "@/lib/types";
 import FeeStructureCard from "./FeeStructureCard";
 
-interface FeeStructure {
-  id: string;
-  programSemester: {
-    programId: string;
-    semesterNo: number;
-    program: {
-      name: string;
-    };
-  };
-  tuitionFee: number;
-  labFee: number;
-  libraryFee: number;
-  sportsFee: number;
-  miscFee: number;
-  totalFee: number;
-}
+// interface FeeStructure {
+//   id: string;
+//   programSemester: {
+//     programId: string;
+//     semesterNo: number;
+//     program: {
+//       name: string;
+//     };
+//   };
+//   tuitionFee: number;
+//   labFee: number;
+//   libraryFee: number;
+//   sportsFee: number;
+//   miscFee: number;
+//   totalFee: number;
+// }
 
 interface FeeStructureListProps {
-  feeStructures: FeeStructure[];
-  onSelect: (feeStructure: FeeStructure) => void;
+  feeStructures: FeeStructureResponse[];
+  onSelect: (feeStructure: FeeStructureResponse) => void;
 }
 
 export default function FeeStructureList({

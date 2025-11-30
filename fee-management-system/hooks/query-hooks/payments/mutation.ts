@@ -3,12 +3,12 @@ import { API_ROUTES } from "../../../lib/config/api-routes";
 import { addPayment } from "@/lib/api/services/payments/payments";
 import { AddPaymentRequest, AddPaymentResponse } from "@/lib/types/api";
 
-export const useAddPayment = () => {
+export const useAddPaymentMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<AddPaymentResponse, Error, AddPaymentRequest>({
     mutationFn: addPayment,
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: [API_ROUTES.students, variables.studentId],
       });

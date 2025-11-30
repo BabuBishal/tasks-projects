@@ -5,11 +5,12 @@ import {
   BulkDeleteResult,
   BulkImportResult,
   BulkPromoteResult,
+  StudentResponse,
 } from "@/lib/types/api";
 
 // For fetching all students
-export const getStudents = async (): Promise<StudentWithComputedTotals[]> => {
-  return await httpClient.get<StudentWithComputedTotals[]>(API_ROUTES.students);
+export const getStudents = async (): Promise<StudentResponse[]> => {
+  return await httpClient.get<StudentResponse[]>(API_ROUTES.students);
 };
 
 // For fetching a student by id
@@ -79,7 +80,7 @@ export const bulkImportStudents = async (
 
 // For promoting students to the next semester
 export const promoteSemester = async (data: {
-  programId: string;
+  studentIds: string[];
 }): Promise<BulkPromoteResult> => {
   return await httpClient.post<BulkPromoteResult>(
     API_ROUTES.studentPromoteSemester,

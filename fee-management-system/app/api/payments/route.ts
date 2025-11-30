@@ -21,7 +21,7 @@ export async function GET() {
       },
     });
 
-    console.log("payments fetched successfully", payments.length);
+    // console.log("payments fetched successfully", payments.length);
 
     type PaymentWithStudent = (typeof payments)[number];
 
@@ -47,7 +47,6 @@ export async function GET() {
         method: payment.method,
         receiptNo: payment.receiptNo,
         status: paymentStatus,
-        // Additional useful info
         feeBalance: fee.balance,
         feeStatus: fee.status,
         academicYear: fee.academicYear,

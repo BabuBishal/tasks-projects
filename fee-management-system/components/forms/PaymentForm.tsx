@@ -1,30 +1,30 @@
 "use client";
-import { PaymentFormProps, Student } from "@/lib/types";
+import { PaymentFormProps, Student, StudentWithComputedTotals } from "@/lib/types";
 import { paymentMethod } from "@/lib/constants/constants";
 import { useState } from "react";
 import { Button } from "../ui/button/Button";
 
 // Extended Student type with feesList for this component
-type StudentWithFees = Student & {
-  program?: string | { name: string };
-  fees?: {
-    paid?: number;
-    balance?: number;
-    totalOutstandingAll?: number;
-  };
-  feesList?: Array<{
-    id: string;
-    academicYear: string;
-    semesterNo: number;
-    originalFee: number;
-    discount: number;
-    payableFee: number;
-    paid: number;
-    balance: number;
-    status: string;
-    dueDate: string | null;
-  }>;
-};
+// type StudentWithFees = Student & {
+//   program?: string | { name: string };
+//   fees?: {
+//     paid?: number;
+//     balance?: number;
+//     totalOutstandingAll?: number;
+//   };
+//   feesList?: Array<{
+//     id: string;
+//     academicYear: string;
+//     semesterNo: number;
+//     originalFee: number;
+//     discount: number;
+//     payableFee: number;
+//     paid: number;
+//     balance: number;
+//     status: string;
+//     dueDate: string | null;
+//   }>;
+// };
 
 export default function PaymentForm({
   formData,
@@ -37,7 +37,7 @@ export default function PaymentForm({
   loading,
 }: PaymentFormProps & {
   error: string;
-  students: StudentWithFees[];
+  students: StudentWithComputedTotals[];
   setAmount?: (v: number) => void;
   loading: boolean;
 }) {
