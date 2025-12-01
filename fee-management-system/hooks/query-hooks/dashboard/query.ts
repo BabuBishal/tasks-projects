@@ -1,7 +1,7 @@
-import { API_ROUTES } from "@/lib/config/api-routes";
-import { useQuery } from "@tanstack/react-query";
-import { getDashboardStats } from "@/lib/api/services/dashboard/dashboard";
-import { DashboardData } from "@/lib/types/api";
+import { API_ROUTES } from '@/lib/api/config/api-routes'
+import { useQuery } from '@tanstack/react-query'
+import { getDashboardStats } from '@/lib/api/services/dashboard/dashboard'
+import { DashboardData } from '@/lib/types/api'
 
 export const useGetDashboardStatsQuery = () => {
   return useQuery<DashboardData>({
@@ -11,5 +11,5 @@ export const useGetDashboardStatsQuery = () => {
     gcTime: 20 * 60 * 1000, // 20 minutes
     retry: 2,
     refetchOnWindowFocus: false,
-  });
-};
+  })
+}

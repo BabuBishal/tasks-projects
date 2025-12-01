@@ -1,87 +1,40 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Building2, Globe, DollarSign, Calendar } from 'lucide-react'
+import { Building2, Globe, DollarSign } from 'lucide-react'
 import { Button } from '@/components/ui/button/Button'
 import { useToast } from '@/components/ui/toast'
 import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
-import { SystemSettings, SettingsUpdateInput } from '@/lib/types'
+import { SettingsUpdateInput } from '@/lib/types'
 import { SettingsSkeleton } from './_components/SettingsSkeleton'
+import { useSettingsQuery, useUpdateSettingsMutation } from '@/hooks/query-hooks/settings'
+import { useProfileQuery } from '@/hooks/query-hooks/profile'
 
 export default function SettingsPage() {
-  const { data: session } = useSession()
   const router = useRouter()
   const { notify } = useToast()
 
-  const [settings, setSettings] = useState<SystemSettings | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [updating, setUpdating] = useState(false)
-  const [isAdmin, setIsAdmin] = useState(false)
+  const { data: settings, isLoading: settingsLoading } = useSettingsQuery()
+  const { data: profileData } = useProfileQuery()
+  const updateSettingsMutation = useUpdateSettingsMutation()
 
   const [settingsForm, setSettingsForm] = useState<SettingsUpdateInput>({
-    institutionName: '',
-    institutionAddress: '',
-    institutionPhone: '',
-    institutionEmail: '',
-    currency: 'Rs.',
-    dateFormat: 'DD/MM/YYYY',
-    timezone: 'Asia/Kathmandu',
-    receiptPrefix: 'RCP',
-    lateFeePercentage: 0,
-    gracePeriodDays: 7,
-    reminderDaysBefore: 3,
+    institutionName: settings?.institutionName || '',
+    institutionAddress: settings?.institutionAddress || '',
+    institutionPhone: settings?.institutionPhone || '',
+    institutionEmail: settings?.institutionEmail || '',
+    currency: settings?.currency || 'Rs.',
+    dateFormat: settings?.dateFormat || 'DD/MM/YYYY',
+    timezone: settings?.timezone || 'Asia/Kathmandu',
+    receiptPrefix: settings?.receiptPrefix || 'RCP',
+    lateFeePercentage: settings?.lateFeePercentage || 0,
+    gracePeriodDays: settings?.gracePeriodDays || 7,
+    reminderDaysBefore: settings?.reminderDaysBefore || 3,
   })
 
-  useEffect(() => {
-    fetchSettings()
-    checkAdminStatus()
-  }, [])
-
-  const checkAdminStatus = async () => {
-    try {
-      const res = await fetch('/api/profile')
-      if (res.ok) {
-        const data = await res.json()
-        setIsAdmin(data.profile?.role === 'Admin')
-      }
-    } catch (error) {
-      console.error('Error checking admin status:', error)
-    }
-  }
-
-  const fetchSettings = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch('/api/settings')
-      if (!res.ok) throw new Error('Failed to fetch settings')
-
-      const data = await res.json()
-      setSettings(data)
-      setSettingsForm({
-        institutionName: data.institutionName || '',
-        institutionAddress: data.institutionAddress || '',
-        institutionPhone: data.institutionPhone || '',
-        institutionEmail: data.institutionEmail || '',
-        currency: data.currency || 'Rs.',
-        dateFormat: data.dateFormat || 'DD/MM/YYYY',
-        timezone: data.timezone || 'Asia/Kathmandu',
-        receiptPrefix: data.receiptPrefix || 'RCP',
-        lateFeePercentage: data.lateFeePercentage || 0,
-        gracePeriodDays: data.gracePeriodDays || 7,
-        reminderDaysBefore: data.reminderDaysBefore || 3,
-      })
-    } catch (error) {
-      notify({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to load settings',
-        type: 'error',
-      })
-    } finally {
-      setLoading(false)
-    }
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isAdmin = (profileData as any)?.profile?.role === 'Admin'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -96,37 +49,23 @@ export default function SettingsPage() {
     }
 
     try {
-      setUpdating(true)
-      const res = await fetch('/api/settings', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settingsForm),
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Failed to update settings')
-      }
+      await updateSettingsMutation.mutateAsync(settingsForm)
 
       notify({
         title: 'Success',
         description: 'Settings updated successfully',
         type: 'success',
       })
-
-      await fetchSettings()
     } catch (error) {
       notify({
         title: 'Error',
         description: error instanceof Error ? error.message : 'Failed to update settings',
         type: 'error',
       })
-    } finally {
-      setUpdating(false)
     }
   }
 
-  if (loading) {
+  if (settingsLoading) {
     return <SettingsSkeleton />
   }
 
@@ -149,14 +88,12 @@ export default function SettingsPage() {
     <div className="flex h-full w-full flex-col gap-6">
       <Breadcrumb items={[{ label: 'Settings', href: '/settings' }]} />
 
-      {/* Header */}
       <div>
         <h1 className="text-primary text-2xl font-bold">System Settings</h1>
         <p className="text-muted text-sm">Configure institution and system preferences</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Institution Information */}
         <div className="bg-card border-border rounded-lg border p-6">
           <div className="mb-4 flex items-center gap-2">
             <Building2 className="text-primary h-5 w-5" />
@@ -229,7 +166,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* System Preferences */}
         <div className="bg-card border-border rounded-lg border p-6">
           <div className="mb-4 flex items-center gap-2">
             <Globe className="text-primary h-5 w-5" />
@@ -282,7 +218,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Fee & Payment Settings */}
         <div className="bg-card border-border rounded-lg border p-6">
           <div className="mb-4 flex items-center gap-2">
             <DollarSign className="text-primary h-5 w-5" />
@@ -369,13 +304,12 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex justify-end gap-3">
           <Button type="button" variant="outline" onClick={() => router.back()}>
             Cancel
           </Button>
-          <Button type="submit" variant="primary" disabled={updating}>
-            {updating ? 'Saving...' : 'Save Settings'}
+          <Button type="submit" variant="primary" disabled={updateSettingsMutation.isPending}>
+            {updateSettingsMutation.isPending ? 'Saving...' : 'Save Settings'}
           </Button>
         </div>
       </form>

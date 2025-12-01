@@ -1,4 +1,4 @@
-import { StatusBar } from '@/components/shared/status-bar/StatusBar'
+import { StatusBar } from '@/app/[locale]/(root)/dashboard/_components/status-bar/StatusBar'
 import { PaymentStats } from '@/lib/types/api'
 
 const PaymentStatusOverview = ({ paymentStats }: { paymentStats: PaymentStats }) => {

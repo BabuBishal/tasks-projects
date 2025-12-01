@@ -1,7 +1,7 @@
 import { Modal } from '@/components/ui/modal'
 
 import { Program } from '../page'
-import ProgramForm from '@/components/programs/ProgramForm'
+import ProgramForm from '@/app/[locale]/(root)/programs/_components/ProgramForm'
 import { X } from 'lucide-react'
 
 const AddProgramModal = ({

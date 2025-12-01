@@ -1,11 +1,11 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardHeader } from "@/components/ui/card/Card";
+import { Skeleton } from '@/components/ui/skeleton'
+import { Card, CardContent, CardHeader } from '@/components/ui/card/Card'
 
 export function StudentDetailsSkeleton() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div className="space-y-2">
           <Skeleton className="h-8 w-[250px]" />
           <Skeleton className="h-4 w-[350px]" />
@@ -16,20 +16,20 @@ export function StudentDetailsSkeleton() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Student Info Card */}
         <Card className="lg:col-span-1">
           <CardHeader>
             <Skeleton className="h-6 w-[150px]" />
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="flex flex-col items-center text-center p-4">
-              <Skeleton className="h-24 w-24 rounded-full mb-4" />
-              <Skeleton className="h-6 w-[180px] mb-2" />
+            <div className="flex flex-col items-center p-4 text-center">
+              <Skeleton className="mb-4 h-24 w-24 rounded-full" />
+              <Skeleton className="mb-2 h-6 w-[180px]" />
               <Skeleton className="h-4 w-[120px]" />
             </div>
             <div className="space-y-4">
-              {[...Array(5)].map((_, i) => (
+              {[...Array(3)].map((_, i) => (
                 <div key={i} className="flex justify-between">
                   <Skeleton className="h-4 w-[100px]" />
                   <Skeleton className="h-4 w-[150px]" />
@@ -40,9 +40,9 @@ export function StudentDetailsSkeleton() {
         </Card>
 
         {/* Right Column */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[...Array(3)].map((_, i) => (
               <Card key={i}>
                 <CardContent className="pt-6">
@@ -70,7 +70,7 @@ export function StudentDetailsSkeleton() {
             <CardContent>
               <div className="space-y-4">
                 <Skeleton className="h-10 w-full" />
-                {[...Array(5)].map((_, i) => (
+                {[...Array(3)].map((_, i) => (
                   <Skeleton key={i} className="h-16 w-full" />
                 ))}
               </div>
@@ -79,5 +79,5 @@ export function StudentDetailsSkeleton() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,75 +1,44 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button/Button";
-import { Download, Plus } from "lucide-react";
-import Link from "next/link";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button/Button'
+import { Download, Plus } from 'lucide-react'
+import Link from 'next/link'
 
-import { useGetPaymentsQuery } from "@/hooks/query-hooks/payments";
-import { TableSkeleton } from "@/app/[locale]/(root)/_components/skeletons/TableSkeleton";
-import { handleExportPayments } from "@/lib/utils/export-payments";
-import PaymentSearch from "./PaymentSearch";
-import PaymentHistory from "./PaymentHistory";
+import { useGetPaymentsQuery } from '@/hooks/query-hooks/payments'
+import { TableSkeleton } from '@/app/[locale]/(root)/_components/skeletons/TableSkeleton'
+import { handleExportPayments } from '@/lib/utils/export-payments'
+import PaymentSearch from './PaymentSearch'
+import PaymentHistory from './PaymentHistory'
 
 const PaymentList = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [methodFilter, setMethodFilter] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState('')
+  const [statusFilter, setStatusFilter] = useState<string>('')
+  const [methodFilter, setMethodFilter] = useState<string>('')
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
-  const { data, isLoading, error } = useGetPaymentsQuery({
+  const { data, isLoading } = useGetPaymentsQuery({
     params: { search: searchQuery, status: statusFilter, method: methodFilter },
-  });
+  })
 
-  const initialPayments = data?.payments;
-
-  // if (isLoading) return <TableSkeleton />;
-
-  if (error) return null;
-
-  const filteredPayments = (() => {
-    if (!initialPayments) return [];
-
-    return initialPayments.filter((payment) => {
-      const studentNameMatches = payment.studentName
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const idMatches = payment.id
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const matchesSearch = studentNameMatches || idMatches;
-
-      const matchesStatus = statusFilter
-        ? payment.status.toLowerCase() === statusFilter.toLowerCase()
-        : true;
-
-      const matchesMethod = methodFilter
-        ? payment.method.toLowerCase() === methodFilter.toLowerCase()
-        : true;
-
-      return matchesSearch && matchesStatus && matchesMethod;
-    });
-  })();
-  const filteredTotal = filteredPayments.length;
+  // Use backend-filtered data directly
+  const filteredPayments = data?.payments || []
+  const filteredTotal = filteredPayments.length
 
   const paginatedPayments = (() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return filteredPayments.slice(startIndex, endIndex);
-  })();
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    return filteredPayments.slice(startIndex, endIndex)
+  })()
 
   return (
-    <div className="w-full flex flex-col gap-5 p-6 border border-border rounded-lg bg-card">
-      <div className="flex justify-between items-center">
+    <div className="border-border bg-card flex w-full flex-col gap-5 rounded-lg border p-6">
+      <div className="flex items-center justify-between">
         <div className="flex flex-col">
-          <span className="text-secondary text-lg font-semibold">
-            Payment Management
-          </span>
-          <span className="text-xs text-muted">
-            Manage and view all payment records
-          </span>
+          <span className="text-secondary text-lg font-semibold">Payment Management</span>
+          <span className="text-muted text-xs">Manage and view all payment records</span>
         </div>
         <div className="flex gap-3">
           <Button
@@ -77,11 +46,11 @@ const PaymentList = () => {
             size="sm"
             onClick={() => handleExportPayments(filteredPayments)}
           >
-            <Download className="w-4 h-4" /> Export
+            <Download className="h-4 w-4" /> Export
           </Button>
-          <Link href={"/payments/add"}>
+          <Link href={'/payments/add'}>
             <Button variant="primary" size="sm">
-              <Plus className="w-4 h-4" /> New Payment
+              <Plus className="h-4 w-4" /> New Payment
             </Button>
           </Link>
         </div>
@@ -97,20 +66,20 @@ const PaymentList = () => {
         setCurrentPage={setCurrentPage}
       />
 
-      {/* Payment Table */}
-      {!isLoading && initialPayments && initialPayments?.length > 0 ? (
+      {/* Payment Table - show previous data while loading */}
+      {isLoading && !data ? (
+        <TableSkeleton />
+      ) : (
         <PaymentHistory
-          initialPayments={initialPayments}
+          initialPayments={filteredPayments}
           paginatedPayments={paginatedPayments}
           filteredTotal={filteredTotal}
           setCurrentPage={setCurrentPage}
           itemsPerPage={itemsPerPage}
         />
-      ) : (
-        <TableSkeleton />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PaymentList;
+export default PaymentList

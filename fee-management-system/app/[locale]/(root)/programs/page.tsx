@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button/Button'
 import { Plus } from 'lucide-react'
-import ProgramList from '@/components/programs/ProgramList'
+import ProgramList from '@/app/[locale]/(root)/programs/_components/ProgramList'
 
 import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
 import { useToast } from '@/components/ui/toast'

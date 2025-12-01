@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-import { API_ROUTES } from "../../../lib/config/api-routes";
-import { getPaymentReportStats } from "../../../lib/api/services/reports/reports";
+import { useQuery } from '@tanstack/react-query'
+import { API_ROUTES } from '../../../lib/api/config/api-routes'
+import { getPaymentReportStats } from '../../../lib/api/services/reports/reports'
 
 export const useGetPaymentReportStatsQuery = (params?: {
-  startDate?: string;
-  endDate?: string;
+  startDate?: string
+  endDate?: string
 }) => {
   return useQuery({
     queryKey: [API_ROUTES.reports.paymentStats, params],
@@ -13,5 +13,5 @@ export const useGetPaymentReportStatsQuery = (params?: {
     gcTime: 10 * 60 * 1000, // 10 minutes
     retry: 2,
     refetchOnWindowFocus: false,
-  });
-};
+  })
+}

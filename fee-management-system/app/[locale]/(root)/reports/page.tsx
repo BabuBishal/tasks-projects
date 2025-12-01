@@ -128,7 +128,6 @@ export default function ReportsPage() {
     return options
   }
   const periodOptions = periodOptionsFn()
-  // console.log("🚀 ~ ReportsPage ~ periodOptions:", periodOptions());
 
   // Update selected period when timeframe changes
   const handleTimeFrameChange = (value: string) => {

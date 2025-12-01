@@ -50,7 +50,6 @@ export default function FeeStructureForm({
     miscFee: initialData?.miscFee || 0,
   });
 
-  // Derive available semesters from program duration
   const selectedProgram = programs.find((p) => p.id === formData.programId);
   const availableSemesters = selectedProgram
     ? Array.from({ length: selectedProgram.duration }, (_, i) => i + 1)
@@ -64,7 +63,7 @@ export default function FeeStructureForm({
       ...prev,
       [name]:
         name.includes("Fee") || name === "semesterNo"
-          ? Number(value) || value // Keep as string if empty/invalid for number inputs initially
+          ? Number(value) || value 
           : value,
     }));
   };
@@ -84,14 +83,13 @@ export default function FeeStructureForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Program Selection */}
         <div>
           <label className="block text-sm font-medium mb-1">Program</label>
           <select
             name="programId"
             value={formData.programId}
             onChange={handleChange}
-            disabled={!!initialData} // Disable program change on edit
+            disabled={!!initialData} 
             className="w-full p-2 border rounded-md bg-background"
             required
           >
@@ -104,7 +102,6 @@ export default function FeeStructureForm({
           </select>
         </div>
 
-        {/* Semester Selection */}
         <div>
           <label className="block text-sm font-medium mb-1">Semester</label>
           <select
@@ -124,7 +121,6 @@ export default function FeeStructureForm({
           </select>
         </div>
 
-        {/* Tuition Fee */}
         <div>
           <label className="block text-sm font-medium mb-1">Tuition Fee</label>
           <input
@@ -137,7 +133,6 @@ export default function FeeStructureForm({
           />
         </div>
 
-        {/* Lab Fee */}
         <div>
           <label className="block text-sm font-medium mb-1">Lab Fee</label>
           <input
@@ -150,7 +145,6 @@ export default function FeeStructureForm({
           />
         </div>
 
-        {/* Library Fee */}
         <div>
           <label className="block text-sm font-medium mb-1">Library Fee</label>
           <input
@@ -163,7 +157,6 @@ export default function FeeStructureForm({
           />
         </div>
 
-        {/* Sports Fee */}
         <div>
           <label className="block text-sm font-medium mb-1">Sports Fee</label>
           <input
@@ -176,7 +169,6 @@ export default function FeeStructureForm({
           />
         </div>
 
-        {/* Misc Fee */}
         <div>
           <label className="block text-sm font-medium mb-1">Misc Fee</label>
           <input
@@ -190,7 +182,6 @@ export default function FeeStructureForm({
         </div>
       </div>
 
-      {/* Total Fee Display */}
       <div className="p-4 bg-accent rounded-md flex justify-between items-center">
         <span className="font-semibold">Total Fee:</span>
         <span className="text-xl font-bold text-primary">
@@ -198,7 +189,6 @@ export default function FeeStructureForm({
         </span>
       </div>
 
-      {/* Actions */}
       <div className="flex justify-end gap-3 pt-4">
         <Button type="button" variant="secondary" onClick={onCancel}>
           Cancel

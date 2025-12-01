@@ -11,7 +11,6 @@ import { AlertSkeleton } from './skeletons/AlertSkeleton'
 
 export default function AlertsNotifications() {
   const { data, isLoading, isError } = useGetOverdueFeesQuery()
-  // console.log("overdue", data);
 
   const alerts = data
     ?.filter(fee => fee.daysOverdue > 30 || fee.paidAmount === 0)
@@ -28,7 +27,6 @@ export default function AlertsNotifications() {
       amount: fee.balance,
       daysOverdue: fee.daysOverdue,
     }))
-  // console.log("alerts", alerts);
 
   if (isLoading) {
     return <AlertSkeleton />
@@ -81,7 +79,6 @@ export default function AlertsNotifications() {
   }
 
   return (
-    // <div>hello</div>
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">

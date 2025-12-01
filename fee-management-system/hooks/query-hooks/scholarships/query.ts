@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { API_ROUTES } from "../../../lib/config/api-routes";
-import { getScholarships } from "../../../lib/api/services/scholarships/scholarships";
-import { Scholarship } from "@/lib/types/prisma";
+import { useQuery } from '@tanstack/react-query'
+import { API_ROUTES } from '../../../lib/api/config/api-routes'
+import { getScholarships } from '../../../lib/api/services/scholarships/scholarships'
+import { Scholarship } from '@/lib/types/prisma'
 
 export const useGetScholarshipsQuery = () => {
   return useQuery<Scholarship[]>({
@@ -13,5 +13,5 @@ export const useGetScholarshipsQuery = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-  });
-};
+  })
+}

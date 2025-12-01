@@ -1,10 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { API_ROUTES } from "../../../lib/config/api-routes";
-import {
-  getFeeStructures,
-  getOverdueFees,
-} from "../../../lib/api/services/fees/fees";
-import { FeeStructureResponse, OverdueFee } from "../../../lib/types/api";
+import { useQuery } from '@tanstack/react-query'
+import { API_ROUTES } from '../../../lib/api/config/api-routes'
+import { getFeeStructures, getOverdueFees } from '../../../lib/api/services/fees/fees'
+import { FeeStructureResponse, OverdueFee } from '../../../lib/types/api'
 
 export const useGetFeeStructuresQuery = () => {
   return useQuery<FeeStructureResponse[]>({
@@ -14,8 +11,8 @@ export const useGetFeeStructuresQuery = () => {
     gcTime: 30 * 60 * 1000, // 30 minutes
     retry: 2,
     refetchOnWindowFocus: false,
-  });
-};
+  })
+}
 
 export const useGetOverdueFeesQuery = () => {
   return useQuery<OverdueFee[]>({
@@ -25,5 +22,5 @@ export const useGetOverdueFeesQuery = () => {
     gcTime: 30 * 60 * 1000, // 30 minutes
     retry: 2,
     refetchOnWindowFocus: false,
-  });
-};
+  })
+}

@@ -1,4 +1,4 @@
-import { API_ROUTES } from '@/lib/config/api-routes'
+import { API_ROUTES } from '@/lib/api/config/api-routes'
 import { signIn } from 'next-auth/react'
 import httpClient from '../../api'
 

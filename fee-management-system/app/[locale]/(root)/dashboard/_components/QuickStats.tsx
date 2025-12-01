@@ -1,6 +1,6 @@
 'use client'
 
-import Piechart from '@/components/piechart/piechart'
+import Piechart from '@/app/[locale]/(root)/dashboard/_components/piechart/piechart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card/Card'
 import { COLORS } from '@/lib/constants/constants'
 import { ProgramDistribution } from '@/lib/types'

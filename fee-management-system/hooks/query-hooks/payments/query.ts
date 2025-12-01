@@ -1,23 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import { API_ROUTES } from "../../../lib/config/api-routes";
-import {
-  getPayments,
-  getPaymentStats,
-} from "@/lib/api/services/payments/payments";
-import { PaymentsResponse, PaymentStatsResponse } from "@/lib/types/api";
+import { useQuery } from '@tanstack/react-query'
+import { API_ROUTES } from '../../../lib/api/config/api-routes'
+import { getPayments, getPaymentStats } from '@/lib/api/services/payments/payments'
+import { PaymentsResponse, PaymentStatsResponse } from '@/lib/types/api'
 
 export type PaymentQueryParams = {
-  page?: number;
-  search?: string;
-  status?: string;
-  method?: string;
-};
+  page?: number
+  search?: string
+  status?: string
+  method?: string
+}
 
-export const useGetPaymentsQuery = ({
-  params = {},
-}: {
-  params?: PaymentQueryParams;
-}) => {
+export const useGetPaymentsQuery = ({ params = {} }: { params?: PaymentQueryParams }) => {
   return useQuery<PaymentsResponse>({
     queryKey: [API_ROUTES.payments, params],
     queryFn: () => getPayments({ params }),
@@ -25,8 +18,9 @@ export const useGetPaymentsQuery = ({
     gcTime: 30 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,
-  });
-};
+    placeholderData: previousData => previousData,
+  })
+}
 
 export const useGetPaymentStatsQuery = () => {
   return useQuery<PaymentStatsResponse>({
@@ -36,5 +30,5 @@ export const useGetPaymentStatsQuery = () => {
     gcTime: 30 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,
-  });
-};
+  })
+}
