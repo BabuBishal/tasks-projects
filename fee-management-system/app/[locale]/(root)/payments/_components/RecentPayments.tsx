@@ -20,7 +20,7 @@ const RecentPayments = () => {
   const recentPayments = paymentsData?.payments.slice(0, 5)
 
   if (recentPaymentsLoading) {
-    return <TableSkeleton columnCount={6} rowCount={10} />
+    return <TableSkeleton columnCount={6} rowCount={5} />
   }
 
   if (!paymentsData) return null

@@ -28,41 +28,42 @@ export default function QuickStats({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {/* Collection Rate */}
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-green-100 p-3 dark:bg-green-950">
-              <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="flex flex-col gap-4">
+            {/* Collection Rate */}
+            <div className="flex items-start gap-3">
+              <div className="rounded-xl bg-green-100 p-3 dark:bg-green-950">
+                <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
+              </div>
+              <div>
+                <p className="text-muted text-sm">Collection Rate (This Month)</p>
+                <p className="text-primary text-2xl font-bold">{collectionRate}%</p>
+              </div>
             </div>
-            <div>
-              <p className="text-muted text-sm">Collection Rate (This Month)</p>
-              <p className="text-primary text-2xl font-bold">{collectionRate}%</p>
+
+            {/* Students with Pending Fees */}
+            <div className="flex items-start gap-3">
+              <div className="rounded-xl bg-orange-100 p-3 dark:bg-orange-950">
+                <Users className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+              </div>
+              <div>
+                <p className="text-muted text-sm">Students with Pending Fees</p>
+                <p className="text-primary text-2xl font-bold">{studentsPending}</p>
+              </div>
+            </div>
+
+            {/* Upcoming Deadlines */}
+            <div className="flex items-start gap-3">
+              <div className="rounded-xl bg-blue-100 p-3 dark:bg-blue-950">
+                <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <p className="text-muted text-sm">Upcoming Deadlines (7 days)</p>
+                <p className="text-primary text-2xl font-bold">{upcomingDeadlines}</p>
+              </div>
             </div>
           </div>
 
-          {/* Students with Pending Fees */}
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-orange-100 p-3 dark:bg-orange-950">
-              <Users className="h-6 w-6 text-orange-600 dark:text-orange-400" />
-            </div>
-            <div>
-              <p className="text-muted text-sm">Students with Pending Fees</p>
-              <p className="text-primary text-2xl font-bold">{studentsPending}</p>
-            </div>
-          </div>
-
-          {/* Upcoming Deadlines */}
-          <div className="flex items-start gap-3">
-            <div className="rounded-xl bg-blue-100 p-3 dark:bg-blue-950">
-              <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <p className="text-muted text-sm">Upcoming Deadlines (7 days)</p>
-              <p className="text-primary text-2xl font-bold">{upcomingDeadlines}</p>
-            </div>
-          </div>
-
-          {/* Program Distribution */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <div className="rounded-lg bg-purple-100 p-2 dark:bg-purple-950">
@@ -70,7 +71,7 @@ export default function QuickStats({
               </div>
               <p className="text-muted text-sm font-medium">Program Distribution</p>
             </div>
-            <div className="h-[160px] w-full">
+            <div className="h-[200px] w-full">
               {programDistribution.length > 0 ? (
                 <Piechart programDistribution={programDistribution} />
               ) : (

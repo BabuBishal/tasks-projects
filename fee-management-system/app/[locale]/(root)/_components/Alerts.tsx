@@ -11,7 +11,7 @@ import { TableSkeleton } from './skeletons/TableSkeleton'
 const Alerts = () => {
   const { data: overdueFees, isLoading: overDuePaymentsLoading } = useGetOverdueFeesQuery()
 
-  if (overDuePaymentsLoading) return <TableSkeleton columnCount={6} rowCount={10} />
+  if (overDuePaymentsLoading) return <TableSkeleton columnCount={6} rowCount={5} />
 
   if (!overdueFees) return null
 

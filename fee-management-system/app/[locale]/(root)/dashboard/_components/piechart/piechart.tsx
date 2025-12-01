@@ -1,7 +1,7 @@
 import { COLORS } from '@/lib/constants/constants'
 import { ProgramDistribution } from '@/lib/types/api'
 import { memo } from 'react'
-import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 type TooltipFormatterFn = (value: number, name?: string) => [number, string]
 
@@ -27,11 +27,7 @@ const Piechart = ({ programDistribution }: { programDistribution: ProgramDistrib
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        {/* <Tooltip
-                      formatter={tooltipFormatter}
-                      contentStyle={TOOLTIP_CONTENT_STYLE}
-                      itemStyle={TOOLTIP_ITEM_STYLE}
-                    /> */}
+        <Tooltip formatter={tooltipFormatter} />
       </PieChart>
     </ResponsiveContainer>
   )
