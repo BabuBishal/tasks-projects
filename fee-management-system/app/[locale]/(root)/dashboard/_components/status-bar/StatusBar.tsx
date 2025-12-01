@@ -1,4 +1,4 @@
-import ProgressBar from "@/components/ui/progress-bar/ProgressBar";
+import ProgressBar from "@/shared/ui/progress-bar/ProgressBar";
 
 export function StatusBar({
   label,

@@ -1,9 +1,9 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card/Card";
+import { Skeleton } from '@/shared/ui/skeleton'
+import { Card, CardContent } from '@/shared/ui/card/Card'
 
 export function SettingsSkeleton() {
   return (
-    <div className="w-full h-full flex flex-col gap-6">
+    <div className="flex h-full w-full flex-col gap-6">
       {/* Header */}
       <div className="space-y-2">
         <Skeleton className="h-8 w-[200px]" />
@@ -12,17 +12,17 @@ export function SettingsSkeleton() {
 
       {/* Institution Information */}
       <Card>
-        <CardContent className="p-6 space-y-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Skeleton className="w-5 h-5" />
+        <CardContent className="space-y-6 p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <Skeleton className="h-5 w-5" />
             <Skeleton className="h-6 w-[200px]" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2 space-y-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="space-y-2 md:col-span-2">
               <Skeleton className="h-4 w-[120px]" />
               <Skeleton className="h-10 w-full" />
             </div>
-            <div className="md:col-span-2 space-y-2">
+            <div className="space-y-2 md:col-span-2">
               <Skeleton className="h-4 w-[80px]" />
               <Skeleton className="h-10 w-full" />
             </div>
@@ -40,12 +40,12 @@ export function SettingsSkeleton() {
 
       {/* System Preferences */}
       <Card>
-        <CardContent className="p-6 space-y-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Skeleton className="w-5 h-5" />
+        <CardContent className="space-y-6 p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <Skeleton className="h-5 w-5" />
             <Skeleton className="h-6 w-[200px]" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="space-y-2">
                 <Skeleton className="h-4 w-[120px]" />
@@ -58,12 +58,12 @@ export function SettingsSkeleton() {
 
       {/* Fee & Payment Settings */}
       <Card>
-        <CardContent className="p-6 space-y-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Skeleton className="w-5 h-5" />
+        <CardContent className="space-y-6 p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <Skeleton className="h-5 w-5" />
             <Skeleton className="h-6 w-[200px]" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="space-y-2">
                 <Skeleton className="h-4 w-[150px]" />
@@ -74,5 +74,5 @@ export function SettingsSkeleton() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

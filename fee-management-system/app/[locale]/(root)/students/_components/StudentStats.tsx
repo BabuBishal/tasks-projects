@@ -1,7 +1,7 @@
 'use client'
 
-import { useGetStudentsQuery } from '@/hooks/query-hooks/students'
-import StatsCard from '@/components/ui/stats-card/StatsCard'
+import { useGetStudentsQuery } from '@/app/[locale]/(root)/students/_hooks'
+import StatsCard from '@/shared/ui/stats-card/StatsCard'
 import { AlertCircle, Users, Wallet } from 'lucide-react'
 import { StatsSkeleton } from '../../_components/skeletons/StatsSkeleton'
 

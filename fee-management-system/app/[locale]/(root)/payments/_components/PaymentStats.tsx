@@ -1,27 +1,26 @@
-"use client"
+'use client'
 
-import StatsCard from "@/components/ui/stats-card/StatsCard";
-import { useGetPaymentStatsQuery } from "@/hooks/query-hooks/payments";
-import { DollarSign, CheckCircle, Clock } from "lucide-react";
-import { StatsSkeleton } from "../../_components/skeletons/StatsSkeleton";
+import StatsCard from '@/shared/ui/stats-card/StatsCard'
+import { useGetPaymentStatsQuery } from '@/app/[locale]/(root)/payments/_hooks'
+import { DollarSign, CheckCircle, Clock } from 'lucide-react'
+import { StatsSkeleton } from '../../_components/skeletons/StatsSkeleton'
 
 const PaymentStats = ({}) => {
-  const { data: paymentStats, isLoading: paymentStatsLoading } =
-    useGetPaymentStatsQuery();
+  const { data: paymentStats, isLoading: paymentStatsLoading } = useGetPaymentStatsQuery()
 
   if (paymentStatsLoading) {
-    return <StatsSkeleton />;
+    return <StatsSkeleton />
   }
 
-  if (!paymentStats) return null;
+  if (!paymentStats) return null
 
-  const todaysCollections = paymentStats?.todaysCollections || 0;
-  const monthCollections = paymentStats?.monthCollections || 0;
-  const pendingAmount = paymentStats?.pendingAmount || "Rs 0";
-  const successRate = paymentStats?.paymentSuccessRate || 0;
+  const todaysCollections = paymentStats?.todaysCollections || 0
+  const monthCollections = paymentStats?.monthCollections || 0
+  const pendingAmount = paymentStats?.pendingAmount || 'Rs 0'
+  const successRate = paymentStats?.paymentSuccessRate || 0
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
       <StatsCard
         title="Today's Collections"
         value={`Rs ${todaysCollections.toLocaleString()}`}
@@ -51,7 +50,7 @@ const PaymentStats = ({}) => {
         variant="primary"
       />
     </div>
-  );
-};
+  )
+}
 
-export default PaymentStats;
+export default PaymentStats

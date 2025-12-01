@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card/Card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from '@/shared/ui/card/Card'
+import { Skeleton } from '@/shared/ui/skeleton'
 
 export function AlertSkeleton() {
   return (
@@ -10,10 +10,7 @@ export function AlertSkeleton() {
       <CardContent>
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-3 p-3 border rounded-lg"
-            >
+            <div key={i} className="flex items-start gap-3 rounded-lg border p-3">
               <Skeleton className="h-10 w-10 rounded-lg" />
               <div className="flex-1 space-y-2">
                 <div className="flex justify-between">
@@ -27,5 +24,5 @@ export function AlertSkeleton() {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

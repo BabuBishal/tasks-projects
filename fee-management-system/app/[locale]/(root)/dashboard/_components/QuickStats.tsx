@@ -1,9 +1,9 @@
 'use client'
 
 import Piechart from '@/app/[locale]/(root)/dashboard/_components/piechart/piechart'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card/Card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card/Card'
 import { COLORS } from '@/lib/constants/constants'
-import { ProgramDistribution } from '@/lib/types'
+import { ProgramDistribution } from '@/lib/types/api'
 import { TrendingUp, Users, Calendar, PieChart as PieChartIcon } from 'lucide-react'
 
 interface QuickStatsProps {

@@ -1,13 +1,13 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Button } from '@/components/ui/button/Button'
-import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
+import { Button } from '@/shared/ui/button/Button'
+import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import { Download, BarChart3, CreditCard, Banknote, Landmark, ChevronDown } from 'lucide-react'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import { useGetPaymentReportStatsQuery } from '@/hooks/query-hooks/reports'
-import { ReportsSkeleton } from './_components/ReportsSkeleton'
+import { useGetPaymentReportStatsQuery } from '@/app/[locale]/(root)/reports/_hooks'
+import { ReportsSkeleton } from './_components/skeletons/ReportsSkeleton'
 
 interface PaymentStats {
   byProgram: {

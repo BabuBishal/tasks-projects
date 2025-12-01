@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Table } from '@/components/ui/table/Table'
-import Badge from '@/components/ui/badges/Badges'
+import { Table } from '@/shared/ui/table/Table'
+import Badge from '@/shared/ui/badges/Badges'
 import { Eye, Search, Pencil, Trash2, X, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { calculateStudentStatus } from '@/lib/utils/status-utils'
-import { useGetProgramsQuery } from '@/hooks/query-hooks/programs'
+import { useGetProgramsQuery } from '@/app/[locale]/(root)/programs/_hooks'
 import { useDebounce } from '@/hooks/useDebounce'
 import { TableSkeleton } from '@/app/[locale]/(root)/_components/skeletons/TableSkeleton'
 import {
@@ -15,10 +15,10 @@ import {
   useDeleteStudentMutation,
   useBulkDeleteStudentsMutation,
   usePromoteSemesterMutation,
-} from '@/hooks/query-hooks/students'
-import { Modal } from '@/components/ui/modal/Modal'
-import { Button } from '@/components/ui/button/Button'
-import { useToast } from '@/components/ui/toast'
+} from '@/app/[locale]/(root)/students/_hooks'
+import { Modal } from '@/shared/ui/modal/Modal'
+import { Button } from '@/shared/ui/button/Button'
+import { useToast } from '@/shared/ui/toast'
 
 const StudentList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')

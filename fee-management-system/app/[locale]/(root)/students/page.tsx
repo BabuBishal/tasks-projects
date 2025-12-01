@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button/Button'
+import { Button } from '@/shared/ui/button/Button'
 import { ChevronDown, Download, Plus, Upload } from 'lucide-react'
-import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
-import { DropdownMenu } from '@/components/ui/dropdown-menu/DropdownMenu'
+import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
+import { DropdownMenu } from '@/shared/ui/dropdown-menu/DropdownMenu'
 import StudentStats from './_components/StudentStats'
 import StudentList from '@/app/[locale]/(root)/students/_components/StudentList'
 

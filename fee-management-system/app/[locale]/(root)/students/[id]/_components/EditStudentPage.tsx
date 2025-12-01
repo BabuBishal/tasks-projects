@@ -1,17 +1,20 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import useForm from '@/hooks/useForm'
 
 import { studentSchema } from '@/lib/constants/constants'
 import { validateForm } from '@/lib/validator'
 import { StudentFormInputs } from '@/lib/types'
-import { useToast } from '@/components/ui/toast'
-import StudentForm from '../../../../../../components/forms/StudentForm'
+import { useToast } from '@/shared/ui/toast'
 
-import { useGetStudentByIdQuery, useUpdateStudentMutation } from '@/hooks/query-hooks/students'
-import { useGetProgramsQuery } from '@/hooks/query-hooks/programs'
-import { useGetScholarshipsQuery } from '@/hooks/query-hooks/scholarships'
+import {
+  useGetStudentByIdQuery,
+  useUpdateStudentMutation,
+} from '@/app/[locale]/(root)/students/_hooks'
+import { useGetProgramsQuery } from '@/app/[locale]/(root)/programs/_hooks'
+import { useGetScholarshipsQuery } from '../../../_hooks/scholarships'
+import StudentForm from '@/shared/forms/StudentForm'
 
 export default function EditStudentPage() {
   const [error, setError] = useState('')
@@ -38,20 +41,6 @@ export default function EditStudentPage() {
     validateForm,
     schema: studentSchema,
   })
-
-  // useEffect(() => {
-  //   if (studentData) {
-  //     setFormData({
-  //       name: studentData.name || '',
-  //       email: studentData.email || '',
-  //       programId: studentData.programId || '',
-  //       semester: studentData.semester || 1,
-  //       phone: studentData.phone || '',
-  //       address: studentData.address || '',
-  //       scholarshipId: studentData.scholarships?.[0]?.scholarshipId || '',
-  //     })
-  //   }
-  // }, [studentData, setFormData])
 
   const onSubmit = async (data: StudentFormInputs) => {
     try {

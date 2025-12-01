@@ -2,24 +2,24 @@
 
 import { useState } from 'react'
 import { User, Mail, Phone, Briefcase, Calendar, Camera, Upload, Edit, Key } from 'lucide-react'
-import { Button } from '@/components/ui/button/Button'
-import { useToast } from '@/components/ui/toast'
-import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
+import { Button } from '@/shared/ui/button/Button'
+import { useToast } from '@/shared/ui/toast'
+import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet/sheet'
+} from '@/shared/ui/sheet/sheet'
 import { ProfileUpdateInput, PasswordChangeInput } from '@/lib/types'
 import Image from 'next/image'
-import { useProfileQuery } from '@/hooks/query-hooks/profile'
+import { useProfileQuery } from '@/app/[locale]/(root)/profile/_hooks'
 import {
   useUpdateProfileMutation,
   useChangePasswordMutation,
   useUploadProfilePhotoMutation,
-} from '@/hooks/query-hooks/profile/mutation'
+} from '@/app/[locale]/(root)/profile/_hooks/mutation'
 import { ProfileSkeleton } from './_components/skeletons/ProfileSkeleton'
 
 export default function ProfilePage() {

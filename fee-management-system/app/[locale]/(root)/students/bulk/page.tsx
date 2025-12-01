@@ -1,4 +1,4 @@
-import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
+import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import BulkOperations from './_components/BulkOperations'
 
 const BulkOperationsPage = () => {

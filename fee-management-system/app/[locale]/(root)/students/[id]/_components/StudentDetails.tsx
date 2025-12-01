@@ -2,22 +2,20 @@
 import { useRouter } from 'next/navigation'
 import { Pencil, Trash2, CreditCard, Award, ArrowRight, Download } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils/utils'
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
-import { Button } from '@/components/ui/button/Button'
-import StatsCard from '@/components/ui/stats-card/StatsCard'
+
+import { Button } from '@/shared/ui/button/Button'
+import StatsCard from '@/shared/ui/stats-card/StatsCard'
 import StudentInfo from '../../_components/StudentInfo'
-import Badge from '@/components/ui/badges/Badges'
-import { Modal } from '@/components/ui/modal'
-import { useToast } from '@/components/ui/toast'
-import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
+import Badge from '@/shared/ui/badges/Badges'
+import { Modal } from '@/shared/ui/modal'
+import { useToast } from '@/shared/ui/toast'
+import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import { StudentDetailsSkeleton } from './StudentDetailsSkeleton'
 import {
   useDeleteStudentMutation,
   useGetStudentByIdQuery,
   usePromoteSemesterMutation,
-} from '@/hooks/query-hooks/students'
-import { StudentWithComputedTotals } from '@/lib/types'
+} from '@/app/[locale]/(root)/students/_hooks'
 import { handleDownloadFeeRecord } from '@/lib/utils/fee-records-download'
 
 interface StudentDetailsProps {

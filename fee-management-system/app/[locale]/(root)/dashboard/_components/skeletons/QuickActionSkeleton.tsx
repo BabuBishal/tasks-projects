@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card/Card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from '@/shared/ui/card/Card'
+import { Skeleton } from '@/shared/ui/skeleton'
 
 export function QuickActionsSkeleton() {
   return (
@@ -13,5 +13,5 @@ export function QuickActionsSkeleton() {
         ))}
       </CardContent>
     </Card>
-  );
+  )
 }

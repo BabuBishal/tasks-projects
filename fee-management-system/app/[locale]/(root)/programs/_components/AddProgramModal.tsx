@@ -1,4 +1,4 @@
-import { Modal } from '@/components/ui/modal'
+import { Modal } from '@/shared/ui/modal/Modal'
 
 import { Program } from '../page'
 import ProgramForm from '@/app/[locale]/(root)/programs/_components/ProgramForm'

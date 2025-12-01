@@ -1,19 +1,15 @@
-import { COLORS } from "@/lib/constants/constants";
-import { ProgramDistribution } from "@/lib/types";
-import { memo } from "react";
-import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
+import { COLORS } from '@/lib/constants/constants'
+import { ProgramDistribution } from '@/lib/types/api'
+import { memo } from 'react'
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
-type TooltipFormatterFn = (value: number, name?: string) => [number, string];
+type TooltipFormatterFn = (value: number, name?: string) => [number, string]
 
 const tooltipFormatter: TooltipFormatterFn = (value: number, name?: string) => {
-  return [value, name ?? ""];
-};
+  return [value, name ?? '']
+}
 
-const Piechart = ({
-  programDistribution,
-}: {
-  programDistribution: ProgramDistribution[];
-}) => {
+const Piechart = ({ programDistribution }: { programDistribution: ProgramDistribution[] }) => {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChart>
@@ -38,7 +34,7 @@ const Piechart = ({
                     /> */}
       </PieChart>
     </ResponsiveContainer>
-  );
-};
+  )
+}
 
-export default memo(Piechart);
+export default memo(Piechart)

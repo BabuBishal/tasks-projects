@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Modal } from '@/components/ui/modal/Modal'
 import { Button } from '@/components/ui/button/Button'
 import { useToast } from '@/components/ui/toast'
-import { useDeleteStudentMutation } from '@/hooks/query-hooks/students'
+import { useDeleteStudentMutation } from '@/app/[locale]/(root)/students/_hooks'
 import { StudentResponse } from '@/lib/types/api'
 
 interface DeleteStudentModalProps {

@@ -1,6 +1,6 @@
-import { Skeleton } from '@/components/ui/skeleton'
-import { Table } from '@/components/ui/table/Table'
-import { Card, CardContent, CardHeader } from '@/components/ui/card/Card'
+import { Skeleton } from '@/shared/ui/skeleton'
+import { Table } from '@/shared/ui/table/Table'
+import { Card, CardContent, CardHeader } from '@/shared/ui/card/Card'
 
 interface TableSkeletonProps {
   columnCount?: number

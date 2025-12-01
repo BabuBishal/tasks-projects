@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card/Card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from '@/shared/ui/card/Card'
+import { Skeleton } from '@/shared/ui/skeleton'
 
 export function PaymentStatusSkeleton() {
   return (
@@ -18,9 +18,9 @@ export function PaymentStatusSkeleton() {
               <Skeleton className="h-4 w-[50px]" />
             </div>
           ))}
-          <Skeleton className="h-2 w-full mt-4" />
+          <Skeleton className="mt-4 h-2 w-full" />
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

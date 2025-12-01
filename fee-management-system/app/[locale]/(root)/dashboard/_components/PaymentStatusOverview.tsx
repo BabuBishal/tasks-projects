@@ -1,9 +1,9 @@
-import { StatusBar } from '@/app/[locale]/(root)/dashboard/_components/status-bar/StatusBar'
 import { PaymentStats } from '@/lib/types/api'
+import { StatusBar } from './status-bar/StatusBar'
 
 const PaymentStatusOverview = ({ paymentStats }: { paymentStats: PaymentStats }) => {
   return (
-    <div className="bg-card col-span-1 h-full w-full rounded-lg p-6 shadow">
+    <div className="col-span-1 h-full w-full rounded-lg p-6 shadow">
       <h2 className="text-primary mb-4 text-lg font-semibold">Payment Status</h2>
       <div className="space-y-4">
         <StatusBar

@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card/Card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card/Card'
 import { Activity, UserPlus, DollarSign, Award } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils/utils'
 

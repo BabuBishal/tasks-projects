@@ -7,7 +7,7 @@ import { hasLocale } from 'next-intl'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import { ThemeProvider } from '@/providers/ThemeContextProvider'
-import { ToastProvider } from '@/components/ui/toast'
+import { ToastProvider } from '@/shared/ui/toast'
 import React from 'react'
 import ReactQueryProvider from '@/providers/ReactQueryProviders'
 

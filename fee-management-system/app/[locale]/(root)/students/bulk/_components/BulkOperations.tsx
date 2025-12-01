@@ -2,11 +2,14 @@
 
 import React, { useState, useEffect } from 'react'
 import { Upload, Download } from 'lucide-react'
-import { Button } from '@/components/ui/button/Button'
-import { useToast } from '@/components/ui/toast'
+import { Button } from '@/shared/ui/button/Button'
+import { useToast } from '@/shared/ui/toast'
 import { generateCSVTemplate, parseCSV, exportToCSV, ParseResult } from '@/lib/utils/csv-parser'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useBulkImportStudentsMutation, useGetStudentsQuery } from '@/hooks/query-hooks/students'
+import {
+  useBulkImportStudentsMutation,
+  useGetStudentsQuery,
+} from '@/app/[locale]/(root)/students/_hooks'
 import { BulkImportResult } from '@/lib/types/api'
 
 export default function BulkOperations() {

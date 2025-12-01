@@ -1,10 +1,9 @@
-import { Skeleton } from '@/components/ui/skeleton'
-import { Card, CardContent, CardHeader } from '@/components/ui/card/Card'
+import { Skeleton } from '@/shared/ui/skeleton'
+import { Card, CardContent, CardHeader } from '@/shared/ui/card/Card'
 
 export function StudentDetailsSkeleton() {
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
         <div className="space-y-2">
           <Skeleton className="h-8 w-[250px]" />
@@ -17,7 +16,6 @@ export function StudentDetailsSkeleton() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        {/* Student Info Card */}
         <Card className="lg:col-span-1">
           <CardHeader>
             <Skeleton className="h-6 w-[150px]" />
@@ -39,9 +37,7 @@ export function StudentDetailsSkeleton() {
           </CardContent>
         </Card>
 
-        {/* Right Column */}
         <div className="space-y-6 lg:col-span-2">
-          {/* Stats Grid */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[...Array(3)].map((_, i) => (
               <Card key={i}>
@@ -58,7 +54,6 @@ export function StudentDetailsSkeleton() {
             ))}
           </div>
 
-          {/* Tabs/Content Area */}
           <Card className="h-[400px]">
             <CardHeader>
               <div className="flex gap-4">

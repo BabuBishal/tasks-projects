@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   Sheet,
@@ -6,15 +6,15 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet/sheet";
-import { useRouter } from "next/navigation";
-import EditStudentPage from "@/app/[locale]/(root)/students/[id]/_components/EditStudentPage";
+} from '@/shared/ui/sheet/sheet'
+import { useRouter } from 'next/navigation'
+import EditStudentPage from '@/app/[locale]/(root)/students/[id]/_components/EditStudentPage'
 
 export default function AddStudentSheet() {
-  const router = useRouter();
+  const router = useRouter()
 
   return (
-    <Sheet defaultOpen onOpenChange={(open) => !open && router.back()}>
+    <Sheet defaultOpen onOpenChange={open => !open && router.back()}>
       <SheetContent side="right" className="max-w-lg">
         <SheetHeader>
           <SheetTitle>Edit Student</SheetTitle>
@@ -26,5 +26,5 @@ export default function AddStudentSheet() {
         </div>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

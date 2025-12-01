@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Modal } from '@/components/ui/modal/Modal'
 import { Button } from '@/components/ui/button/Button'
 import { useToast } from '@/components/ui/toast'
-import { useBulkDeleteStudentsMutation } from '@/hooks/query-hooks/students'
+import { useBulkDeleteStudentsMutation } from '@/app/[locale]/(root)/students/_hooks'
 
 interface BulkDeleteModalProps {
   isOpen: boolean

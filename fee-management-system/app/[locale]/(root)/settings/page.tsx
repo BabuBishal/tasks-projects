@@ -1,15 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Building2, Globe, DollarSign } from 'lucide-react'
-import { Button } from '@/components/ui/button/Button'
-import { useToast } from '@/components/ui/toast'
-import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
+import { Button } from '@/shared/ui/button/Button'
+import { useToast } from '@/shared/ui/toast'
+import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import { SettingsUpdateInput } from '@/lib/types'
 import { SettingsSkeleton } from './_components/SettingsSkeleton'
-import { useSettingsQuery, useUpdateSettingsMutation } from '@/hooks/query-hooks/settings'
-import { useProfileQuery } from '@/hooks/query-hooks/profile'
+import { useSettingsQuery, useUpdateSettingsMutation } from '@/app/[locale]/(root)/settings/_hooks'
+import { useProfileQuery } from '@/app/[locale]/(root)/profile/_hooks'
 
 export default function SettingsPage() {
   const router = useRouter()

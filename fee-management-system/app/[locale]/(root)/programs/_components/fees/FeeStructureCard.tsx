@@ -1,10 +1,10 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card/Card";
-import Badge from "@/components/ui/badges/Badges";
+import { Card, CardContent } from "@/shared/ui/card/Card";
+import Badge from "@/shared/ui/badges/Badges";
 import { Coins } from "lucide-react";
 import { formatCurrency } from "@/lib/utils/utils";
-import { FeeStructureResponse } from "@/lib/types";
+import { FeeStructureResponse } from "@/lib/types/api";
 
 // interface FeeStructure {
 //   id: string;

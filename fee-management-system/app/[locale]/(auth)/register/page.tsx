@@ -1,11 +1,11 @@
 'use client'
 import { useParams, useRouter } from 'next/navigation'
 import { type RegisterFormData } from '@/lib/schemas/auth.schema'
-import RegisterForm from '@/components/forms/RegisterForm'
-import { useToast } from '@/components/ui/toast'
-import { useRegisterMutation } from '@/hooks/query-hooks/auth/mutation'
+import RegisterForm from '@/shared/forms/RegisterForm'
+import { useToast } from '@/shared/ui/toast'
+import { useRegisterMutation } from '@/app/[locale]/(auth)/_hooks/mutation'
 import { useForm } from 'react-hook-form'
-import { loginUser } from '@/lib/api/services/auth/auth'
+import { loginUser } from '@/app/[locale]/(auth)/_api/auth'
 
 const RegisterPage = () => {
   const router = useRouter()

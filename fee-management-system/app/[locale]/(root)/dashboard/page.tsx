@@ -1,5 +1,5 @@
+import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import AlertsNotifications from './_components/AlertsNotifications'
-import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
 
 import StatsContainer from './_components/StatsContainer'
 

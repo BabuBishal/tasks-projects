@@ -1,7 +1,4 @@
-// ============================================
-// Prisma Base Models
-// Generated from Prisma schema - keep in sync with schema.prisma
-// ============================================
+
 
 import { FeeStructureResponse } from "./api";
 

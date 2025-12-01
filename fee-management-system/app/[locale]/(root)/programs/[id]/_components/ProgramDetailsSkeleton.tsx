@@ -1,6 +1,6 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent } from "@/components/ui/card/Card";
-import { Breadcrumb } from "@/components/ui/breadcrumb/Breadcrumb";
+import { Skeleton } from "@/shared/ui/skeleton";
+import { Card, CardContent } from "@/shared/ui/card/Card";
+import { Breadcrumb } from "@/shared/ui/breadcrumb/Breadcrumb";
 
 export function ProgramDetailsSkeleton() {
   return (

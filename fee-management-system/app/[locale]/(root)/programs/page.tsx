@@ -1,18 +1,18 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button/Button'
+import { Button } from '@/shared/ui/button/Button'
 import { Plus } from 'lucide-react'
 import ProgramList from '@/app/[locale]/(root)/programs/_components/ProgramList'
 
-import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
-import { useToast } from '@/components/ui/toast'
+import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
+import { useToast } from '@/shared/ui/toast'
 import {
   useCreateProgramMutation,
   useDeleteProgramMutation,
   useGetProgramsQuery,
   useUpdateProgramMutation,
-} from '@/hooks/query-hooks/programs'
+} from '@/app/[locale]/(root)/programs/_hooks'
 import AddProgramModal from './_components/AddProgramModal'
 import { ProgramListSkeleton } from './_components/skeletons/ProgramListSkeleton'
 

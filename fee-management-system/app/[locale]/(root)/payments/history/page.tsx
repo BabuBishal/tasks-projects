@@ -1,4 +1,4 @@
-import { Breadcrumb } from '@/components/ui/breadcrumb/Breadcrumb'
+import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 
 import PaymentList from '@/app/[locale]/(root)/payments/_components/PaymentList'
 import PaymentHistoryStats from '../_components/PaymentHistoryStats'

@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import StatsCard from "@/components/ui/stats-card/StatsCard";
-import { useGetPaymentsQuery } from "@/hooks/query-hooks/payments";
-import { formatCurrency } from "@/lib/utils/utils";
-import { Calendar, CheckCircle, CreditCard, TrendingUp } from "lucide-react";
-import { StatsSkeleton } from "../../_components/skeletons/StatsSkeleton";
+import StatsCard from '@/shared/ui/stats-card/StatsCard'
+import { useGetPaymentsQuery } from '@/app/[locale]/(root)/payments/_hooks'
+import { formatCurrency } from '@/lib/utils/utils'
+import { Calendar, CheckCircle, CreditCard, TrendingUp } from 'lucide-react'
+import { StatsSkeleton } from '../../_components/skeletons/StatsSkeleton'
 
 const PaymentHistoryStats = () => {
-  const { data, isLoading, error } = useGetPaymentsQuery({});
+  const { data, isLoading, error } = useGetPaymentsQuery({})
 
-  const { totalAmount = 0, totalPayments = 0, todayPayments = 0 } = data || {};
+  const { totalAmount = 0, totalPayments = 0, todayPayments = 0 } = data || {}
 
-  if (isLoading) return <StatsSkeleton />;
+  if (isLoading) return <StatsSkeleton />
 
-  if (error || !data) return null;
+  if (error || !data) return null
 
   return (
-    <div className="grid grid-cols-1 min-[480px]:grid-cols-2 min-[1024px]:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 min-[1024px]:grid-cols-4">
       <StatsCard
         title="Total Collected"
         value={formatCurrency(totalAmount)}
@@ -44,7 +44,7 @@ const PaymentHistoryStats = () => {
         icon={TrendingUp}
       />
     </div>
-  );
-};
+  )
+}
 
-export default PaymentHistoryStats;
+export default PaymentHistoryStats

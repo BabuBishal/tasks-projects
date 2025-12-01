@@ -1,12 +1,12 @@
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card/Card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card/Card'
 import { AlertTriangle, UserX, FileWarning } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils/utils'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button/Button'
-import Badge from '@/components/ui/badges/Badges'
-import { useGetOverdueFeesQuery } from '@/hooks/query-hooks/fees'
+import { Button } from '@/shared/ui/button/Button'
+import Badge from '@/shared/ui/badges/Badges'
+import { useGetOverdueFeesQuery } from '@/app/[locale]/(root)/_hooks/fees'
 import { AlertSkeleton } from './skeletons/AlertSkeleton'
 
 export default function AlertsNotifications() {

@@ -1,7 +1,7 @@
 'use client'
 
-import StatsCard from '@/components/ui/stats-card/StatsCard'
-import { DashboardStats } from '@/lib/types'
+import StatsCard from '@/shared/ui/stats-card/StatsCard'
+import { DashboardStats } from '@/lib/types/api'
 import { DollarSign, Users, Clock, TrendingUp } from 'lucide-react'
 
 const DashboardStatsOverview = ({ stats: dashboardStats }: { stats: DashboardStats[] }) => {

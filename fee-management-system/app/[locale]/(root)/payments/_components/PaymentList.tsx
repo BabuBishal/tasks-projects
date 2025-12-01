@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button/Button'
+import { Button } from '@/shared/ui/button/Button'
 import { Download, Plus } from 'lucide-react'
 import Link from 'next/link'
 
-import { useGetPaymentsQuery } from '@/hooks/query-hooks/payments'
+import { useGetPaymentsQuery } from '@/app/[locale]/(root)/payments/_hooks'
 import { TableSkeleton } from '@/app/[locale]/(root)/_components/skeletons/TableSkeleton'
 import { handleExportPayments } from '@/lib/utils/export-payments'
 import PaymentSearch from './PaymentSearch'
@@ -14,7 +14,7 @@ import PaymentHistory from './PaymentHistory'
 const PaymentList = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('')
-  const [methodFilter, setMethodFilter] = useState<string>('')
+  const [methodFilter, setMethodFilter] = useState<string>('')  
 
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10

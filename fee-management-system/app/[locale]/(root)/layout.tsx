@@ -1,7 +1,7 @@
 'use client'
 import React, { ReactNode } from 'react'
-import Sidebar from '@/components/layout/sidebar'
-import Navbar from '@/components/layout/navbar/Navbar'
+import Sidebar from '@/shared/layout/sidebar'
+import Navbar from '@/shared/layout/navbar/Navbar'
 import { SessionProvider } from 'next-auth/react'
 
 type DashboardLayoutProps = {

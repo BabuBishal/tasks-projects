@@ -1,6 +1,6 @@
 "use client";
 
-import { FeeStructureResponse } from "@/lib/types";
+import { FeeStructureResponse } from "@/lib/types/api";
 import FeeStructureCard from "./FeeStructureCard";
 
 // interface FeeStructure {

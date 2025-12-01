@@ -12,9 +12,7 @@ const QuickActions = () => {
       <div className="flex flex-col gap-5 pb-4">
         <Link
           href={'/payments/add'}
-          className="border-border hover:bg-accent flex cursor-pointer
-          items-center 
-          justify-start gap-2 rounded-md border p-1.5 transition duration-200"
+          className="border-border hover:bg-accent flex cursor-pointer items-center justify-start gap-2 rounded-md border p-1.5 transition duration-200"
         >
           <WalletCardsIcon className="h-4 w-4" />
           <span className="text-secondary text-sm">Make Payment</span>

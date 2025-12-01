@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Modal } from '@/components/ui/modal/Modal'
 import { Button } from '@/components/ui/button/Button'
 import { useToast } from '@/components/ui/toast'
-import { usePromoteSemesterMutation } from '@/hooks/query-hooks/students'
+import { usePromoteSemesterMutation } from '@/app/[locale]/(root)/students/_hooks'
 
 interface PromoteSemesterModalProps {
   isOpen: boolean

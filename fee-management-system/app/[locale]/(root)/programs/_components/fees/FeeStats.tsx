@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card/Card";
+import { Card, CardContent } from "@/shared/ui/card/Card";
 import { BookOpen, Coins, GraduationCap, TrendingUp } from "lucide-react";
 import { formatCurrency } from "@/lib/utils/utils";
 
