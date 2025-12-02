@@ -9,9 +9,10 @@ export const useGetPaymentReportStatsQuery = (params?: {
   return useQuery({
     queryKey: [API_ROUTES.reports.paymentStats, params],
     queryFn: () => getPaymentReportStats(params),
-    staleTime: 5 * 60 * 1000, // 5 minutes (reports need fresher data)
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,
+    placeholderData: previousData => previousData,
   })
 }

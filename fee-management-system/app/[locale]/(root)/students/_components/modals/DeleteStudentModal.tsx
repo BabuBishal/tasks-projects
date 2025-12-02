@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Modal } from '@/components/ui/modal/Modal'
-import { Button } from '@/components/ui/button/Button'
-import { useToast } from '@/components/ui/toast'
+import { Modal } from '@/shared/ui/modal/Modal'
+import { Button } from '@/shared/ui/button/Button'
+import { useToast } from '@/shared/ui/toast/Toast'
 import { useDeleteStudentMutation } from '@/app/[locale]/(root)/students/_hooks'
 import { StudentResponse } from '@/lib/types/api'
 
@@ -44,7 +44,7 @@ export default function DeleteStudentModal({ isOpen, onClose, student }: DeleteS
   if (!student) return null
 
   return (
-    <Modal open={isOpen} onOpenChange={onClose}>
+    <Modal open={isOpen} onOpenChange={open => !open && onClose()}>
       <Modal.Content>
         <Modal.CloseIcon />
         <Modal.Header>

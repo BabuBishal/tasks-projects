@@ -12,5 +12,6 @@ export const useSettingsQuery = () => {
     gcTime: 60 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,
+    placeholderData: previousData => previousData,
   })
 }

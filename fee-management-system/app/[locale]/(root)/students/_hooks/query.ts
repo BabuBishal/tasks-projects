@@ -30,5 +30,6 @@ export const useGetStudentByIdQuery = (id: string) => {
     gcTime: 30 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,
+    placeholderData: previousData => previousData,
   })
 }

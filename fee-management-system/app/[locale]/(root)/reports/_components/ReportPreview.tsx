@@ -7,6 +7,7 @@ import { generatePaymentStatusReport } from '../_services/reportGenerator'
 import { DateRange } from '../_types'
 import { useGetPaymentReportStatsQuery } from '../_hooks'
 import { ReportsSkeleton } from './skeletons/ReportsSkeleton'
+import PaymentsSummary from './PaymentsSummary'
 
 interface ReportPreviewProps {
   dateRange: DateRange
@@ -18,6 +19,13 @@ export function ReportPreview({ dateRange, selectedPeriod }: ReportPreviewProps)
     startDate: dateRange.start.toISOString(),
     endDate: dateRange.end.toISOString(),
   })
+
+  const totalTransactions =
+    paymentStats?.byProgram.reduce((sum, item) => sum + item.totalPayments, 0) || 0
+
+  const totalRevenue = paymentStats?.byProgram.reduce((sum, item) => sum + item.totalAmount, 0) || 0
+
+  const avgTransaction = Math.round(totalRevenue / (totalTransactions || 1))
 
   const handleGenerateReport = () => {
     if (!paymentStats) return
@@ -51,6 +59,12 @@ export function ReportPreview({ dateRange, selectedPeriod }: ReportPreviewProps)
       <PaymentsByProgram programs={paymentStats.byProgram} />
       <PaymentsBySemester semesters={paymentStats.bySemester} />
       <PaymentsByMethod methods={paymentStats.byMethod} />
+
+      <PaymentsSummary
+        totalTransactions={totalTransactions}
+        totalRevenue={totalRevenue}
+        avgTransaction={avgTransaction}
+      />
     </div>
   )
 }

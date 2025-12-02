@@ -3,22 +3,18 @@
 import React, { useState } from 'react'
 import { Table } from '@/shared/ui/table/Table'
 import Badge from '@/shared/ui/badges/Badges'
-import { Eye, Search, Pencil, Trash2, X, ArrowRight } from 'lucide-react'
+import { Eye, Search, Trash2, X, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { calculateStudentStatus } from '@/lib/utils/status-utils'
 import { useGetProgramsQuery } from '@/app/[locale]/(root)/programs/_hooks'
 import { useDebounce } from '@/hooks/useDebounce'
 import { TableSkeleton } from '@/app/[locale]/(root)/_components/skeletons/TableSkeleton'
-import {
-  useGetStudentsQuery,
-  useUpdateStudentMutation,
-  useDeleteStudentMutation,
-  useBulkDeleteStudentsMutation,
-  usePromoteSemesterMutation,
-} from '@/app/[locale]/(root)/students/_hooks'
-import { Modal } from '@/shared/ui/modal/Modal'
-import { Button } from '@/shared/ui/button/Button'
-import { useToast } from '@/shared/ui/toast'
+import { useGetStudentsQuery } from '@/app/[locale]/(root)/students/_hooks'
+import PromoteSemesterModal from './modals/PromoteSemesterModal'
+import EditStudentModal from './modals/EditStudentModal'
+import BulkDeleteModal from './modals/BulkDeleteModal'
+import DeleteStudentModal from './modals/DeleteStudentModal'
+import { StudentResponse } from '@/lib/types/api'
 
 const StudentList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -27,6 +23,9 @@ const StudentList: React.FC = () => {
   const [semesterFilter, setSemesterFilter] = useState<string>('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([])
+  const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false)
+  const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false)
+  const [studentToDelete, setStudentToDelete] = useState<StudentResponse | null>(null)
 
   const debouncedSearch = useDebounce(searchQuery, 300)
   const itemsPerPage = 10
@@ -40,12 +39,6 @@ const StudentList: React.FC = () => {
 
   const { data: students, isLoading } = useGetStudentsQuery(params)
   const { data: programs } = useGetProgramsQuery()
-
-  const updateMutation = useUpdateStudentMutation()
-  const deleteMutation = useDeleteStudentMutation()
-  const bulkDeleteMutation = useBulkDeleteStudentsMutation()
-  const promoteMutation = usePromoteSemesterMutation()
-  const { notify } = useToast()
 
   const filteredStudents = students || []
   const paginatedStudents = filteredStudents.slice(
@@ -159,103 +152,36 @@ const StudentList: React.FC = () => {
             </span>
             <div className="flex gap-2">
               {/* Bulk Promote Modal */}
-              <Modal>
-                <Modal.Trigger asChild>
-                  <button className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700">
-                    <ArrowRight className="mr-1 inline h-4 w-4" />
-                    Promote
-                  </button>
-                </Modal.Trigger>
-                <Modal.Content>
-                  <Modal.CloseIcon />
-                  <Modal.Header>
-                    <h2 className="text-xl font-bold">Promote Students</h2>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <p className="text-muted">
-                      Are you sure you want to promote{' '}
-                      <strong>{selectedStudentIds.length} students</strong> to the next semester?
-                    </p>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <div className="flex justify-end gap-2">
-                      <Modal.Close>Cancel</Modal.Close>
-                      <Button
-                        onClick={async () => {
-                          try {
-                            await promoteMutation.mutateAsync({ studentIds: selectedStudentIds })
-                            notify({
-                              title: 'Success',
-                              description: `${selectedStudentIds.length} students promoted`,
-                              type: 'success',
-                            })
-                            clearSelection()
-                          } catch {
-                            notify({
-                              title: 'Error',
-                              description: 'Failed to promote students',
-                              type: 'error',
-                            })
-                          }
-                        }}
-                        variant="primary"
-                      >
-                        Promote {selectedStudentIds.length} Students
-                      </Button>
-                    </div>
-                  </Modal.Footer>
-                </Modal.Content>
-              </Modal>
+              <button
+                onClick={() => setIsPromoteModalOpen(true)}
+                className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+              >
+                <ArrowRight className="mr-1 inline h-4 w-4" />
+                Promote
+              </button>
+
+              <PromoteSemesterModal
+                isOpen={isPromoteModalOpen}
+                onClose={() => setIsPromoteModalOpen(false)}
+                selectedStudentIds={selectedStudentIds}
+                onSuccess={clearSelection}
+              />
 
               {/* Bulk Delete Modal */}
-              <Modal>
-                <Modal.Trigger asChild>
-                  <button className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700">
-                    <Trash2 className="mr-1 inline h-4 w-4" />
-                    Delete
-                  </button>
-                </Modal.Trigger>
-                <Modal.Content>
-                  <Modal.CloseIcon />
-                  <Modal.Header>
-                    <h2 className="text-xl font-bold text-red-600">Delete Multiple Students</h2>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <p className="text-muted">
-                      Are you sure you want to delete{' '}
-                      <strong>{selectedStudentIds.length} students</strong>? This action cannot be
-                      undone.
-                    </p>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <div className="flex justify-end gap-2">
-                      <Modal.Close>Cancel</Modal.Close>
-                      <Button
-                        onClick={async () => {
-                          try {
-                            await bulkDeleteMutation.mutateAsync(selectedStudentIds)
-                            notify({
-                              title: 'Success',
-                              description: `${selectedStudentIds.length} students deleted`,
-                              type: 'success',
-                            })
-                            clearSelection()
-                          } catch {
-                            notify({
-                              title: 'Error',
-                              description: 'Failed to delete students',
-                              type: 'error',
-                            })
-                          }
-                        }}
-                        variant="danger"
-                      >
-                        Delete {selectedStudentIds.length} Students
-                      </Button>
-                    </div>
-                  </Modal.Footer>
-                </Modal.Content>
-              </Modal>
+              <button
+                onClick={() => setIsBulkDeleteModalOpen(true)}
+                className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+              >
+                <Trash2 className="mr-1 inline h-4 w-4" />
+                Delete
+              </button>
+
+              <BulkDeleteModal
+                isOpen={isBulkDeleteModalOpen}
+                onClose={() => setIsBulkDeleteModalOpen(false)}
+                selectedStudentIds={selectedStudentIds}
+                onSuccess={clearSelection}
+              />
 
               <button
                 onClick={clearSelection}
@@ -346,188 +272,15 @@ const StudentList: React.FC = () => {
                         </Link>
 
                         {/* Edit Modal */}
-                        <Modal>
-                          <Modal.Trigger asChild>
-                            <button className="text-green-600 hover:text-green-800">
-                              <Pencil className="h-4 w-4" />
-                            </button>
-                          </Modal.Trigger>
-                          <Modal.Content>
-                            <Modal.CloseIcon />
-                            <Modal.Header>
-                              <h2 className="text-xl font-bold">Edit Student</h2>
-                            </Modal.Header>
-                            <Modal.Body>
-                              <form
-                                className="space-y-4"
-                                onSubmit={async e => {
-                                  e.preventDefault()
-                                  const formData = new FormData(e.currentTarget)
-                                  try {
-                                    await updateMutation.mutateAsync({
-                                      id: student.id,
-                                      data: {
-                                        name: formData.get('name') as string,
-                                        email: formData.get('email') as string,
-                                        programId: formData.get('programId') as string,
-                                        semester: parseInt(formData.get('semester') as string),
-                                        phone: formData.get('phone') as string,
-                                        address: formData.get('address') as string,
-                                        status:
-                                          (formData.get('graduated') as string) === 'on'
-                                            ? 'Graduated'
-                                            : 'Active',
-                                      },
-                                    })
-                                    notify({
-                                      title: 'Success',
-                                      description: 'Student updated',
-                                      type: 'success',
-                                    })
-                                  } catch {
-                                    notify({
-                                      title: 'Error',
-                                      description: 'Failed to update',
-                                      type: 'error',
-                                    })
-                                  }
-                                }}
-                              >
-                                <div>
-                                  <label className="mb-1 block text-sm font-medium">Name</label>
-                                  <input
-                                    name="name"
-                                    defaultValue={student.name}
-                                    className="w-full rounded-md border px-3 py-2"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label className="mb-1 block text-sm font-medium">Email</label>
-                                  <input
-                                    name="email"
-                                    type="email"
-                                    defaultValue={student.email}
-                                    className="w-full rounded-md border px-3 py-2"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label className="mb-1 block text-sm font-medium">Program</label>
-                                  <select
-                                    name="programId"
-                                    defaultValue={student.programId}
-                                    className="w-full rounded-md border px-3 py-2"
-                                    required
-                                  >
-                                    {programs?.map(p => (
-                                      <option key={p.id} value={p.id}>
-                                        {p.name}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </div>
-                                <div>
-                                  <label className="mb-1 block text-sm font-medium">Semester</label>
-                                  <input
-                                    name="semester"
-                                    type="number"
-                                    defaultValue={student.semester}
-                                    min="1"
-                                    max="8"
-                                    className="w-full rounded-md border px-3 py-2"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label className="mb-1 block text-sm font-medium">Phone</label>
-                                  <input
-                                    name="phone"
-                                    defaultValue={student.phone}
-                                    className="w-full rounded-md border px-3 py-2"
-                                    required
-                                  />
-                                </div>
-                                <div>
-                                  <label className="mb-1 block text-sm font-medium">Address</label>
-                                  <input
-                                    name="address"
-                                    defaultValue={student.address}
-                                    className="w-full rounded-md border px-3 py-2"
-                                    required
-                                  />
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <input
-                                    type="checkbox"
-                                    name="graduated"
-                                    defaultChecked={student.status === 'Graduated'}
-                                    id={`grad-${student.id}`}
-                                  />
-                                  <label
-                                    htmlFor={`grad-${student.id}`}
-                                    className="text-sm font-medium"
-                                  >
-                                    Graduated
-                                  </label>
-                                </div>
-                                <div className="flex justify-end gap-2 pt-4">
-                                  <Modal.Close>Cancel</Modal.Close>
-                                  <Button type="submit" variant="primary">
-                                    Save Changes
-                                  </Button>
-                                </div>
-                              </form>
-                            </Modal.Body>
-                          </Modal.Content>
-                        </Modal>
+                        <EditStudentModal student={student} />
 
                         {/* Delete Modal */}
-                        <Modal>
-                          <Modal.Trigger asChild>
-                            <button className="text-red-600 hover:text-red-800">
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </Modal.Trigger>
-                          <Modal.Content>
-                            <Modal.CloseIcon />
-                            <Modal.Header>
-                              <h2 className="text-xl font-bold text-red-600">Delete Student</h2>
-                            </Modal.Header>
-                            <Modal.Body>
-                              <p className="text-muted">
-                                Are you sure you want to delete <strong>{student.name}</strong>?
-                                This action cannot be undone.
-                              </p>
-                            </Modal.Body>
-                            <Modal.Footer>
-                              <div className="flex justify-end gap-2">
-                                <Modal.Close>Cancel</Modal.Close>
-                                <Button
-                                  onClick={async () => {
-                                    try {
-                                      await deleteMutation.mutateAsync(student.id)
-                                      notify({
-                                        title: 'Success',
-                                        description: 'Student deleted',
-                                        type: 'success',
-                                      })
-                                    } catch {
-                                      notify({
-                                        title: 'Error',
-                                        description: 'Failed to delete',
-                                        type: 'error',
-                                      })
-                                    }
-                                  }}
-                                  variant="danger"
-                                >
-                                  Delete
-                                </Button>
-                              </div>
-                            </Modal.Footer>
-                          </Modal.Content>
-                        </Modal>
+                        <button
+                          onClick={() => setStudentToDelete(student)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
                       </div>
                     </Table.Cell>
                   </Table.Row>
@@ -537,6 +290,12 @@ const StudentList: React.FC = () => {
           </Table>
         )}
       </div>
+
+      <DeleteStudentModal
+        isOpen={!!studentToDelete}
+        onClose={() => setStudentToDelete(null)}
+        student={studentToDelete}
+      />
     </div>
   )
 }

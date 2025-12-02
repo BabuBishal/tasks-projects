@@ -27,7 +27,6 @@ export const useUpdateStudentMutation = () => {
   return useMutation({
     mutationFn: updateStudent,
     onSuccess: (data, variables) => {
-      // Invalidate specific student query
       queryClient.invalidateQueries({
         queryKey: [API_ROUTES.students, variables.id],
       })
@@ -58,7 +57,6 @@ export const useBulkDeleteStudentsMutation = () => {
   return useMutation({
     mutationFn: bulkDeleteStudents,
     onSuccess: () => {
-      // Invalidate all related queries
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.students] })
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.dashboardStats] })
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.payments] })
@@ -73,7 +71,6 @@ export const useBulkImportStudentsMutation = () => {
   return useMutation({
     mutationFn: bulkImportStudents,
     onSuccess: () => {
-      // Invalidate students and dashboard
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.students] })
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.dashboardStats] })
     },
@@ -86,7 +83,6 @@ export const usePromoteSemesterMutation = () => {
   return useMutation({
     mutationFn: promoteSemester,
     onSuccess: () => {
-      // Invalidate all student-related queries
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.students] })
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.dashboardStats] })
     },

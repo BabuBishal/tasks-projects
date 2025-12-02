@@ -50,9 +50,9 @@ export const deleteStudent = async (id: string): Promise<void> => {
   return await httpClient.delete(API_ROUTES.studentWithId(id))
 }
 
-export const bulkDeleteStudents = async (ids: string[]): Promise<BulkDeleteResult> => {
+export const bulkDeleteStudents = async (studentIds: string[]): Promise<BulkDeleteResult> => {
   return await httpClient.post<BulkDeleteResult>(API_ROUTES.studentBulkDelete, {
-    ids,
+    studentIds,
   })
 }
 
@@ -67,8 +67,6 @@ export const bulkImportStudents = async (file: File): Promise<BulkImportResult> 
   })
 }
 
-export const promoteSemester = async (data: {
-  studentIds: string[]
-}): Promise<BulkPromoteResult> => {
-  return await httpClient.post<BulkPromoteResult>(API_ROUTES.studentPromoteSemester, data)
+export const promoteSemester = async (studentIds: string[]): Promise<BulkPromoteResult> => {
+  return await httpClient.post<BulkPromoteResult>(API_ROUTES.studentPromoteSemester, { studentIds })
 }

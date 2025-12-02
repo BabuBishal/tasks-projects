@@ -1,13 +1,12 @@
-```javascript
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Modal } from '@/components/ui/modal/Modal'
-import { Button } from '@/components/ui/button/Button'
-import { useToast } from '@/components/ui/toast'
-import { useUpdateStudentMutation } from '@/hooks/query-hooks/students'
+import { Modal } from '@/shared/ui/modal/Modal'
+import { Button } from '@/shared/ui/button/Button'
+import { useToast } from '@/shared/ui/toast/Toast'
+import { useUpdateStudentMutation } from '@/app/[locale]/(root)/students/_hooks'
 import { StudentResponse } from '@/lib/types/api'
-import { useGetProgramsQuery } from '@/hooks/query-hooks/programs'
+import { useGetProgramsQuery } from '@/app/[locale]/(root)/programs/_hooks'
 import { Pencil } from 'lucide-react'
 
 interface EditStudentModalProps {
@@ -93,31 +92,31 @@ export default function EditStudentModal({ student }: EditStudentModalProps) {
         <Modal.Body>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Name</label>
+              <label className="mb-1 block text-sm font-medium">Name</label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full rounded-md border px-3 py-2"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
+              <label className="mb-1 block text-sm font-medium">Email</label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full rounded-md border px-3 py-2"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Program</label>
+              <label className="mb-1 block text-sm font-medium">Program</label>
               <select
                 value={formData.programId}
                 onChange={e => setFormData({ ...formData, programId: e.target.value })}
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full rounded-md border px-3 py-2"
                 required
               >
                 {programs?.map(program => (
@@ -128,34 +127,34 @@ export default function EditStudentModal({ student }: EditStudentModalProps) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Semester</label>
+              <label className="mb-1 block text-sm font-medium">Semester</label>
               <input
                 type="number"
                 value={formData.semester}
                 onChange={e => setFormData({ ...formData, semester: parseInt(e.target.value) })}
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full rounded-md border px-3 py-2"
                 min="1"
                 max="8"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Phone</label>
+              <label className="mb-1 block text-sm font-medium">Phone</label>
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full rounded-md border px-3 py-2"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Address</label>
+              <label className="mb-1 block text-sm font-medium">Address</label>
               <input
                 type="text"
                 value={formData.address}
                 onChange={e => setFormData({ ...formData, address: e.target.value })}
-                className="w-full px-3 py-2 border rounded-md"
+                className="w-full rounded-md border px-3 py-2"
                 required
               />
             </div>
@@ -173,7 +172,7 @@ export default function EditStudentModal({ student }: EditStudentModalProps) {
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <div className="flex gap-2 justify-end">
+          <div className="flex justify-end gap-2">
             <Modal.Close>Cancel</Modal.Close>
             <Button onClick={handleSubmit} disabled={isLoading} variant="primary">
               {isLoading ? 'Saving...' : 'Save Changes'}

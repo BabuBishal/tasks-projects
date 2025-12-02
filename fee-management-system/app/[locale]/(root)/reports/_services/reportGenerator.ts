@@ -126,6 +126,60 @@ export const generatePaymentStatusReport = (
     margin: { left: 20, right: 20 },
   })
 
+  yPos = (doc as typeof doc & { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 15
+
+  // Summary Section
+  if (yPos > 240) {
+    doc.addPage()
+    yPos = 20
+  }
+
+  const totalTransactions = paymentStats.byProgram.reduce(
+    (sum, item) => sum + item.totalPayments,
+    0
+  )
+  const totalRevenue = paymentStats.byProgram.reduce((sum, item) => sum + item.totalAmount, 0)
+  const avgTransaction = Math.round(totalRevenue / (totalTransactions || 1))
+
+  doc.setFillColor(245, 247, 250)
+  doc.roundedRect(20, yPos, pageWidth - 40, 40, 3, 3, 'F')
+
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(0)
+  doc.text('Report Summary', 30, yPos + 12)
+
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(100)
+
+  // Column 1: Transactions
+  doc.text('Total Transactions', 30, yPos + 25)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(0)
+  doc.setFontSize(12)
+  doc.text(totalTransactions.toLocaleString(), 30, yPos + 32)
+
+  // Column 2: Revenue
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(100)
+  doc.text('Total Revenue', 90, yPos + 25)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(22, 163, 74) // Green
+  doc.setFontSize(12)
+  doc.text(`Rs ${totalRevenue.toLocaleString()}`, 90, yPos + 32)
+
+  // Column 3: Average
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(100)
+  doc.text('Avg. Transaction', 150, yPos + 25)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(37, 99, 235) // Blue
+  doc.setFontSize(12)
+  doc.text(`Rs ${avgTransaction.toLocaleString()}`, 150, yPos + 32)
+
   // Footer
   const totalPages = doc.getNumberOfPages()
   for (let i = 1; i <= totalPages; i++) {
