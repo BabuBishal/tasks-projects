@@ -8,6 +8,7 @@ export default function TextWidget({
   onChange,
   onBlur,
   disabled,
+  readonly,
   placeholder,
 }: WidgetProps) {
   return (
@@ -21,6 +22,7 @@ export default function TextWidget({
         onBlur={e => onBlur && onBlur(id, e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
+        readOnly={readonly}
         className={styles.textInput}
       />
       {/* {rawErrors && rawErrors.length > 0 && <p className={styles.textError}>{rawErrors[0]}</p>} */}

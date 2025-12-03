@@ -50,7 +50,8 @@ $text-dark-placeholder-color: #71717a;
     border-color: $text-input-border-focus;
   }
 
-  .textInput:disabled {
+  .textInput:disabled,
+  .textInput:read-only {
     background-color: $text-disabled-bg;
     color: $text-disabled-text;
     cursor: not-allowed;
@@ -75,9 +76,11 @@ $text-dark-placeholder-color: #71717a;
     border-color: $text-dark-input-border-focus;
   }
 
-  .textInput:disabled {
+  .textInput:disabled,
+  .textInput:read-only {
     background-color: $text-dark-disabled-bg;
     color: $text-dark-disabled-text;
+    cursor: not-allowed;
   }
 
   .textError {

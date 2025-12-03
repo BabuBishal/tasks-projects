@@ -1,6 +1,6 @@
-import { JSONSchema7 } from 'json-schema'
+import { RJSFSchema } from '@rjsf/utils'
 
-const profileSchema: JSONSchema7 = {
+const profileSchema: RJSFSchema = {
   type: 'object',
   required: ['name', 'email'],
   properties: {

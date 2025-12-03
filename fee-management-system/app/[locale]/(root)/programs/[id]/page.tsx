@@ -19,7 +19,13 @@ import { FeeStructureResponse } from '@/lib/types/api'
 import FeeStructureList from '../_components/fees/FeeStructureList'
 import FeeStructureForm, { FeeStructureFormValues } from '../_components/fees/FeeStructureForm'
 import FeeDetailsModal from '../_components/fees/FeeDetailsModal'
-
+import Form from '@rjsf/core'
+import feeSchema from '../_schema/fee.schema'
+import validator from '@/shared/forms/rjsf/validators/validator'
+import { feeUiSchema } from '../_schema/ui.schema'
+import SelectWidget from '@/shared/forms/rjsf/widgets/select-widget/SelectWidget'
+import TextWidget from '@/shared/forms/rjsf/widgets/text-widget/TextWidget'
+import '@/shared/forms/rjsf/styles/rjsf.scss'
 // interface Program {
 //   id: string;
 //   name: string;
@@ -227,7 +233,84 @@ export default function ProgramDetailsPage({ params }: { params: Promise<{ id: s
                 </button>
               </div>
               <div className="p-6">
-                <FeeStructureForm
+                <Form
+                  schema={feeSchema}
+                  validator={validator}
+                  uiSchema={feeUiSchema}
+                  formData={
+                    editingFee
+                      ? {
+                          fee: {
+                            program: program.name,
+                            semester: editingFee.programSemester?.semesterNo?.toString() || '',
+                            tuitionFee: editingFee.tuitionFee || 0,
+                            labFee: editingFee.labFee || 0,
+                            libraryFee: editingFee.libraryFee || 0,
+                            sportsFee: editingFee.sportsFee || 0,
+                            miscFee: editingFee.miscFee || 0,
+                          },
+                        }
+                      : {
+                          fee: {
+                            program: program.name,
+                            semester: '',
+                            tuitionFee: 0,
+                            labFee: 0,
+                            libraryFee: 0,
+                            sportsFee: 0,
+                            miscFee: 0,
+                          },
+                        }
+                  }
+                  onSubmit={({ formData }) => {
+                    const feeData: FeeStructureFormValues = {
+                      programId: program.id,
+                      semesterNo: formData.fee.semester,
+                      tuitionFee: formData.fee.tuitionFee,
+                      labFee: formData.fee.labFee,
+                      libraryFee: formData.fee.libraryFee,
+                      sportsFee: formData.fee.sportsFee,
+                      miscFee: formData.fee.miscFee,
+                    }
+                    if (editingFee) {
+                      handleUpdate(feeData)
+                    } else {
+                      handleCreate(feeData)
+                    }
+                  }}
+                  showErrorList={false}
+                  widgets={{
+                    number: TextWidget,
+                    text: TextWidget,
+                    select: SelectWidget,
+                  }}
+                >
+                  <div className="flex justify-end gap-3 pt-4">
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => {
+                        setIsModalOpen(false)
+                        setEditingFee(null)
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      disabled={createFeeStructure.isPending || updateFeeStructure.isPending}
+                    >
+                      {createFeeStructure.isPending || updateFeeStructure.isPending
+                        ? 'Saving...'
+                        : editingFee
+                          ? 'Update'
+                          : 'Create'}
+                    </Button>
+                  </div>
+                </Form>
+
+                {/* <FeeStructureForm
                   key={editingFee ? editingFee.id : 'new'}
                   initialData={
                     editingFee
@@ -252,7 +335,7 @@ export default function ProgramDetailsPage({ params }: { params: Promise<{ id: s
                   program={program}
                   onSubmit={editingFee ? handleUpdate : handleCreate}
                   onCancel={() => setIsModalOpen(false)}
-                />
+                /> */}
               </div>
             </div>
           </div>
