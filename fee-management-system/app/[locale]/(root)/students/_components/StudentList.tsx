@@ -15,6 +15,7 @@ import EditStudentModal from './modals/EditStudentModal'
 import BulkDeleteModal from './modals/BulkDeleteModal'
 import DeleteStudentModal from './modals/DeleteStudentModal'
 import { StudentResponse } from '@/lib/types/api'
+import StudentSearch from './StudentSearch'
 
 const StudentList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -35,19 +36,15 @@ const StudentList: React.FC = () => {
     programId: programFilter !== 'all' ? programFilter : undefined,
     semester: semesterFilter !== 'all' ? semesterFilter : undefined,
     status: statusFilter !== 'All' ? statusFilter : undefined,
+    page: currentPage,
+    limit: itemsPerPage,
   }
 
-  const { data: students, isLoading } = useGetStudentsQuery(params)
-  const { data: programs } = useGetProgramsQuery()
-
-  const filteredStudents = students || []
-  const paginatedStudents = filteredStudents.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  )
-
-  const totalPages = Math.max(1, Math.ceil(filteredStudents?.length / itemsPerPage))
-  console.log(totalPages)
+  const { data: response, isLoading } = useGetStudentsQuery(params)
+  const { data: programsData } = useGetProgramsQuery()
+  const programs = programsData || []
+  const students = response?.data || []
+  const meta = response?.meta
 
   const handleSelectStudent = (studentId: string) => {
     setSelectedStudentIds(prev =>
@@ -56,10 +53,10 @@ const StudentList: React.FC = () => {
   }
 
   const handleSelectAll = () => {
-    if (selectedStudentIds.length === paginatedStudents.length) {
+    if (selectedStudentIds.length === students.length) {
       setSelectedStudentIds([])
     } else {
-      setSelectedStudentIds(paginatedStudents.map(s => s.id))
+      setSelectedStudentIds(students.map((s: StudentResponse) => s.id))
     }
   }
 
@@ -67,7 +64,7 @@ const StudentList: React.FC = () => {
     setSelectedStudentIds([])
   }
 
-  if (isLoading && !students) {
+  if (isLoading && !response) {
     return <TableSkeleton columnCount={6} rowCount={10} />
   }
 
@@ -78,72 +75,23 @@ const StudentList: React.FC = () => {
           <div className="flex flex-col">
             <span className="text-secondary text-sm">Student List</span>
             <span className="text-muted text-xs">
-              Showing {paginatedStudents.length} of {filteredStudents.length} students
+              Showing {students.length} of {meta?.total || 0} students
             </span>
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 md:flex-row">
-          <div className="relative flex-1">
-            <Search className="text-muted absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search by name, roll number, or phone..."
-              className="border-border bg-background w-full rounded-lg border py-2 pr-4 pl-10 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <select
-              className="border-border bg-background rounded-lg border px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              value={statusFilter}
-              onChange={e => {
-                setStatusFilter(e.target.value)
-                setCurrentPage(1)
-              }}
-            >
-              <option value="All">All Status</option>
-              <option value="Paid">Paid</option>
-              <option value="Pending">Pending</option>
-              <option value="Overdue">Overdue</option>
-              <option value="Graduated">Graduated</option>
-            </select>
-
-            <select
-              className="border-border bg-background rounded-lg border px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              value={programFilter}
-              onChange={e => {
-                setProgramFilter(e.target.value)
-                setCurrentPage(1)
-              }}
-            >
-              <option value="all">All Programs</option>
-              {programs?.map(program => (
-                <option key={program.id} value={program.id}>
-                  {program.name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className="border-border bg-background rounded-lg border px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              value={semesterFilter}
-              onChange={e => {
-                setSemesterFilter(e.target.value)
-                setCurrentPage(1)
-              }}
-            >
-              <option value="all">All Semesters</option>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map(sem => (
-                <option key={sem} value={sem.toString()}>
-                  Semester {sem}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        <StudentSearch
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          programFilter={programFilter}
+          setProgramFilter={setProgramFilter}
+          semesterFilter={semesterFilter}
+          setSemesterFilter={setSemesterFilter}
+          programs={programs}
+          setCurrentPage={setCurrentPage}
+        />
 
         {selectedStudentIds.length > 0 && (
           <div className="flex items-center justify-between rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
@@ -151,7 +99,6 @@ const StudentList: React.FC = () => {
               {selectedStudentIds.length} student(s) selected
             </span>
             <div className="flex gap-2">
-              {/* Bulk Promote Modal */}
               <button
                 onClick={() => setIsPromoteModalOpen(true)}
                 className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
@@ -167,7 +114,6 @@ const StudentList: React.FC = () => {
                 onSuccess={clearSelection}
               />
 
-              {/* Bulk Delete Modal */}
               <button
                 onClick={() => setIsBulkDeleteModalOpen(true)}
                 className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
@@ -194,7 +140,7 @@ const StudentList: React.FC = () => {
           </div>
         )}
 
-        {paginatedStudents.length === 0 ? (
+        {students.length === 0 ? (
           <div className="text-muted py-10 text-center">
             <p>No students found matching your criteria.</p>
           </div>
@@ -204,7 +150,7 @@ const StudentList: React.FC = () => {
             className="text-secondary rounded-md text-xs"
             pagination={{
               pageSize: itemsPerPage,
-              total: filteredStudents.length,
+              total: meta?.total || 0,
               onPageChange: setCurrentPage,
             }}
           >
@@ -213,7 +159,7 @@ const StudentList: React.FC = () => {
                 <Table.Head>
                   <input
                     type="checkbox"
-                    checked={selectedStudentIds.length === paginatedStudents.length}
+                    checked={selectedStudentIds.length === students.length}
                     onChange={handleSelectAll}
                     className="cursor-pointer"
                   />
@@ -228,12 +174,12 @@ const StudentList: React.FC = () => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {paginatedStudents.map(student => {
+              {students.map((student: StudentResponse) => {
                 const feeStatus =
                   student.status === 'Graduated'
                     ? 'Graduated'
                     : calculateStudentStatus(student.fees)
-                const totalPaid = student.fees.reduce((sum, fee) => sum + fee.paid, 0)
+                const totalPaid = student.fees.reduce((sum: number, fee) => sum + fee.paid, 0)
 
                 return (
                   <Table.Row key={student.id}>

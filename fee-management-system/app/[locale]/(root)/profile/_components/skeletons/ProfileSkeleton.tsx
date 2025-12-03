@@ -4,13 +4,6 @@ import { Skeleton } from '@/shared/ui/skeleton'
 export function ProfileSkeleton() {
   return (
     <div className="flex h-full w-full flex-col gap-8 pb-8">
-      {/* Header */}
-      <div className="space-y-2">
-        <Skeleton className="h-10 w-[200px]" />
-        <Skeleton className="h-4 w-[300px]" />
-      </div>
-
-      {/* Profile Summary Card */}
       <Card>
         <CardContent className="p-8">
           <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">

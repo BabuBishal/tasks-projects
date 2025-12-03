@@ -16,8 +16,8 @@ import { handleDownloadReceipt } from '@/lib/utils/payment-receipt-download'
 
 const RecentPayments = () => {
   const { data: paymentsData, isLoading: recentPaymentsLoading } = useGetPaymentsQuery({})
-
-  const recentPayments = paymentsData?.payments.slice(0, 5)
+  console.log(paymentsData)
+  const recentPayments = paymentsData?.data?.slice(0, 5)
 
   if (recentPaymentsLoading) {
     return <TableSkeleton columnCount={6} rowCount={5} />

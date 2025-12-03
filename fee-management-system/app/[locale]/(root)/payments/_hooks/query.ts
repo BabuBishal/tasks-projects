@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { API_ROUTES } from '../../../../../lib/api/api-routes'
 import { getPayments, getPaymentStats } from '@/app/[locale]/(root)/payments/_api/payments'
 import { PaymentsResponse, PaymentStatsResponse } from '@/lib/types/api'
 
 export type PaymentQueryParams = {
   page?: number
+  limit?: number
   search?: string
   status?: string
   method?: string
@@ -30,5 +31,18 @@ export const useGetPaymentStatsQuery = () => {
     gcTime: 30 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,
+  })
+}
+
+export const useGetInfinitePaymentsQuery = ({ params = {} }: { params?: PaymentQueryParams }) => {
+  return useInfiniteQuery<PaymentsResponse>({
+    queryKey: [API_ROUTES.payments, params],
+    queryFn: ({ pageParam = 1 }) =>
+      getPayments({ params: { ...params, page: pageParam as number } }),
+    initialPageParam: 1,
+    getNextPageParam: lastPage => {
+      const { page, totalPages } = lastPage?.meta || {}
+      return page && page < totalPages ? page + 1 : undefined
+    },
   })
 }

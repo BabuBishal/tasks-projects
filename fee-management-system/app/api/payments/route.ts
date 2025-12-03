@@ -10,6 +10,10 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get('status') || ''
     const method = searchParams.get('method') || ''
 
+    // Pagination params
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '10')
+
     const payments = await prisma.payment.findMany({
       where: {
         AND: [
@@ -87,14 +91,21 @@ export async function GET(req: NextRequest) {
       ? paymentHistory.filter(p => p.status.toLowerCase() === status.toLowerCase())
       : paymentHistory
 
-    // Calculate stats
-    const totalAmount = filteredPayments.reduce((sum, payment) => sum + payment.amount, 0)
-    const totalPayments = filteredPayments.length
+    // Calculate total before pagination
+    const total = filteredPayments.length
+
+    // Apply pagination
+    const skip = (page - 1) * limit
+    const paginatedPayments = filteredPayments.slice(skip, skip + limit)
+
+    // Calculate stats from paginated data
+    const totalAmount = paginatedPayments.reduce((sum, payment) => sum + payment.amount, 0)
+    const totalPayments = paginatedPayments.length
 
     // Calculate today's payments
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    const todayPayments = filteredPayments
+    const todayPayments = paginatedPayments
       .filter(p => {
         const paymentDate = new Date(p.date)
         paymentDate.setHours(0, 0, 0, 0)
@@ -103,7 +114,13 @@ export async function GET(req: NextRequest) {
       .reduce((sum, p) => sum + p.amount, 0)
 
     return NextResponse.json({
-      payments: filteredPayments,
+      data: paginatedPayments,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
       totalAmount,
       totalPayments,
       todayPayments,

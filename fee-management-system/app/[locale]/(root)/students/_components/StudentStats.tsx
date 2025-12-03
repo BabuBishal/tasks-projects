@@ -6,13 +6,14 @@ import { AlertCircle, Users, Wallet } from 'lucide-react'
 import { StatsSkeleton } from '../../_components/skeletons/StatsSkeleton'
 
 export default function StudentStats() {
-  const { data: allStudents, isLoading } = useGetStudentsQuery()
+  const { data, isLoading } = useGetStudentsQuery()
 
   if (isLoading) {
     return <StatsSkeleton />
   }
 
-  const totalStudents = allStudents?.length || 0
+  const allStudents = data?.data || []
+  const totalStudents = data?.meta?.total || 0
   const paidStudents =
     allStudents?.filter(s => {
       const latestFee =

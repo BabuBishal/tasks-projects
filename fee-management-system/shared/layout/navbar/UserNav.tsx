@@ -13,10 +13,8 @@ const UserNav = () => {
   const [openDropdown, setOpenDropdown] = useState(false)
   const dropdownRef = useRef<HTMLSpanElement>(null)
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const userRole = (profileData as any)?.profile?.role || 'Staff'
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const profilePicture = (profileData as any)?.profile?.profilePicture
+  const userRole = profileData?.profile?.role || 'Staff'
+  const profilePicture = profileData?.profile?.profilePicture
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

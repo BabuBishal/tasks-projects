@@ -1,4 +1,3 @@
-// app/api/students/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import type { StudentWithFees } from '@/lib/types/prisma'
@@ -18,6 +17,11 @@ export async function GET(req: NextRequest) {
     const programId = searchParams.get('programId') || ''
     const semester = searchParams.get('semester') || ''
     const status = searchParams.get('status') || ''
+
+    // Pagination params
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '10')
+    const skip = (page - 1) * limit
 
     // Build where clause
     const where: {
@@ -55,6 +59,9 @@ export async function GET(req: NextRequest) {
       where.status = status
     }
 
+    // Get total count for pagination
+    const total = await prisma.student.count({ where })
+
     const students = (await prisma.student.findMany({
       where,
       include: {
@@ -78,9 +85,19 @@ export async function GET(req: NextRequest) {
       orderBy: {
         createdAt: 'desc',
       },
+      skip,
+      take: limit,
     })) as unknown as StudentWithFees[]
 
-    return NextResponse.json(students)
+    return NextResponse.json({
+      data: students,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    })
   } catch (error) {
     console.error('Error fetching students:', error)
     const errorMessage = error instanceof Error ? error.message : 'Unknown error'

@@ -10,7 +10,6 @@ const PaymentSearch = ({
   setStatusFilter,
   methodFilter,
   setMethodFilter,
-  setCurrentPage,
 }: {
   searchQuery: string
   setSearchQuery: (query: string) => void
@@ -18,7 +17,6 @@ const PaymentSearch = ({
   setStatusFilter: (filter: string) => void
   methodFilter: string
   setMethodFilter: (filter: string) => void
-  setCurrentPage: (page: number) => void
 }) => {
   const [searchText, setSearchText] = useState(searchQuery)
 
@@ -26,8 +24,7 @@ const PaymentSearch = ({
 
   useEffect(() => {
     setSearchQuery(debouncedSearchText)
-    setCurrentPage(1)
-  }, [debouncedSearchText, setSearchQuery, setCurrentPage])
+  }, [debouncedSearchText, setSearchQuery])
 
   return (
     <div className="flex flex-col gap-3 md:flex-row">
@@ -49,7 +46,6 @@ const PaymentSearch = ({
           value={statusFilter}
           onChange={e => {
             setStatusFilter(e.target.value)
-            setCurrentPage(1)
           }}
         >
           <option value="">All Status</option>
@@ -62,7 +58,6 @@ const PaymentSearch = ({
           value={methodFilter}
           onChange={e => {
             setMethodFilter(e.target.value)
-            setCurrentPage(1)
           }}
         >
           <option value="">All Methods</option>

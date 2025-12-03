@@ -6,6 +6,7 @@ import {
   BulkImportResult,
   BulkPromoteResult,
   StudentResponse,
+  PaginatedResponse,
 } from '@/lib/types/api'
 
 export const getStudents = async (params?: {
@@ -13,19 +14,23 @@ export const getStudents = async (params?: {
   programId?: string
   semester?: string
   status?: string
-}): Promise<StudentResponse[]> => {
+  page?: number
+  limit?: number
+}): Promise<PaginatedResponse<StudentResponse>> => {
   const queryParams = new URLSearchParams()
 
   if (params?.search) queryParams.append('search', params.search)
   if (params?.programId) queryParams.append('programId', params.programId)
   if (params?.semester) queryParams.append('semester', params.semester)
   if (params?.status) queryParams.append('status', params.status)
+  if (params?.page) queryParams.append('page', params.page.toString())
+  if (params?.limit) queryParams.append('limit', params.limit.toString())
 
   const url = queryParams.toString()
     ? `${API_ROUTES.students}?${queryParams.toString()}`
     : API_ROUTES.students
 
-  return await httpClient.get<StudentResponse[]>(url)
+  return await httpClient.get<PaginatedResponse<StudentResponse>>(url)
 }
 
 export const getStudentById = async (id: string): Promise<StudentWithComputedTotals> => {

@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button/Button'
 import { Download, Plus } from 'lucide-react'
 import Link from 'next/link'
 
-import { useGetPaymentsQuery } from '@/app/[locale]/(root)/payments/_hooks'
+import { useGetInfinitePaymentsQuery } from '@/app/[locale]/(root)/payments/_hooks'
 import { TableSkeleton } from '@/app/[locale]/(root)/_components/skeletons/TableSkeleton'
 import { handleExportPayments } from '@/lib/utils/export-payments'
 import PaymentSearch from './PaymentSearch'
@@ -14,24 +14,33 @@ import PaymentHistory from './PaymentHistory'
 const PaymentList = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('')
-  const [methodFilter, setMethodFilter] = useState<string>('')  
+  const [methodFilter, setMethodFilter] = useState<string>('')
 
-  const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
-  const { data, isLoading } = useGetPaymentsQuery({
-    params: { search: searchQuery, status: statusFilter, method: methodFilter },
+  const {
+    data: paymentsData,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useGetInfinitePaymentsQuery({
+    params: {
+      search: searchQuery,
+      status: statusFilter,
+      method: methodFilter,
+      limit: itemsPerPage,
+    },
   })
 
-  // Use backend-filtered data directly
-  const filteredPayments = data?.payments || []
-  const filteredTotal = filteredPayments.length
+  // Flatten all pages into a single array
+  const infinitePayments = paymentsData?.pages?.flatMap(page => page.data) || []
 
-  const paginatedPayments = (() => {
-    const startIndex = (currentPage - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
-    return filteredPayments.slice(startIndex, endIndex)
-  })()
+  // Get total from the first page's meta
+  const totalPayments = paymentsData?.pages?.[0]?.meta?.total || 0
+
+  // Get initial payments (first page)
+  const initialPayments = paymentsData?.pages?.[0]?.data || []
 
   return (
     <div className="border-border bg-card flex w-full flex-col gap-5 rounded-lg border p-6">
@@ -44,7 +53,7 @@ const PaymentList = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => handleExportPayments(filteredPayments)}
+            onClick={() => handleExportPayments(infinitePayments)}
           >
             <Download className="h-4 w-4" /> Export
           </Button>
@@ -63,19 +72,18 @@ const PaymentList = () => {
         setStatusFilter={setStatusFilter}
         methodFilter={methodFilter}
         setMethodFilter={setMethodFilter}
-        setCurrentPage={setCurrentPage}
       />
 
-      {/* Payment Table - show previous data while loading */}
-      {isLoading && !data ? (
+      {isLoading ? (
         <TableSkeleton />
       ) : (
         <PaymentHistory
-          initialPayments={filteredPayments}
-          paginatedPayments={paginatedPayments}
-          filteredTotal={filteredTotal}
-          setCurrentPage={setCurrentPage}
-          itemsPerPage={itemsPerPage}
+          initialPayments={initialPayments}
+          paginatedPayments={infinitePayments}
+          filteredTotal={totalPayments}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          fetchNextPage={fetchNextPage}
         />
       )}
     </div>

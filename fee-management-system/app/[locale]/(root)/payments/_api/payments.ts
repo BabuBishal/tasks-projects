@@ -25,3 +25,13 @@ export const getPaymentStats = async (): Promise<PaymentStatsResponse> => {
 export const addPayment = async (data: AddPaymentRequest): Promise<AddPaymentResponse> => {
   return await httpClient.post<AddPaymentResponse>(API_ROUTES.paymentAdd, data)
 }
+
+// export const getPaymentsInfinite = async ({
+//   params,
+// }: {
+//   params: PaymentQueryParams
+// }): Promise<PaymentsResponse> => {
+//   return await httpClient.get<PaymentsResponse>(API_ROUTES.payments, {
+//     params,
+//   })
+// }

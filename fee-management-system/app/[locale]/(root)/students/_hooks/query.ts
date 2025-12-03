@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { API_ROUTES } from '../../../../../lib/api/api-routes'
 import { getStudents, getStudentById } from '../_api/students'
-import { StudentResponse } from '@/lib/types/api'
+import { PaginatedResponse, StudentResponse } from '@/lib/types/api'
 import { StudentWithComputedTotals } from '@/lib/types'
 
 export const useGetStudentsQuery = (params?: {
@@ -9,8 +9,10 @@ export const useGetStudentsQuery = (params?: {
   programId?: string
   semester?: string
   status?: string
+  page?: number
+  limit?: number
 }) => {
-  return useQuery<StudentResponse[]>({
+  return useQuery<PaginatedResponse<StudentResponse>>({
     queryKey: [API_ROUTES.students, params],
     queryFn: () => getStudents(params),
     staleTime: 15 * 60 * 1000,

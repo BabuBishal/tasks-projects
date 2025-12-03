@@ -139,7 +139,13 @@ export type PaymentHistoryItem = {
 }
 
 export type PaymentsResponse = {
-  payments: PaymentHistoryItem[]
+  data: PaymentHistoryItem[]
+  meta: {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+  }
   totalAmount: number
   totalPayments: number
   todayPayments: number
@@ -319,6 +325,16 @@ export interface Scholarship {
   value: number
   createdAt: string
   updatedAt: string
+}
+
+export type PaginatedResponse<T> = {
+  data: T[]
+  meta: {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+  }
 }
 
 // interface DashboardData {

@@ -1,7 +1,7 @@
 'use client'
 
 import LanguageSwitcher from '@/shared/layout/navbar/language-switcher/LanguageSwitcher'
-import { Bell, Menu } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import UserNav from './UserNav'
 import ThemeToggle from './theme-toggle/ThemeToggle'
 
@@ -14,7 +14,6 @@ const Navbar = ({ onMenuClick }: { onMenuClick: () => void }) => {
       <div className="flex items-center justify-center gap-3">
         <LanguageSwitcher />
         <ThemeToggle />
-        <Bell className="h-5 w-5 cursor-pointer" />
         <UserNav />
       </div>
     </nav>
