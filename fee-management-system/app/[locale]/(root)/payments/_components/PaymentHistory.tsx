@@ -9,7 +9,6 @@ import { handleDownloadReceipt } from '@/lib/utils/payment-receipt-download'
 import { formatCurrency, formatDate } from '@/lib/utils/utils'
 import { Download, Filter } from 'lucide-react'
 import { useInfiniteScrollObserver } from '@/hooks/useInfiniteScrollObserver'
-// import { LoadingDots } from 'l3ui'
 
 const PaymentHistory = ({
   paginatedPayments,
@@ -25,21 +24,6 @@ const PaymentHistory = ({
   isFetchingNextPage: boolean
   fetchNextPage: () => void
 }) => {
-  // const { data } = useGetInfinitePaymentsQuery({ pageParam: currentPage })
-
-  // console.log(data, 'data')
-
-  // const paginatedPayments = data?.pages?.flatMap(page => page.data) || []
-  console.log(
-    '🚀 ~ PaymentHistory ~ paginatedPayments:',
-    paginatedPayments.length,
-    'of',
-    filteredTotal
-  )
-
-  // State for the scrollable container element
-  // const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null)
-
   const lastRef: React.RefCallback<HTMLTableRowElement> = useInfiniteScrollObserver({
     enabled: hasNextPage,
     onIntersect: () => {
@@ -49,8 +33,6 @@ const PaymentHistory = ({
     },
   })
 
-  // console.log('👁️ Observer enabled:', 'Scroll container:', !!scrollContainer)
-
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
@@ -58,12 +40,13 @@ const PaymentHistory = ({
           Payment History ({paginatedPayments?.length})
         </div>
         <div className="text-muted text-xs">
-          Showing {paginatedPayments?.length ?? '-'} of {filteredTotal ?? '-'} transactions
+          Showing {paginatedPayments?.length ?? '-'} of {filteredTotal ?? '-'}{' '}
+          transactions
         </div>
       </div>
 
       {paginatedPayments?.length > 0 ? (
-        <div className="text-secondary h-[500px] overflow-y-auto rounded-md text-xs">
+        <div className="text-secondary h-[500px] overflow-auto rounded-md text-xs">
           <Table>
             <Table.Header>
               <Table.Row>
@@ -74,9 +57,10 @@ const PaymentHistory = ({
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {paginatedPayments?.map(payment => {
+              {paginatedPayments.map((payment, index) => {
+                const isLast = index === paginatedPayments.length - 1
                 return (
-                  <Table.Row key={payment.id}>
+                  <Table.Row key={payment.id} ref={isLast && hasNextPage ? lastRef : undefined}>
                     <Table.Cell dataLabel="PaymentID">{payment.id}</Table.Cell>
                     <Table.Cell dataLabel="Student">{payment.studentName}</Table.Cell>
                     <Table.Cell dataLabel="Program">{payment.program}</Table.Cell>
@@ -180,15 +164,11 @@ const PaymentHistory = ({
                   </Table.Row>
                 )
               })}
-              <Table.Row ref={lastRef} className="flex w-full items-center justify-center">
-                {isFetchingNextPage ? (
-                  <Table.Cell className="mx-auto text-center">Loading more payments ...</Table.Cell>
-                ) : hasNextPage ? (
-                  <Table.Cell className="text-center">Load more payments</Table.Cell>
-                ) : (
-                  <Table.Cell className="text-center">No more payments</Table.Cell>
-                )}
-              </Table.Row>{' '}
+              {isFetchingNextPage && (
+                <Table.Row>
+                  <Table.Cell className="py-4 text-center">Loading more payments...</Table.Cell>
+                </Table.Row>
+              )}
             </Table.Body>
           </Table>
         </div>

@@ -134,6 +134,7 @@ export default function ProgramsPage() {
         editingProgram={editingProgram}
         handleUpdate={handleUpdate}
         handleCreate={handleCreate}
+        isLoading={isLoading}
       />
     </div>
   )

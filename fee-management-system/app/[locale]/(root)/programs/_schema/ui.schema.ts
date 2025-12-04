@@ -129,3 +129,14 @@ export const feeUiSchema = {
     },
   },
 }
+
+export const programUiSchema = {
+  name: {
+    'ui:placeholder': 'Eg: BSc CSIT, BBA, ...',
+    'ui:classNames': 'textInputWrapper',
+  },
+  duration: {
+    'ui:placeholder': 'Total Semesters',
+    'ui:classNames': 'textInputWrapper',
+  },
+}

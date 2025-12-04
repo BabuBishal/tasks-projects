@@ -26,16 +26,7 @@ import { feeUiSchema } from '../_schema/ui.schema'
 import SelectWidget from '@/shared/forms/rjsf/widgets/select-widget/SelectWidget'
 import TextWidget from '@/shared/forms/rjsf/widgets/text-widget/TextWidget'
 import '@/shared/forms/rjsf/styles/rjsf.scss'
-// interface Program {
-//   id: string;
-//   name: string;
-//   duration: number;
-//   semesters: {
-//     id: string;
-//     semesterNo: number;
-//     feeStructures: any[];
-//   }[];
-// }
+
 
 export interface FeeStructure {
   id: string

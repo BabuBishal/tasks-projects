@@ -52,8 +52,18 @@ const Header = ({ children, className }: { children: ReactNode; className?: stri
 )
 
 /* Body */
-const Body = ({ children, className }: { children: ReactNode; className?: string }) => (
-  <tbody className={cn('ui-table-body', className)}>{children}</tbody>
+const Body = ({
+  children,
+  className,
+  style,
+}: {
+  children: ReactNode
+  className?: string
+  style?: React.CSSProperties
+}) => (
+  <tbody className={cn('ui-table-body', className)} style={style}>
+    {children}
+  </tbody>
 )
 
 /* Row */
@@ -76,10 +86,12 @@ const Row = forwardRef<
   {
     children: ReactNode
     className?: string
+    style?: React.CSSProperties
+    'data-index'?: number
   }
->(({ children, className }, ref) => {
+>(({ children, className, style, ...props }, ref) => {
   return (
-    <tr className={cn('ui-table-row', className)} ref={ref}>
+    <tr className={cn('ui-table-row', className)} ref={ref} style={style} {...props}>
       {children}
     </tr>
   )

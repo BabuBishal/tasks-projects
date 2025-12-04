@@ -11,11 +11,8 @@ export default function SelectWidget({
   disabled,
 }: WidgetProps) {
   
-  // Extract options from various possible sources
-  // RJSF passes options through the 'options' prop which contains enumOptions
   const selectOptions = options?.enumOptions || []
 
-  // If no enumOptions, try to extract from schema.anyOf
   const anyOfOptions =
     schema?.anyOf
       ?.filter(
