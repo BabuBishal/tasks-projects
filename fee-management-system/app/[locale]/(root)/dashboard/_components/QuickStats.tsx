@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card/Card'
 import { COLORS } from '@/lib/constants/constants'
 import { ProgramDistribution } from '@/lib/types/api'
 import { TrendingUp, Users, Calendar, PieChart as PieChartIcon } from 'lucide-react'
+import { memo } from 'react'
 
 interface QuickStatsProps {
   collectionRate?: number | string
@@ -13,12 +14,12 @@ interface QuickStatsProps {
   programDistribution?: ProgramDistribution[]
 }
 
-export default function QuickStats({
+const QuickStats = ({
   collectionRate = 0,
   studentsPending = 0,
   upcomingDeadlines = 0,
   programDistribution = [],
-}: QuickStatsProps) {
+}: QuickStatsProps) => {
   return (
     <Card>
       <CardHeader>
@@ -71,7 +72,7 @@ export default function QuickStats({
               </div>
               <p className="text-muted text-sm font-medium">Program Distribution</p>
             </div>
-            <div className="h-[200px] w-full">
+            {/* <div className="h-[200px] w-full">
               {programDistribution.length > 0 ? (
                 <Piechart programDistribution={programDistribution} />
               ) : (
@@ -79,7 +80,7 @@ export default function QuickStats({
                   No data
                 </div>
               )}
-            </div>
+            </div> */}
             {/* Legend */}
             <div className="flex flex-wrap gap-2 text-xs">
               {programDistribution.slice(0, 4).map((prog, idx) => (
@@ -100,3 +101,5 @@ export default function QuickStats({
     </Card>
   )
 }
+
+export default memo(QuickStats)

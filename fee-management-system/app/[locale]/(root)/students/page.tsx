@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Button } from '@/shared/ui/button/Button'
 import { ChevronDown, Download, Plus, Upload } from 'lucide-react'
 import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
-import { DropdownMenu } from '@/shared/ui/dropdown-menu/DropdownMenu'
+import { DropdownMenu, DropdownMenuItem } from '@/shared/ui/dropdown-menu/DropdownMenu'
 import StudentStats from './_components/StudentStats'
 import StudentList from '@/app/[locale]/(root)/students/_components/StudentList'
 
@@ -25,18 +25,18 @@ const Students = () => {
               </Button>
             }
           >
-            <DropdownMenu.Item
+            <DropdownMenuItem
               href="/students/bulk?tab=import"
               icon={<Upload className="h-4 w-4" />}
             >
               Import Students
-            </DropdownMenu.Item>
-            <DropdownMenu.Item
+            </DropdownMenuItem>
+            <DropdownMenuItem
               href="/students/bulk?tab=export"
               icon={<Download className="h-4 w-4" />}
             >
               Export Students
-            </DropdownMenu.Item>
+            </DropdownMenuItem>
           </DropdownMenu>
           <Link href="/students/add">
             <Button variant="primary" size="sm">

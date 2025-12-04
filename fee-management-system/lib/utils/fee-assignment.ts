@@ -1,4 +1,3 @@
-// lib/fee-assignment.ts
 import { prisma } from "../prisma";
 import {
   getAcademicYearForSemester,
@@ -14,10 +13,7 @@ export interface FeeAssignmentResult {
   isGraduated?: boolean;
 }
 
-/**
- * Assign fee for a specific semester to a student
- * This is used during semester promotion or manual fee assignment
- */
+
 export async function assignFeeForSemester(
   studentId: string,
   semester: number,

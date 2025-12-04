@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react'
 import Badge from '@/shared/ui/badges/Badges'
 import { Button } from '@/shared/ui/button/Button'
 import { Modal } from '@/shared/ui/modal'
@@ -10,177 +11,170 @@ import { formatCurrency, formatDate } from '@/lib/utils/utils'
 import { Download, Filter } from 'lucide-react'
 import { useInfiniteScrollObserver } from '@/hooks/useInfiniteScrollObserver'
 
-const PaymentHistory = ({
-  paginatedPayments,
-  filteredTotal,
-  hasNextPage,
-  isFetchingNextPage,
-  fetchNextPage,
-}: {
+interface PaymentHistoryProps {
   initialPayments: PaymentHistoryItem[]
   paginatedPayments: PaymentHistoryItem[]
   filteredTotal: number
   hasNextPage: boolean
   isFetchingNextPage: boolean
   fetchNextPage: () => void
-}) => {
-  const lastRef: React.RefCallback<HTMLTableRowElement> = useInfiniteScrollObserver({
-    enabled: hasNextPage,
-    onIntersect: () => {
-      if (!isFetchingNextPage && hasNextPage) {
-        fetchNextPage()
-      }
-    },
-  })
-
-  return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <div className="text-md text-secondary font-semibold">
-          Payment History ({paginatedPayments?.length})
-        </div>
-        <div className="text-muted text-xs">
-          Showing {paginatedPayments?.length ?? '-'} of {filteredTotal ?? '-'}{' '}
-          transactions
-        </div>
-      </div>
-
-      {paginatedPayments?.length > 0 ? (
-        <div className="text-secondary h-[500px] overflow-auto rounded-md text-xs">
-          <Table>
-            <Table.Header>
-              <Table.Row>
-                {paymentHeaders?.map((head, index) => (
-                  <Table.Head key={index}>{head}</Table.Head>
-                ))}
-                <Table.Head>Actions</Table.Head>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {paginatedPayments.map((payment, index) => {
-                const isLast = index === paginatedPayments.length - 1
-                return (
-                  <Table.Row key={payment.id} ref={isLast && hasNextPage ? lastRef : undefined}>
-                    <Table.Cell dataLabel="PaymentID">{payment.id}</Table.Cell>
-                    <Table.Cell dataLabel="Student">{payment.studentName}</Table.Cell>
-                    <Table.Cell dataLabel="Program">{payment.program}</Table.Cell>
-                    <Table.Cell dataLabel="Amount">{formatCurrency(payment.amount)}</Table.Cell>
-                    <Table.Cell dataLabel="Date">
-                      {new Date(payment.date).toLocaleDateString()}
-                    </Table.Cell>
-                    <Table.Cell dataLabel="Method">
-                      <span className="bg-background border-border flex w-fit items-center rounded border px-2 py-1 text-xs">
-                        {getMethodIcon(payment.method)}
-                        <span className="capitalize">{payment.method}</span>
-                      </span>
-                    </Table.Cell>
-                    <Table.Cell dataLabel="Status">
-                      <Badge
-                        size="small"
-                        variant={
-                          payment.status === 'Partial'
-                            ? 'info'
-                            : payment.status === 'Paid'
-                              ? 'success'
-                              : 'danger'
-                        }
-                      >
-                        {payment.status ?? '-'}
-                      </Badge>
-                    </Table.Cell>
-                    <Table.Cell dataLabel="Actions">
-                      <Modal>
-                        <Modal.Trigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <Download className="h-4 w-4 text-blue-500" />
-                          </Button>
-                        </Modal.Trigger>
-                        <Modal.Content>
-                          <Modal.CloseIcon />
-                          <Modal.Header>
-                            <h2 className="text-primary text-xl font-bold">Payment Receipt</h2>
-                          </Modal.Header>
-                          <Modal.Body>
-                            <div className="space-y-3">
-                              <div className="border-border flex justify-between border-b py-2">
-                                <span className="text-muted font-medium">Receipt No:</span>
-                                <span className="text-primary font-semibold">{payment.id}</span>
-                              </div>
-                              <div className="border-border flex justify-between border-b py-2">
-                                <span className="text-muted font-medium">Date:</span>
-                                <span className="text-primary">{formatDate(payment.date)}</span>
-                              </div>
-                              <div className="border-border flex justify-between border-b py-2">
-                                <span className="text-muted font-medium">Student Name:</span>
-                                <span className="text-primary">{payment.studentName}</span>
-                              </div>
-                              <div className="border-border flex justify-between border-b py-2">
-                                <span className="text-muted font-medium">Program:</span>
-                                <span className="text-primary">{payment.program}</span>
-                              </div>
-                              <div className="border-border flex justify-between border-b py-2">
-                                <span className="text-muted font-medium">Payment Method:</span>
-                                <span className="text-primary capitalize">{payment.method}</span>
-                              </div>
-                              <div className="flex justify-between py-2">
-                                <span className="text-muted font-medium">Status:</span>
-                                <Badge
-                                  size="small"
-                                  variant={
-                                    payment.status === 'Partial'
-                                      ? 'info'
-                                      : payment.status === 'Paid'
-                                        ? 'success'
-                                        : 'danger'
-                                  }
-                                >
-                                  {payment.status}
-                                </Badge>
-                              </div>
-                              <div className="border-primary mt-4 flex justify-between border-t-2 py-3">
-                                <span className="text-primary text-lg font-bold">Amount Paid:</span>
-                                <span className="text-primary text-lg font-bold">
-                                  Rs {payment.amount.toLocaleString()}
-                                </span>
-                              </div>
-                            </div>
-                          </Modal.Body>
-                          <Modal.Footer>
-                            <div className="flex gap-3">
-                              <Modal.Close>Close</Modal.Close>
-                              <Button
-                                variant="primary"
-                                className="flex-1"
-                                onClick={() => handleDownloadReceipt(payment)}
-                              >
-                                <Download className="mr-2 h-4 w-4" />
-                                Download
-                              </Button>
-                            </div>
-                          </Modal.Footer>
-                        </Modal.Content>
-                      </Modal>
-                    </Table.Cell>
-                  </Table.Row>
-                )
-              })}
-              {isFetchingNextPage && (
-                <Table.Row>
-                  <Table.Cell className="py-4 text-center">Loading more payments...</Table.Cell>
-                </Table.Row>
-              )}
-            </Table.Body>
-          </Table>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <Filter className="text-muted mb-3 h-12 w-12" />
-          <p className="text-muted mb-2 text-sm">No payments found</p>
-          <p className="text-muted text-xs">Try adjusting your search or filters</p>
-        </div>
-      )}
-    </div>
-  )
 }
+
+const PaymentHistory = memo(
+  ({
+    paginatedPayments,
+    filteredTotal,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  }: PaymentHistoryProps) => {
+    const lastRef: React.RefCallback<HTMLTableRowElement> = useInfiniteScrollObserver({
+      enabled: hasNextPage,
+      onIntersect: () => {
+        if (!isFetchingNextPage && hasNextPage) {
+          fetchNextPage()
+        }
+      },
+    })
+
+    const getBadgeVariant = useCallback((status: string) => {
+      return status === 'Partial' ? 'info' : status === 'Paid' ? 'success' : 'danger'
+    }, [])
+
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div className="text-md text-secondary font-semibold">
+            Payment History ({paginatedPayments?.length})
+          </div>
+          <div className="text-muted text-xs">
+            Showing {paginatedPayments?.length ?? '-'} of {filteredTotal ?? '-'} transactions
+          </div>
+        </div>
+
+        {paginatedPayments?.length > 0 ? (
+          <div className="text-secondary h-[500px] overflow-auto rounded-md text-xs">
+            <Table>
+              <Table.Header>
+                <Table.Row>
+                  {paymentHeaders?.map((head, index) => (
+                    <Table.Head key={index}>{head}</Table.Head>
+                  ))}
+                  <Table.Head>Actions</Table.Head>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {paginatedPayments.map((payment, index) => {
+                  const isLast = index === paginatedPayments.length - 1
+                  return (
+                    <Table.Row key={payment.id} ref={isLast && hasNextPage ? lastRef : undefined}>
+                      <Table.Cell dataLabel="PaymentID">{payment.id}</Table.Cell>
+                      <Table.Cell dataLabel="Student">{payment.studentName}</Table.Cell>
+                      <Table.Cell dataLabel="Program">{payment.program}</Table.Cell>
+                      <Table.Cell dataLabel="Amount">{formatCurrency(payment.amount)}</Table.Cell>
+                      <Table.Cell dataLabel="Date">
+                        {new Date(payment.date).toLocaleDateString()}
+                      </Table.Cell>
+                      <Table.Cell dataLabel="Method">
+                        <span className="bg-background border-border flex w-fit items-center rounded border px-2 py-1 text-xs">
+                          {getMethodIcon(payment.method)}
+                          <span className="capitalize">{payment.method}</span>
+                        </span>
+                      </Table.Cell>
+                      <Table.Cell dataLabel="Status">
+                        <Badge size="small" variant={getBadgeVariant(payment.status)}>
+                          {payment.status ?? '-'}
+                        </Badge>
+                      </Table.Cell>
+                      <Table.Cell dataLabel="Actions">
+                        <Modal>
+                          <Modal.Trigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <Download className="h-4 w-4 text-blue-500" />
+                            </Button>
+                          </Modal.Trigger>
+                          <Modal.Content>
+                            <Modal.CloseIcon />
+                            <Modal.Header>
+                              <h2 className="text-primary text-xl font-bold">Payment Receipt</h2>
+                            </Modal.Header>
+                            <Modal.Body>
+                              <div className="space-y-3">
+                                <div className="border-border flex justify-between border-b py-2">
+                                  <span className="text-muted font-medium">Receipt No:</span>
+                                  <span className="text-primary font-semibold">{payment.id}</span>
+                                </div>
+                                <div className="border-border flex justify-between border-b py-2">
+                                  <span className="text-muted font-medium">Date:</span>
+                                  <span className="text-primary">{formatDate(payment.date)}</span>
+                                </div>
+                                <div className="border-border flex justify-between border-b py-2">
+                                  <span className="text-muted font-medium">Student Name:</span>
+                                  <span className="text-primary">{payment.studentName}</span>
+                                </div>
+                                <div className="border-border flex justify-between border-b py-2">
+                                  <span className="text-muted font-medium">Program:</span>
+                                  <span className="text-primary">{payment.program}</span>
+                                </div>
+                                <div className="border-border flex justify-between border-b py-2">
+                                  <span className="text-muted font-medium">Payment Method:</span>
+                                  <span className="text-primary capitalize">{payment.method}</span>
+                                </div>
+                                <div className="flex justify-between py-2">
+                                  <span className="text-muted font-medium">Status:</span>
+                                  <Badge size="small" variant={getBadgeVariant(payment.status)}>
+                                    {payment.status}
+                                  </Badge>
+                                </div>
+                                <div className="border-primary mt-4 flex justify-between border-t-2 py-3">
+                                  <span className="text-primary text-lg font-bold">
+                                    Amount Paid:
+                                  </span>
+                                  <span className="text-primary text-lg font-bold">
+                                    Rs {payment.amount.toLocaleString()}
+                                  </span>
+                                </div>
+                              </div>
+                            </Modal.Body>
+                            <Modal.Footer>
+                              <div className="flex gap-3">
+                                <Modal.Close>Close</Modal.Close>
+                                <Button
+                                  variant="primary"
+                                  className="flex-1"
+                                  onClick={() => handleDownloadReceipt(payment)}
+                                >
+                                  <Download className="mr-2 h-4 w-4" />
+                                  Download
+                                </Button>
+                              </div>
+                            </Modal.Footer>
+                          </Modal.Content>
+                        </Modal>
+                      </Table.Cell>
+                    </Table.Row>
+                  )
+                })}
+                {isFetchingNextPage && (
+                  <Table.Row>
+                    <Table.Cell className="py-4 text-center">Loading more payments...</Table.Cell>
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-12 text-center">
+            <Filter className="text-muted mb-3 h-12 w-12" />
+            <p className="text-muted mb-2 text-sm">No payments found</p>
+            <p className="text-muted text-xs">Try adjusting your search or filters</p>
+          </div>
+        )}
+      </div>
+    )
+  }
+)
+
+PaymentHistory.displayName = 'PaymentHistory'
 
 export default PaymentHistory

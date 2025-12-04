@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card/Card'
 import { AlertTriangle, UserX, FileWarning } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils/utils'
@@ -12,21 +13,64 @@ import { AlertSkeleton } from './skeletons/AlertSkeleton'
 export default function AlertsNotifications() {
   const { data, isLoading, isError } = useGetOverdueFeesQuery()
 
-  const alerts = data
-    ?.filter(fee => fee.daysOverdue > 30 || fee.paidAmount === 0)
-    .slice(0, 10)
-    .map(fee => ({
-      id: fee.id,
-      type: fee.daysOverdue > 30 ? ('critical_overdue' as const) : ('zero_payment' as const),
-      studentId: fee.studentId,
-      studentName: fee.studentName,
-      message:
-        fee.daysOverdue > 30
-          ? `Critical: ${fee.daysOverdue} days overdue`
-          : 'No payment received yet',
-      amount: fee.balance,
-      daysOverdue: fee.daysOverdue,
-    }))
+  const alerts = useMemo(
+    () =>
+      data
+        ?.filter(fee => fee.daysOverdue > 30 || fee.paidAmount === 0)
+        .slice(0, 10)
+        .map(fee => ({
+          id: fee.id,
+          type: fee.daysOverdue > 30 ? ('critical_overdue' as const) : ('zero_payment' as const),
+          studentId: fee.studentId,
+          studentName: fee.studentName,
+          message:
+            fee.daysOverdue > 30
+              ? `Critical: ${fee.daysOverdue} days overdue`
+              : 'No payment received yet',
+          amount: fee.balance,
+          daysOverdue: fee.daysOverdue,
+        })),
+    [data]
+  )
+
+  const getIcon = useCallback((type: string) => {
+    switch (type) {
+      case 'critical_overdue':
+        return <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
+      case 'zero_payment':
+        return <UserX className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+      case 'scholarship_pending':
+        return <FileWarning className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+      default:
+        return <AlertTriangle className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+    }
+  }, [])
+
+  const getBackgroundColor = useCallback((type: string) => {
+    switch (type) {
+      case 'critical_overdue':
+        return 'bg-red-100 dark:bg-red-950'
+      case 'zero_payment':
+        return 'bg-orange-100 dark:bg-orange-950'
+      case 'scholarship_pending':
+        return 'bg-yellow-100 dark:bg-yellow-950'
+      default:
+        return 'bg-gray-100 dark:bg-gray-950'
+    }
+  }, [])
+
+  const getBadgeVariant = useCallback((type: string) => {
+    switch (type) {
+      case 'critical_overdue':
+        return 'danger'
+      case 'zero_payment':
+        return 'warning'
+      case 'scholarship_pending':
+        return 'info'
+      default:
+        return 'info'
+    }
+  }, [])
 
   if (isLoading) {
     return <AlertSkeleton />
@@ -38,44 +82,6 @@ export default function AlertsNotifications() {
         <p className="text-red-600">Failed to load dashboard data</p>
       </div>
     )
-  }
-  const getIcon = (type: string) => {
-    switch (type) {
-      case 'critical_overdue':
-        return <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
-      case 'zero_payment':
-        return <UserX className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-      case 'scholarship_pending':
-        return <FileWarning className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-      default:
-        return <AlertTriangle className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-    }
-  }
-
-  const getBackgroundColor = (type: string) => {
-    switch (type) {
-      case 'critical_overdue':
-        return 'bg-red-100 dark:bg-red-950'
-      case 'zero_payment':
-        return 'bg-orange-100 dark:bg-orange-950'
-      case 'scholarship_pending':
-        return 'bg-yellow-100 dark:bg-yellow-950'
-      default:
-        return 'bg-gray-100 dark:bg-gray-950'
-    }
-  }
-
-  const getBadgeVariant = (type: string) => {
-    switch (type) {
-      case 'critical_overdue':
-        return 'danger'
-      case 'zero_payment':
-        return 'warning'
-      case 'scholarship_pending':
-        return 'info'
-      default:
-        return 'info'
-    }
   }
 
   return (

@@ -1,5 +1,7 @@
 'use client'
 
+import { useMemo } from 'react'
+
 import {
   Sheet,
   SheetContent,
@@ -29,7 +31,7 @@ const EditProfile = ({
 }) => {
   const updateProfileMutation = useUpdateProfileMutation()
   const { notify } = useToast()
-  
+
   const handleSubmit = (data: ProfileUpdateInput) => {
     updateProfileMutation.mutate(data, {
       onSuccess: () => {
@@ -50,12 +52,15 @@ const EditProfile = ({
     })
   }
 
-  const profileData = {
-    name: profile.name,
-    email: profile.email,
-    phone: profile?.profile?.phone,
-    position: profile?.profile?.position,
-  }
+  const profileData = useMemo(
+    () => ({
+      name: profile.name,
+      email: profile.email,
+      phone: profile?.profile?.phone,
+      position: profile?.profile?.position,
+    }),
+    [profile]
+  )
   return (
     <Sheet open={editProfileOpen} onOpenChange={setEditProfileOpen}>
       <SheetContent side="right" className="w-full overflow-y-auto p-5 sm:max-w-xl">

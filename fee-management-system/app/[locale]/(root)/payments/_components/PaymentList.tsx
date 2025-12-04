@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { Button } from '@/shared/ui/button/Button'
 import { Download, Plus } from 'lucide-react'
 import Link from 'next/link'
@@ -11,7 +11,7 @@ import { handleExportPayments } from '@/lib/utils/export-payments'
 import PaymentSearch from './PaymentSearch'
 import PaymentHistory from './PaymentHistory'
 
-const PaymentList = () => {
+const PaymentList = React.memo(() => {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('')
   const [methodFilter, setMethodFilter] = useState<string>('')
@@ -34,13 +34,20 @@ const PaymentList = () => {
   })
 
   // Flatten all pages into a single array
-  const infinitePayments = paymentsData?.pages?.flatMap(page => page.data) || []
+  const infinitePayments = useMemo(
+    () => paymentsData?.pages?.flatMap(page => page.data) || [],
+    [paymentsData?.pages]
+  )
 
   // Get total from the first page's meta
   const totalPayments = paymentsData?.pages?.[0]?.meta?.total || 0
 
   // Get initial payments (first page)
   const initialPayments = paymentsData?.pages?.[0]?.data || []
+
+  const handleExport = useCallback(() => {
+    handleExportPayments(infinitePayments)
+  }, [infinitePayments])
 
   return (
     <div className="border-border bg-card flex w-full flex-col gap-5 rounded-lg border p-6">
@@ -50,11 +57,7 @@ const PaymentList = () => {
           <span className="text-muted text-xs">Manage and view all payment records</span>
         </div>
         <div className="flex gap-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => handleExportPayments(infinitePayments)}
-          >
+          <Button variant="outline" size="sm" onClick={handleExport}>
             <Download className="h-4 w-4" /> Export
           </Button>
           <Link href={'/payments/add'}>
@@ -88,6 +91,8 @@ const PaymentList = () => {
       )}
     </div>
   )
-}
+})
+
+PaymentList.displayName = 'PaymentList'
 
 export default PaymentList

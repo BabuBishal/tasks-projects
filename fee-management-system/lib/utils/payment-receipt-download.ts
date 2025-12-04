@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import { formatDate } from "./utils";
-import { PaymentHistoryItem } from "@/lib/types";
+import { PaymentHistoryItem } from "@/lib/types/api";
 
 export const handleDownloadReceipt = (payment: Partial<PaymentHistoryItem>) => {
   const doc = new jsPDF();

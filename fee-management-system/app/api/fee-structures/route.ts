@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { FeeStructure } from "@prisma/client";
-import { FeeStructureResponse } from "@/lib/types";
+import { FeeStructureResponse } from "@/lib/types/api";
 
 export async function GET(request: Request) {
   try {

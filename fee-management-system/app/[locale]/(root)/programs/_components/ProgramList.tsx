@@ -1,9 +1,12 @@
 'use client'
 
+import React, { useCallback } from 'react'
 import { Card, CardContent } from '@/shared/ui/card/Card'
 import { Button } from '@/shared/ui/button/Button'
 import Link from 'next/link'
 import { Edit, Trash2, GraduationCap, BookOpen, Users } from 'lucide-react'
+import { useDeleteProgramMutation } from '../_hooks'
+import { useToast } from '@/shared/ui/toast'
 
 interface Program {
   id: string
@@ -17,10 +20,33 @@ interface Program {
 interface ProgramListProps {
   programs: Program[]
   onEdit: (program: Program) => void
-  onDelete: (id: string) => void
 }
 
-export default function ProgramList({ programs, onEdit, onDelete }: ProgramListProps) {
+const ProgramList = React.memo(({ programs, onEdit }: ProgramListProps) => {
+  const deleteProgramMutation = useDeleteProgramMutation()
+
+  const { notify } = useToast()
+
+  const handleDelete = useCallback(
+    async (id: string) => {
+      try {
+        await deleteProgramMutation.mutateAsync(id)
+
+        notify({
+          title: 'Success',
+          description: 'Program deleted successfully',
+          type: 'success',
+        })
+      } catch (error: unknown) {
+        notify({
+          title: 'Error',
+          description: (error as Error).message || 'Failed to delete program',
+          type: 'error',
+        })
+      }
+    },
+    [deleteProgramMutation, notify]
+  )
   if (programs.length === 0) {
     return (
       <div className="bg-muted/10 rounded-lg border-2 border-dashed py-12 text-center">
@@ -70,7 +96,7 @@ export default function ProgramList({ programs, onEdit, onDelete }: ProgramListP
                         `Are you sure you want to delete ${program.name}? This action cannot be undone.`
                       )
                     ) {
-                      onDelete(program.id)
+                      handleDelete(program.id)
                     }
                   }}
                 >
@@ -111,4 +137,8 @@ export default function ProgramList({ programs, onEdit, onDelete }: ProgramListP
       ))}
     </div>
   )
-}
+})
+
+ProgramList.displayName = 'ProgramList'
+
+export default ProgramList

@@ -2,31 +2,20 @@
 
 import { useState, use } from 'react'
 import { Button } from '@/shared/ui/button/Button'
-import { Plus, X } from 'lucide-react'
-
-import { Modal } from '@/shared/ui/modal/Modal'
+import { Plus } from 'lucide-react'
 import { useToast } from '@/shared/ui/toast'
 import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import {
   useGetFeeStructuresQuery,
-  useCreateFeeStructureMutation,
-  useUpdateFeeStructureMutation,
   useDeleteFeeStructureMutation,
 } from '@/app/[locale]/(root)/_hooks/fees'
 import { useGetProgramQuery } from '@/app/[locale]/(root)/programs/_hooks'
 import { ProgramDetailsSkeleton } from './_components/ProgramDetailsSkeleton'
 import { FeeStructureResponse } from '@/lib/types/api'
 import FeeStructureList from '../_components/fees/FeeStructureList'
-import FeeStructureForm, { FeeStructureFormValues } from '../_components/fees/FeeStructureForm'
 import FeeDetailsModal from '../_components/fees/FeeDetailsModal'
-import Form from '@rjsf/core'
-import feeSchema from '../_schema/fee.schema'
-import validator from '@/shared/forms/rjsf/validators/validator'
-import { feeUiSchema } from '../_schema/ui.schema'
-import SelectWidget from '@/shared/forms/rjsf/widgets/select-widget/SelectWidget'
-import TextWidget from '@/shared/forms/rjsf/widgets/text-widget/TextWidget'
-import '@/shared/forms/rjsf/styles/rjsf.scss'
 
+import FeeStructureModal from './_components/FeeStructureModal'
 
 export interface FeeStructure {
   id: string
@@ -56,81 +45,11 @@ export default function ProgramDetailsPage({ params }: { params: Promise<{ id: s
   const { data: program, isLoading } = useGetProgramQuery(id)
   const { data: allFeeStructures, isLoading: isFeesLoading } = useGetFeeStructuresQuery()
 
-  // Filter fee structures for this program
   const feeStructures = allFeeStructures?.filter(
     (fee: FeeStructureResponse) => fee.programSemester.programId === id
   )
 
-  // Mutations
-  const createFeeStructure = useCreateFeeStructureMutation()
-  const updateFeeStructure = useUpdateFeeStructureMutation()
   const deleteFeeStructure = useDeleteFeeStructureMutation()
-
-  const handleCreate = async (formData: FeeStructureFormValues) => {
-    const data = {
-      programId: formData.programId,
-      semesterNo: formData.semesterNo,
-      tuitionFee: formData.tuitionFee,
-      labFee: formData.labFee,
-      libraryFee: formData.libraryFee,
-      sportsFee: formData.sportsFee,
-      miscFee: formData.miscFee,
-    }
-
-    createFeeStructure.mutate(data, {
-      onSuccess: () => {
-        notify({
-          title: 'Success',
-          description: 'Fee structure created successfully',
-          type: 'success',
-        })
-        setIsModalOpen(false)
-      },
-      onError: (error: Error) => {
-        notify({
-          title: 'Error',
-          description: error.message || 'Failed to create fee structure',
-          type: 'error',
-        })
-      },
-    })
-  }
-
-  const handleUpdate = async (formData: FeeStructureFormValues) => {
-    if (!editingFee) return
-
-    const data = {
-      programId: formData.programId,
-      semesterNo: formData.semesterNo,
-      tuitionFee: formData.tuitionFee,
-      labFee: formData.labFee,
-      libraryFee: formData.libraryFee,
-      sportsFee: formData.sportsFee,
-      miscFee: formData.miscFee,
-    }
-
-    updateFeeStructure.mutate(
-      { id: editingFee.id!, data },
-      {
-        onSuccess: () => {
-          notify({
-            title: 'Success',
-            description: 'Fee structure updated successfully',
-            type: 'success',
-          })
-          setIsModalOpen(false)
-          setEditingFee(null)
-        },
-        onError: (error: Error) => {
-          notify({
-            title: 'Error',
-            description: error.message || 'Failed to update fee structure',
-            type: 'error',
-          })
-        },
-      }
-    )
-  }
 
   const handleDelete = async (id: string) => {
     deleteFeeStructure.mutate(id, {
@@ -176,8 +95,6 @@ export default function ProgramDetailsPage({ params }: { params: Promise<{ id: s
     return <div>Program not found</div>
   }
 
-  // ...
-
   return (
     <div className="flex h-full w-full flex-col gap-6">
       <Breadcrumb
@@ -207,133 +124,14 @@ export default function ProgramDetailsPage({ params }: { params: Promise<{ id: s
         <FeeStructureList feeStructures={feeStructures || []} onSelect={handleSelectFee} />
       )}
 
-      {/* Create/Edit Modal */}
-      <Modal defaultOpen={isModalOpen}>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
-            <div className="bg-background max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg shadow-lg">
-              <div className="flex items-center justify-between border-b p-6">
-                <h2 className="text-lg font-bold">
-                  {editingFee ? 'Edit Fee Structure' : 'Add Fee Structure'}
-                </h2>
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-              <div className="p-6">
-                <Form
-                  schema={feeSchema}
-                  validator={validator}
-                  uiSchema={feeUiSchema}
-                  formData={
-                    editingFee
-                      ? {
-                          fee: {
-                            program: program.name,
-                            semester: editingFee.programSemester?.semesterNo?.toString() || '',
-                            tuitionFee: editingFee.tuitionFee || 0,
-                            labFee: editingFee.labFee || 0,
-                            libraryFee: editingFee.libraryFee || 0,
-                            sportsFee: editingFee.sportsFee || 0,
-                            miscFee: editingFee.miscFee || 0,
-                          },
-                        }
-                      : {
-                          fee: {
-                            program: program.name,
-                            semester: '',
-                            tuitionFee: 0,
-                            labFee: 0,
-                            libraryFee: 0,
-                            sportsFee: 0,
-                            miscFee: 0,
-                          },
-                        }
-                  }
-                  onSubmit={({ formData }) => {
-                    const feeData: FeeStructureFormValues = {
-                      programId: program.id,
-                      semesterNo: formData.fee.semester,
-                      tuitionFee: formData.fee.tuitionFee,
-                      labFee: formData.fee.labFee,
-                      libraryFee: formData.fee.libraryFee,
-                      sportsFee: formData.fee.sportsFee,
-                      miscFee: formData.fee.miscFee,
-                    }
-                    if (editingFee) {
-                      handleUpdate(feeData)
-                    } else {
-                      handleCreate(feeData)
-                    }
-                  }}
-                  showErrorList={false}
-                  widgets={{
-                    number: TextWidget,
-                    text: TextWidget,
-                    select: SelectWidget,
-                  }}
-                >
-                  <div className="flex justify-end gap-3 pt-4">
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={() => {
-                        setIsModalOpen(false)
-                        setEditingFee(null)
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      type="submit"
-                      variant="primary"
-                      disabled={createFeeStructure.isPending || updateFeeStructure.isPending}
-                    >
-                      {createFeeStructure.isPending || updateFeeStructure.isPending
-                        ? 'Saving...'
-                        : editingFee
-                          ? 'Update'
-                          : 'Create'}
-                    </Button>
-                  </div>
-                </Form>
+      <FeeStructureModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        editingFee={editingFee}
+        setEditingFee={setEditingFee}
+        program={program}
+      />
 
-                {/* <FeeStructureForm
-                  key={editingFee ? editingFee.id : 'new'}
-                  initialData={
-                    editingFee
-                      ? {
-                          programSemester: {
-                            programId: editingFee?.programSemester?.programId,
-                            semesterNo: editingFee?.programSemester?.semesterNo,
-                          },
-                          tuitionFee: editingFee?.tuitionFee,
-                          labFee: editingFee?.labFee,
-                          libraryFee: editingFee?.libraryFee,
-                          sportsFee: editingFee?.sportsFee,
-                          miscFee: editingFee.miscFee,
-                        }
-                      : {
-                          programSemester: {
-                            programId: program.id,
-                            semesterNo: 1,
-                          },
-                        }
-                  }
-                  program={program}
-                  onSubmit={editingFee ? handleUpdate : handleCreate}
-                  onCancel={() => setIsModalOpen(false)}
-                /> */}
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal>
-
-      {/* Details Modal */}
       <FeeDetailsModal
         isOpen={isDetailsOpen}
         onClose={() => setIsDetailsOpen(false)}

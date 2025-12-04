@@ -373,3 +373,17 @@ export type PaginatedResponse<T> = {
 //     semester: number;
 //   }[];
 // }
+// Settings API response
+export interface SettingsResponse {
+  institutionName: string
+  institutionAddress: string | null
+  institutionPhone: string | null
+  institutionEmail: string | null
+  currency: string
+  dateFormat: string
+  timezone: string
+  receiptPrefix: string
+  lateFeePercentage: number
+  gracePeriodDays: number
+  reminderDaysBefore: number
+}

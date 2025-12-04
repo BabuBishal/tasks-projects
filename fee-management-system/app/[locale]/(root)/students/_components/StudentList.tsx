@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useCallback, useMemo, memo } from 'react'
 import { Table } from '@/shared/ui/table/Table'
 import Badge from '@/shared/ui/badges/Badges'
-import { Eye, Search, Trash2, X, ArrowRight } from 'lucide-react'
+import { Eye, Trash2, X, ArrowRight, Pencil } from 'lucide-react'
 import Link from 'next/link'
 import { calculateStudentStatus } from '@/lib/utils/status-utils'
 import { useGetProgramsQuery } from '@/app/[locale]/(root)/programs/_hooks'
@@ -17,7 +17,87 @@ import DeleteStudentModal from './modals/DeleteStudentModal'
 import { StudentResponse } from '@/lib/types/api'
 import StudentSearch from './StudentSearch'
 
-const StudentList: React.FC = () => {
+// Memoized Student Row Component
+const StudentRow = memo(
+  ({
+    student,
+    isSelected,
+    onSelect,
+    onEdit,
+    onDelete,
+  }: {
+    student: StudentResponse
+    isSelected: boolean
+    onSelect: (id: string) => void
+    onEdit: (student: StudentResponse) => void
+    onDelete: (student: StudentResponse) => void
+  }) => {
+    // Memoize expensive calculations
+    const feeStatus = useMemo(
+      () => (student.status === 'Graduated' ? 'Graduated' : calculateStudentStatus(student.fees)),
+      [student.status, student.fees]
+    )
+
+    const totalPaid = useMemo(
+      () => student.fees.reduce((sum: number, fee) => sum + fee.paid, 0),
+      [student.fees]
+    )
+
+    const badgeVariant = useMemo(() => {
+      if (feeStatus === 'Paid') return 'success'
+      if (feeStatus === 'Overdue') return 'danger'
+      return 'warning'
+    }, [feeStatus])
+
+    return (
+      <Table.Row>
+        <Table.Cell data-label="">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => onSelect(student.id)}
+            className="cursor-pointer"
+          />
+        </Table.Cell>
+        <Table.Cell data-label="Roll No">{student.rollNo}</Table.Cell>
+        <Table.Cell data-label="Name">{student.name}</Table.Cell>
+        <Table.Cell data-label="Program">{student.program?.name || 'N/A'}</Table.Cell>
+        <Table.Cell data-label="Semester">{student.semester}</Table.Cell>
+        <Table.Cell data-label="Status">
+          <Badge variant={badgeVariant}>{feeStatus}</Badge>
+        </Table.Cell>
+        <Table.Cell data-label="Total Paid">Rs. {totalPaid.toLocaleString()}</Table.Cell>
+        <Table.Cell data-label="Actions">
+          <div className="flex items-center gap-2">
+            <Link href={`/students/${student.id}`}>
+              <Eye className="h-4 w-4 text-blue-600 hover:text-blue-800" />
+            </Link>
+
+            {/* Edit Button */}
+            <button
+              onClick={() => onEdit(student)}
+              className="cursor-pointer text-green-600 hover:text-green-800"
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+
+            {/* Delete Button */}
+            <button
+              onClick={() => onDelete(student)}
+              className="cursor-pointer text-red-600 hover:text-red-800"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        </Table.Cell>
+      </Table.Row>
+    )
+  }
+)
+
+StudentRow.displayName = 'StudentRow'
+
+const StudentList: React.FC = React.memo(() => {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('All')
   const [programFilter, setProgramFilter] = useState<string>('all')
@@ -27,42 +107,54 @@ const StudentList: React.FC = () => {
   const [isPromoteModalOpen, setIsPromoteModalOpen] = useState(false)
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false)
   const [studentToDelete, setStudentToDelete] = useState<StudentResponse | null>(null)
+  const [studentToEdit, setStudentToEdit] = useState<StudentResponse | null>(null)
 
   const debouncedSearch = useDebounce(searchQuery, 300)
   const itemsPerPage = 10
 
-  const params = {
-    search: debouncedSearch,
-    programId: programFilter !== 'all' ? programFilter : undefined,
-    semester: semesterFilter !== 'all' ? semesterFilter : undefined,
-    status: statusFilter !== 'All' ? statusFilter : undefined,
-    page: currentPage,
-    limit: itemsPerPage,
-  }
+  const params = useMemo(
+    () => ({
+      search: debouncedSearch,
+      programId: programFilter !== 'all' ? programFilter : undefined,
+      semester: semesterFilter !== 'all' ? semesterFilter : undefined,
+      status: statusFilter !== 'All' ? statusFilter : undefined,
+      page: currentPage,
+      limit: itemsPerPage,
+    }),
+    [debouncedSearch, programFilter, semesterFilter, statusFilter, currentPage]
+  )
 
   const { data: response, isLoading } = useGetStudentsQuery(params)
   const { data: programsData } = useGetProgramsQuery()
   const programs = programsData || []
-  const students = response?.data || []
+  const students = useMemo(() => response?.data || [], [response?.data])
   const meta = response?.meta
 
-  const handleSelectStudent = (studentId: string) => {
+  const handleSelectStudent = useCallback((studentId: string) => {
     setSelectedStudentIds(prev =>
       prev.includes(studentId) ? prev.filter(id => id !== studentId) : [...prev, studentId]
     )
-  }
+  }, [])
 
-  const handleSelectAll = () => {
+  const handleSelectAll = useCallback(() => {
     if (selectedStudentIds.length === students.length) {
       setSelectedStudentIds([])
     } else {
       setSelectedStudentIds(students.map((s: StudentResponse) => s.id))
     }
-  }
+  }, [selectedStudentIds.length, students])
 
-  const clearSelection = () => {
+  const clearSelection = useCallback(() => {
     setSelectedStudentIds([])
-  }
+  }, [])
+
+  const handleDeleteClick = useCallback((student: StudentResponse) => {
+    setStudentToDelete(student)
+  }, [])
+
+  const handleEditClick = useCallback((student: StudentResponse) => {
+    setStudentToEdit(student)
+  }, [])
 
   if (isLoading && !response) {
     return <TableSkeleton columnCount={6} rowCount={10} />
@@ -107,13 +199,6 @@ const StudentList: React.FC = () => {
                 Promote
               </button>
 
-              <PromoteSemesterModal
-                isOpen={isPromoteModalOpen}
-                onClose={() => setIsPromoteModalOpen(false)}
-                selectedStudentIds={selectedStudentIds}
-                onSuccess={clearSelection}
-              />
-
               <button
                 onClick={() => setIsBulkDeleteModalOpen(true)}
                 className="rounded bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
@@ -121,13 +206,6 @@ const StudentList: React.FC = () => {
                 <Trash2 className="mr-1 inline h-4 w-4" />
                 Delete
               </button>
-
-              <BulkDeleteModal
-                isOpen={isBulkDeleteModalOpen}
-                onClose={() => setIsBulkDeleteModalOpen(false)}
-                selectedStudentIds={selectedStudentIds}
-                onSuccess={clearSelection}
-              />
 
               <button
                 onClick={clearSelection}
@@ -174,76 +252,54 @@ const StudentList: React.FC = () => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {students.map((student: StudentResponse) => {
-                const feeStatus =
-                  student.status === 'Graduated'
-                    ? 'Graduated'
-                    : calculateStudentStatus(student.fees)
-                const totalPaid = student.fees.reduce((sum: number, fee) => sum + fee.paid, 0)
-
-                return (
-                  <Table.Row key={student.id}>
-                    <Table.Cell data-label="">
-                      <input
-                        type="checkbox"
-                        checked={selectedStudentIds.includes(student.id)}
-                        onChange={() => handleSelectStudent(student.id)}
-                        className="cursor-pointer"
-                      />
-                    </Table.Cell>
-                    <Table.Cell data-label="Roll No">{student.rollNo}</Table.Cell>
-                    <Table.Cell data-label="Name">{student.name}</Table.Cell>
-                    <Table.Cell data-label="Program">{student.program?.name || 'N/A'}</Table.Cell>
-                    <Table.Cell data-label="Semester">{student.semester}</Table.Cell>
-                    <Table.Cell data-label="Status">
-                      <Badge
-                        variant={
-                          feeStatus === 'Paid'
-                            ? 'success'
-                            : feeStatus === 'Overdue'
-                              ? 'danger'
-                              : 'warning'
-                        }
-                      >
-                        {feeStatus}
-                      </Badge>
-                    </Table.Cell>
-                    <Table.Cell data-label="Total Paid">
-                      Rs. {totalPaid.toLocaleString()}
-                    </Table.Cell>
-                    <Table.Cell data-label="Actions">
-                      <div className="flex items-center gap-2">
-                        <Link href={`/students/${student.id}`}>
-                          <Eye className="h-4 w-4 text-blue-600 hover:text-blue-800" />
-                        </Link>
-
-                        {/* Edit Modal */}
-                        <EditStudentModal student={student} />
-
-                        {/* Delete Modal */}
-                        <button
-                          onClick={() => setStudentToDelete(student)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </Table.Cell>
-                  </Table.Row>
-                )
-              })}
+              {students.map((student: StudentResponse) => (
+                <StudentRow
+                  key={student.id}
+                  student={student}
+                  isSelected={selectedStudentIds.includes(student.id)}
+                  onSelect={handleSelectStudent}
+                  onEdit={handleEditClick}
+                  onDelete={handleDeleteClick}
+                />
+              ))}
             </Table.Body>
           </Table>
         )}
       </div>
+
+      {/* Modals moved outside the loop */}
+      <PromoteSemesterModal
+        isOpen={isPromoteModalOpen}
+        onClose={() => setIsPromoteModalOpen(false)}
+        selectedStudentIds={selectedStudentIds}
+        onSuccess={clearSelection}
+      />
+
+      <BulkDeleteModal
+        isOpen={isBulkDeleteModalOpen}
+        onClose={() => setIsBulkDeleteModalOpen(false)}
+        selectedStudentIds={selectedStudentIds}
+        onSuccess={clearSelection}
+      />
 
       <DeleteStudentModal
         isOpen={!!studentToDelete}
         onClose={() => setStudentToDelete(null)}
         student={studentToDelete}
       />
+
+      {studentToEdit && (
+        <EditStudentModal
+          key={studentToEdit.id}
+          student={studentToEdit}
+          isOpen={!!studentToEdit}
+          onClose={() => setStudentToEdit(null)}
+        />
+      )}
     </div>
   )
-}
+})
+
+StudentList.displayName = 'StudentList'
 
 export default StudentList

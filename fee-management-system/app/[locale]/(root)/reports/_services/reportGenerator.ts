@@ -1,5 +1,3 @@
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
 import { PaymentStats, DateRange } from '../_types'
 
 /**
@@ -14,12 +12,19 @@ export const formatDate = (date: Date): string => {
 
 /**
  * Generates a PDF report for payment statistics
+ * Uses dynamic imports to reduce initial bundle size
  */
-export const generatePaymentStatusReport = (
+export const generatePaymentStatusReport = async (
   paymentStats: PaymentStats,
   dateRange: DateRange,
   selectedPeriod: string
 ) => {
+  // Dynamic import to reduce bundle size
+  const [{ default: jsPDF }, { default: autoTable }] = await Promise.all([
+    import('jspdf'),
+    import('jspdf-autotable'),
+  ])
+
   const doc = new jsPDF()
   const pageWidth = doc.internal.pageSize.getWidth()
   let yPos = 20

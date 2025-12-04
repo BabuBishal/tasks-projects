@@ -1,7 +1,7 @@
 import { Modal } from '@/shared/ui/modal/Modal'
 
 import { Program } from '../page'
-import ProgramForm from '@/app/[locale]/(root)/programs/_components/ProgramForm'
+// import ProgramForm from '@/app/[locale]/(root)/programs/_components/ProgramForm'
 import { X } from 'lucide-react'
 import Form from '@rjsf/core'
 import programSchema from '../_schema/program.schema'
@@ -10,22 +10,73 @@ import { programUiSchema } from '../_schema/ui.schema'
 import TextWidget from '@/shared/forms/rjsf/widgets/text-widget/TextWidget'
 import '@/shared/forms/rjsf/styles/rjsf.scss'
 import { Button } from '@/shared/ui/button/Button'
+import { useCreateProgramMutation, useUpdateProgramMutation } from '../_hooks'
+import { useToast } from '@/shared/ui/toast'
+import { SetStateAction } from 'react'
 
 const AddProgramModal = ({
   isModalOpen,
   setIsModalOpen,
-  editingProgram,
-  handleUpdate,
-  handleCreate,
   isLoading,
+  editingProgram,
+  setEditingProgram,
 }: {
-  isModalOpen: boolean
+  isModalOpen: boolean 
   setIsModalOpen: (open: boolean) => void
-  editingProgram: Program | null
-  handleUpdate: (data: { name: string; duration: number }) => void
-  handleCreate: (data: { name: string; duration: number }) => void
-  isLoading: boolean
+  isLoading: boolean,
+  editingProgram: Program | null,
+  setEditingProgram: (value: SetStateAction<Program | null>) => void
 }) => {
+
+  const createProgramMutation = useCreateProgramMutation()
+  const updateProgramMutation = useUpdateProgramMutation()
+  const { notify } = useToast()
+
+  const handleUpdate = async (data: { name: string; duration: number }) => {
+    if (!editingProgram) return
+
+    try {
+      await updateProgramMutation.mutateAsync({
+        id: editingProgram.id,
+        data,
+      })
+
+      notify({
+        title: 'Success',
+        description: 'Program updated successfully',
+        type: 'success',
+      })
+
+      setIsModalOpen(false)
+      setEditingProgram(null)
+    } catch (error: unknown) {
+      notify({
+        title: 'Error',
+        description: (error as Error).message || 'Failed to update program',
+        type: 'error',
+      })
+    }
+  }
+
+  const handleCreate = async (data: { name: string; duration: number }) => {
+    try {
+      await createProgramMutation.mutateAsync(data)
+
+      notify({
+        title: 'Success',
+        description: 'Program created successfully',
+        type: 'success',
+      })
+      setIsModalOpen(false)
+    } catch (error: unknown) {
+      notify({
+        title: 'Error',
+        description: (error as Error).message || 'Failed to create program',
+        type: 'error',
+      })
+    }
+  }
+
   return (
     <Modal defaultOpen={isModalOpen}>
       {isModalOpen && (

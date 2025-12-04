@@ -3,110 +3,23 @@
 import { useState } from 'react'
 import { Button } from '@/shared/ui/button/Button'
 import { Plus } from 'lucide-react'
-import ProgramList from '@/app/[locale]/(root)/programs/_components/ProgramList'
-
 import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
-import { useToast } from '@/shared/ui/toast'
-import {
-  useCreateProgramMutation,
-  useDeleteProgramMutation,
-  useGetProgramsQuery,
-  useUpdateProgramMutation,
-} from '@/app/[locale]/(root)/programs/_hooks'
-import AddProgramModal from './_components/AddProgramModal'
-import { ProgramListSkeleton } from './_components/skeletons/ProgramListSkeleton'
+
+import ProgramContent from './_components/ProgramContent'
 
 export interface Program {
   id: string
   name: string
   duration: number
-  _count?: {
-    students: number
-  }
 }
 
 export default function ProgramsPage() {
-  const [editingProgram, setEditingProgram] = useState<Program | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const { data: programs, isLoading } = useGetProgramsQuery()
-  const createProgramMutation = useCreateProgramMutation()
-  const updateProgramMutation = useUpdateProgramMutation()
-  const deleteProgramMutation = useDeleteProgramMutation()
-
-  const { notify } = useToast()
+  const [editingProgram, setEditingProgram] = useState<Program | null>(null)
 
   const openCreateModal = () => {
     setEditingProgram(null)
     setIsModalOpen(true)
-  }
-
-  const openEditModal = (program: Program) => {
-    setEditingProgram(program)
-    setIsModalOpen(true)
-  }
-
-  const handleCreate = async (data: { name: string; duration: number }) => {
-    try {
-      await createProgramMutation.mutateAsync(data)
-
-      notify({
-        title: 'Success',
-        description: 'Program created successfully',
-        type: 'success',
-      })
-      setIsModalOpen(false)
-    } catch (error: unknown) {
-      notify({
-        title: 'Error',
-        description: (error as Error).message || 'Failed to create program',
-        type: 'error',
-      })
-    }
-  }
-
-  const handleUpdate = async (data: { name: string; duration: number }) => {
-    if (!editingProgram) return
-
-    try {
-      await updateProgramMutation.mutateAsync({
-        id: editingProgram.id,
-        data,
-      })
-
-      notify({
-        title: 'Success',
-        description: 'Program updated successfully',
-        type: 'success',
-      })
-
-      setIsModalOpen(false)
-      setEditingProgram(null)
-    } catch (error: unknown) {
-      notify({
-        title: 'Error',
-        description: (error as Error).message || 'Failed to update program',
-        type: 'error',
-      })
-    }
-  }
-
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteProgramMutation.mutateAsync(id)
-
-      notify({
-        title: 'Success',
-        description: 'Program deleted successfully',
-        type: 'success',
-      })
-    } catch (error: unknown) {
-      notify({
-        title: 'Error',
-        description: (error as Error).message || 'Failed to delete program',
-        type: 'error',
-      })
-    }
   }
 
   return (
@@ -122,19 +35,11 @@ export default function ProgramsPage() {
           Add Program
         </Button>
       </div>
-
-      {isLoading ? (
-        <ProgramListSkeleton />
-      ) : (
-        <ProgramList programs={programs || []} onEdit={openEditModal} onDelete={handleDelete} />
-      )}
-      <AddProgramModal
+      <ProgramContent
+        editingProgram={editingProgram}
+        setEditingProgram={setEditingProgram}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        editingProgram={editingProgram}
-        handleUpdate={handleUpdate}
-        handleCreate={handleCreate}
-        isLoading={isLoading}
       />
     </div>
   )

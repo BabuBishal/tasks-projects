@@ -44,5 +44,9 @@ export const useGetInfinitePaymentsQuery = ({ params = {} }: { params?: PaymentQ
       const { page, totalPages } = lastPage?.meta || {}
       return page && page < totalPages ? page + 1 : undefined
     },
+    staleTime: 15 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 2,
+    refetchOnWindowFocus: false,
   })
 }
