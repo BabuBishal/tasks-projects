@@ -1,60 +1,42 @@
-import axios, { InternalAxiosRequestConfig, AxiosRequestConfig } from "axios";
-import { getSession } from "next-auth/react";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import axios, { InternalAxiosRequestConfig, AxiosRequestConfig } from 'axios'
+import { getSession } from 'next-auth/react'
 
-export const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
+export const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
 const http = axios.create({
   baseURL,
   withCredentials: true,
-});
+})
 
 http.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-
-    if (typeof window === "undefined") {
-      try {
-        const session = await getServerSession(authOptions);
-        if (session?.accessToken) {
-          config.headers.Authorization = `Bearer ${session.accessToken}`;
-        }
-      } catch {
-        console.error("Server session may not exist");
-      }
+    // Only use client-side session (this file is bundled for the browser)
+    const session = await getSession()
+    if (session?.accessToken) {
+      config.headers.Authorization = `Bearer ${session.accessToken}`
     }
-    
-    else {
-      const session = await getSession();
-      if (session?.accessToken) {
-        config.headers.Authorization = `Bearer ${session.accessToken}`;
-      }
-    }
-    return config;
+    return config
   },
-  (error) => {
-    return Promise.reject(error);
+  error => {
+    return Promise.reject(error)
   }
-);
+)
 
 // response interceptor for error handling
 http.interceptors.response.use(
-  (response) => response,
-  (error) => {
+  response => response,
+  error => {
     if (error.response?.status === 401) {
-      console.error("Unauthorized access");
+      console.error('Unauthorized access')
     }
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)
 
 export const httpClient = {
-  get: async <T = unknown>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<T> => {
-    const response = await http.get<T>(url, config);
-    return response.data;
+  get: async <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> => {
+    const response = await http.get<T>(url, config)
+    return response.data
   },
 
   post: async <T = unknown>(
@@ -62,8 +44,8 @@ export const httpClient = {
     data?: unknown,
     config?: AxiosRequestConfig
   ): Promise<T> => {
-    const response = await http.post<T>(url, data, config);
-    return response.data;
+    const response = await http.post<T>(url, data, config)
+    return response.data
   },
 
   put: async <T = unknown>(
@@ -71,8 +53,8 @@ export const httpClient = {
     data?: unknown,
     config?: AxiosRequestConfig
   ): Promise<T> => {
-    const response = await http.put<T>(url, data, config);
-    return response.data;
+    const response = await http.put<T>(url, data, config)
+    return response.data
   },
 
   patch: async <T = unknown>(
@@ -80,17 +62,14 @@ export const httpClient = {
     data?: unknown,
     config?: AxiosRequestConfig
   ): Promise<T> => {
-    const response = await http.patch<T>(url, data, config);
-    return response.data;
+    const response = await http.patch<T>(url, data, config)
+    return response.data
   },
 
-  delete: async <T = unknown>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<T> => {
-    const response = await http.delete<T>(url, config);
-    return response.data;
+  delete: async <T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> => {
+    const response = await http.delete<T>(url, config)
+    return response.data
   },
-};
+}
 
-export default httpClient;
+export default httpClient
