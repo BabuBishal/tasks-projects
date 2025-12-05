@@ -1,8 +1,8 @@
-import { StudentWithComputedTotals } from '@/lib/types'
+import { StudentResponse } from '@/lib/types/api'
 import { formatCurrency, formatDate } from '@/lib/utils/utils'
 import { Award, BookOpen, Calendar, Mail, MapPin, Phone } from 'lucide-react'
 
-const StudentInfo = ({ student }: { student: StudentWithComputedTotals }) => {
+const StudentInfo = ({ student }: { student: StudentResponse }) => {
   return (
     <>
       {/* Student Information */}

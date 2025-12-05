@@ -5,6 +5,9 @@ export type StudentFormInputs = {
   semester: number
   phone: string
   address: string
+  rollNo: string
+  year: number
+  joinedYear: number
   scholarshipId?: string
 }
 

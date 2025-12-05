@@ -111,18 +111,37 @@ export async function GET(req: NextRequest) {
   }
 }
 
+import { createStudentSchema } from '@/app/[locale]/(root)/students/_types/schema'
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { name, email, programId, semester, phone, address, scholarshipId } = body
 
-    // Required field check
-    if (!name || !email || !programId) {
+    // Validate request body using Zod
+    const validationResult = createStudentSchema.safeParse(body)
+
+    if (!validationResult.success) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, email, programId' },
+        {
+          error: 'Validation failed',
+          details: validationResult.error.flatten().fieldErrors,
+        },
         { status: 400 }
       )
     }
+
+    const {
+      name,
+      email,
+      programId,
+      semester,
+      phone,
+      address,
+      scholarshipId,
+      rollNo: inputRollNo,
+      year: inputYear,
+      joinedYear: inputJoinedYear,
+    } = validationResult.data
 
     // Check email uniqueness
     const existingEmail = await prisma.student.findUnique({
@@ -143,19 +162,29 @@ export async function POST(req: NextRequest) {
     }
 
     // ---------------------------------------------------------
-    // 1️⃣ Auto-generate roll number using program prefix
+    // 1️⃣ Auto-generate roll number if not provided or empty
     // ---------------------------------------------------------
 
-    const prefix = generateProgramPrefix(program.name)
+    // Always calculate these to ensure consistency
     const joinedYear = calculateJoinedYear(semester)
     const studentSemester = Number(semester) || 1
 
-    // Count existing students in same program + year
-    const studentCount = await prisma.student.count({
-      where: { programId: programId, year: joinedYear },
-    })
+    // Use input year if provided and valid, otherwise use calculated
+    const finalYear = inputYear || joinedYear
+    const finalJoinedYear = inputJoinedYear || joinedYear
 
-    const rollNo = `${prefix}-${joinedYear}-${String(studentCount + 1).padStart(4, '0')}`
+    let finalRollNo = inputRollNo
+
+    if (!finalRollNo) {
+      const prefix = generateProgramPrefix(program.name)
+
+      // Count existing students in same program + year
+      const studentCount = await prisma.student.count({
+        where: { programId: programId, year: finalJoinedYear },
+      })
+
+      finalRollNo = `${prefix}-${finalJoinedYear}-${String(studentCount + 1).padStart(4, '0')}`
+    }
 
     // ---------------------------------------------------------
     // 2️⃣ Fetch scholarship once (if provided)
@@ -259,13 +288,13 @@ export async function POST(req: NextRequest) {
     } = {
       name,
       email,
-      rollNo,
+      rollNo: finalRollNo,
       programId,
       semester: studentSemester,
       phone: phone || '',
       address: address || '',
-      year: joinedYear,
-      joinedYear: joinedYear,
+      year: finalYear,
+      joinedYear: finalJoinedYear,
       fees: {
         create: studentFeesToCreate,
       },

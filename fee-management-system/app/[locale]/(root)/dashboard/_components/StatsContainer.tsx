@@ -60,7 +60,7 @@ const StatsContainer = () => {
     )
   }
 
-  if (!data || isError) {
+  if (isError || !data) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <p className="text-red-600">Failed to load dashboard data</p>

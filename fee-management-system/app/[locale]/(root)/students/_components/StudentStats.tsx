@@ -16,8 +16,8 @@ export default function StudentStats() {
     const paidStudents =
       allStudents?.filter(s => {
         const latestFee =
-          s.fees.length > 0
-            ? s.fees.reduce((latest, fee) =>
+          (s.fees || []).length > 0
+            ? (s.fees || []).reduce((latest, fee) =>
                 new Date(fee.createdAt) > new Date(latest.createdAt) ? fee : latest
               )
             : null
@@ -26,9 +26,9 @@ export default function StudentStats() {
 
     const overdueStudents =
       allStudents?.filter(s => {
-        const latestFee =
-          s.fees.length > 0
-            ? s.fees.reduce((latest, fee) =>
+        const latestFee = 
+          (s.fees || []).length > 0
+            ? (s.fees || []).reduce((latest, fee) =>
                 new Date(fee.createdAt) > new Date(latest.createdAt) ? fee : latest
               )
             : null

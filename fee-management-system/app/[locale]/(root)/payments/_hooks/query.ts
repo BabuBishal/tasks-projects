@@ -31,6 +31,7 @@ export const useGetPaymentStatsQuery = () => {
     gcTime: 30 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,
+    placeholderData: previousData => previousData,
   })
 }
 
