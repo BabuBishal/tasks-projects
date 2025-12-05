@@ -1,7 +1,7 @@
 import { API_ROUTES } from '@/lib/api/api-routes'
 import httpClient from '../../../../lib/api/api'
 import { FeeStructureResponse, OverdueFee } from '@/lib/types/api'
-import { FeeStructure } from '@prisma/client'
+import { FeeStructure } from '@/lib/types'
 
 export const getFeeStructures = async (): Promise<FeeStructureResponse[]> => {
   return await httpClient.get(API_ROUTES.feeStructures)
