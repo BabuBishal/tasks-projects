@@ -28,6 +28,9 @@ const StudentFormPage = () => {
       semester: 1,
       phone: '',
       address: '',
+      rollNo: '',
+      year: new Date().getFullYear(),
+      joinedYear: new Date().getFullYear(),
       scholarshipId: '',
     },
     validateForm,
@@ -36,16 +39,20 @@ const StudentFormPage = () => {
 
   const onSubmit = async (data: StudentFormInputs) => {
     try {
-      await addStudentMutation.mutateAsync(data, {
-        onSuccess: () => {
-          notify({
-            title: 'Added Successfully',
-            description: 'New student added successfully.',
-            type: 'success',
-          })
-          router.back()
-        },
-      })
+      console.log('data', data)
+      await addStudentMutation.mutateAsync(
+        { ...data, semester: Number(data.semester) },
+        {
+          onSuccess: () => {
+            notify({
+              title: 'Added Successfully',
+              description: 'New student added successfully.',
+              type: 'success',
+            })
+            router.back()
+          },
+        }
+      )
 
       // notify({
       //   title: "Added Successfully",
@@ -60,7 +67,7 @@ const StudentFormPage = () => {
       setError(err instanceof Error ? err.message : 'Something went wrong while adding student.')
       notify({
         title: 'Adding Failed',
-        description: 'Error adding new successfully.',
+        description: 'Error adding new students',
         type: 'error',
       })
     }

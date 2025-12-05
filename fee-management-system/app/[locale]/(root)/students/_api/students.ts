@@ -1,6 +1,5 @@
 import { API_ROUTES } from '@/lib/api/api-routes'
 import httpClient from '../../../../../lib/api/api'
-import { StudentWithComputedTotals } from '@/lib/types/prisma'
 import {
   BulkDeleteResult,
   BulkImportResult,
@@ -33,12 +32,12 @@ export const getStudents = async (params?: {
   return await httpClient.get<PaginatedResponse<StudentResponse>>(url)
 }
 
-export const getStudentById = async (id: string): Promise<StudentWithComputedTotals> => {
-  return await httpClient.get<StudentWithComputedTotals>(API_ROUTES.studentWithId(id))
+export const getStudentById = async (id: string): Promise<StudentResponse> => {
+  return await httpClient.get<StudentResponse>(API_ROUTES.studentWithId(id))
 }
 
-export const createStudent = async (data: unknown): Promise<StudentWithComputedTotals> => {
-  return await httpClient.post<StudentWithComputedTotals>(API_ROUTES.students, data)
+export const createStudent = async (data: unknown): Promise<StudentResponse> => {
+  return await httpClient.post<StudentResponse>(API_ROUTES.students, data)
 }
 
 export const updateStudent = async ({
@@ -47,8 +46,8 @@ export const updateStudent = async ({
 }: {
   id: string
   data: unknown
-}): Promise<StudentWithComputedTotals> => {
-  return await httpClient.put<StudentWithComputedTotals>(API_ROUTES.studentWithId(id), data)
+}): Promise<StudentResponse> => {
+  return await httpClient.put<StudentResponse>(API_ROUTES.studentWithId(id), data)
 }
 
 export const deleteStudent = async (id: string): Promise<void> => {

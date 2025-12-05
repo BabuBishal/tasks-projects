@@ -8,7 +8,7 @@ import { Button } from '@/shared/ui/button/Button'
 import StatsCard from '@/shared/ui/stats-card/StatsCard'
 import StudentInfo from '../../_components/StudentInfo'
 import Badge from '@/shared/ui/badges/Badges'
-import { Modal } from '@/shared/ui/modal'
+import { Modal } from '@/shared/ui/modal/Modal'
 import { useToast } from '@/shared/ui/toast'
 import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import { StudentDetailsSkeleton } from './StudentDetailsSkeleton'
@@ -315,13 +315,13 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
                         </div>
 
                         {/* Payment History */}
-                        {fee.payments.length > 0 && (
+                        {(fee.payments || []).length > 0 && (
                           <div className="border-border mt-4 border-t pt-4">
                             <h4 className="text-secondary mb-2 text-sm font-semibold">
                               Payment History
                             </h4>
                             <div className="space-y-2">
-                              {fee.payments.map(payment => (
+                              {(fee.payments || []).map(payment => (
                                 <div
                                   key={payment.id}
                                   className="flex items-center justify-between rounded bg-zinc-100 p-3 text-sm dark:bg-zinc-800"

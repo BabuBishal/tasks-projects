@@ -52,7 +52,7 @@ const RecentPayments = () => {
           <Table.Body>
             {recentPayments &&
               recentPayments.length > 0 &&
-              recentPayments.map(payment => (
+              recentPayments.map((payment: PaymentHistoryItem) => (
                 <Table.Row key={payment.id}>
                   <Table.Cell>
                     <div className="font-medium">{payment.studentName ?? '-'}</div>

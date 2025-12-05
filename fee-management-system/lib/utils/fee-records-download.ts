@@ -1,6 +1,6 @@
 import autoTable from 'jspdf-autotable'
 import { formatCurrency, formatDate } from './utils'
-import { StudentWithComputedTotals } from '../types'
+import { StudentResponse } from '@/lib/types/api'
 import jsPDF from 'jspdf'
 
 export const handleDownloadFeeRecord = ({
@@ -10,7 +10,7 @@ export const handleDownloadFeeRecord = ({
   totalDue,
   totalScholarships,
 }: {
-  student: StudentWithComputedTotals
+  student: StudentResponse
   totalPayable: number
   totalPaid: number
   totalDue: number

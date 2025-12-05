@@ -34,13 +34,15 @@ const StudentRow = memo(
   }) => {
     // Memoize expensive calculations
     const feeStatus = useMemo(
-      () => (student.status === 'Graduated' ? 'Graduated' : calculateStudentStatus(student.fees)),
+      () =>
+        student.status === 'Graduated' ? 'Graduated' : calculateStudentStatus(student.fees || []),
       [student.status, student.fees]
     )
 
     const totalPaid = useMemo(
-      () => student.fees.reduce((sum: number, fee) => sum + fee.paid, 0),
-      [student.fees]
+      () =>
+        student.totalPaid ?? (student.fees || []).reduce((sum: number, fee) => sum + fee.paid, 0),
+      [student.totalPaid, student.fees]
     )
 
     const badgeVariant = useMemo(() => {
@@ -66,7 +68,7 @@ const StudentRow = memo(
         <Table.Cell data-label="Status">
           <Badge variant={badgeVariant}>{feeStatus}</Badge>
         </Table.Cell>
-        <Table.Cell data-label="Total Paid">Rs. {totalPaid.toLocaleString()}</Table.Cell>
+        <Table.Cell data-label="Total Paid">Rs. {totalPaid?.toLocaleString()}</Table.Cell>
         <Table.Cell data-label="Actions">
           <div className="flex items-center gap-2">
             <Link href={`/students/${student.id}`}>

@@ -7,6 +7,8 @@ import { ProgramDistribution } from '@/lib/types/api'
 import { TrendingUp, Users, Calendar, PieChart as PieChartIcon } from 'lucide-react'
 import { memo } from 'react'
 
+import { useTranslations } from 'next-intl'
+
 interface QuickStatsProps {
   collectionRate?: number | string
   studentsPending?: number
@@ -20,12 +22,14 @@ const QuickStats = ({
   upcomingDeadlines = 0,
   programDistribution = [],
 }: QuickStatsProps) => {
+  const t = useTranslations('Dashboard.quickStats')
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5" />
-          Quick Stats Overview
+          {t('title')}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -37,7 +41,7 @@ const QuickStats = ({
                 <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
               </div>
               <div>
-                <p className="text-muted text-sm">Collection Rate (This Month)</p>
+                <p className="text-muted text-sm">{t('collectionRateMonth')}</p>
                 <p className="text-primary text-2xl font-bold">{collectionRate}%</p>
               </div>
             </div>
@@ -48,7 +52,7 @@ const QuickStats = ({
                 <Users className="h-6 w-6 text-orange-600 dark:text-orange-400" />
               </div>
               <div>
-                <p className="text-muted text-sm">Students with Pending Fees</p>
+                <p className="text-muted text-sm">{t('studentsPending')}</p>
                 <p className="text-primary text-2xl font-bold">{studentsPending}</p>
               </div>
             </div>
@@ -59,7 +63,7 @@ const QuickStats = ({
                 <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <p className="text-muted text-sm">Upcoming Deadlines (7 days)</p>
+                <p className="text-muted text-sm">{t('upcomingDeadlines')}</p>
                 <p className="text-primary text-2xl font-bold">{upcomingDeadlines}</p>
               </div>
             </div>
@@ -70,7 +74,7 @@ const QuickStats = ({
               <div className="rounded-lg bg-purple-100 p-2 dark:bg-purple-950">
                 <PieChartIcon className="h-5 w-5 text-purple-600 dark:text-purple-400" />
               </div>
-              <p className="text-muted text-sm font-medium">Program Distribution</p>
+              <p className="text-muted text-sm font-medium">{t('programDistribution')}</p>
             </div>
             {/* <div className="h-[200px] w-full">
               {programDistribution.length > 0 ? (

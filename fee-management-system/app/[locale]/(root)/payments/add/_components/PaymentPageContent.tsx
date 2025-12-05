@@ -28,7 +28,7 @@ export type StudentType = {
     total: number
     paid: number
     balance: number
-    dueDate: string
+    dueDate: string | Date | null
     status: string
     totalOutstandingAll: number
   }
@@ -42,7 +42,7 @@ export type StudentType = {
     paid: number
     balance: number
     status: string
-    dueDate: string
+    dueDate: string | Date | null
   }[]
 }
 

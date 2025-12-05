@@ -1,13 +1,95 @@
 {
   "HomePage": {
-    "title": "swaagat!"
+    "title": "स्वागत छ!"
   },
-
   "Sidebar": {
     "appTitle": "शुल्क भुक्तानी प्रणाली",
     "dashboard": "ड्यासबोर्ड",
-    "students": "विद्यार्थी विवरण",
+    "students": "विद्यार्थीहरू",
     "payments": "भुक्तानी",
-    "settings": "सेटिङ्स"
+    "settings": "सेटिङ्स",
+    "reports": "प्रतिवेदनहरू",
+    "programs": "कार्यक्रमहरू",
+    "fees": "शुल्कहरू",
+    "users": "प्रयोगकर्ताहरू"
+  },
+  "Dashboard": {
+    "title": "ड्यासबोर्ड",
+    "subtitle": "शुल्क व्यवस्थापन प्रणालीमा स्वागत छ",
+    "stats": {
+      "totalStudents": "कुल विद्यार्थी",
+      "totalStudentsDesc": "कुल भर्ना भएका विद्यार्थी",
+      "totalRevenue": "कुल राजस्व",
+      "totalRevenueDesc": "कुल संकलन शुल्क",
+      "pendingCollections": "बाँकी संकलन",
+      "pendingCollectionsDesc": "भुक्तानीको प्रतीक्षामा",
+      "collectionRate": "संकलन दर",
+      "collectionRateDesc": "भुक्तानी सफलता दर"
+    },
+    "paymentStatus": {
+      "title": "भुक्तानी स्थिति",
+      "paid": "भुक्तान गरिएको",
+      "pending": "बाँकी",
+      "overdue": "म्याद नाघेको"
+    },
+    "quickActions": {
+      "title": "द्रुत कार्यहरू",
+      "subtitle": "बारम्बार प्रयोग हुने कार्यहरू",
+      "makePayment": "भुक्तानी गर्नुहोस्",
+      "generateReport": "प्रतिवेदन तयार गर्नुहोस्",
+      "viewStudents": "सबै विद्यार्थी हेर्नुहोस्"
+    },
+    "quickStats": {
+      "title": "द्रुत तथ्याङ्क अवलोकन",
+      "collectionRateMonth": "संकलन दर (यो महिना)",
+      "studentsPending": "बाँकी शुल्क भएका विद्यार्थीहरू",
+      "upcomingDeadlines": "आगामी म्यादहरू (७ दिन)",
+      "programDistribution": "कार्यक्रम वितरण"
+    },
+    "alerts": {
+      "title": "सूचना र जानकारीहरू",
+      "empty": "हाल कुनै गम्भीर सूचना छैन",
+      "viewAll": "सबै सूचना हेर्नुहोस्",
+      "view": "हेर्नुहोस्",
+      "daysOverdue": "दिन म्याद नाघ्यो",
+      "noPayment": "हालसम्म कुनै भुक्तानी प्राप्त भएको छैन",
+      "criticalOverdue": "गम्भीर: {days} दिन म्याद नाघ्यो"
+    }
+  },
+  "Common": {
+    "actions": "कार्यहरू",
+    "add": "थप्नुहोस्",
+    "edit": "सम्पादन गर्नुहोस्",
+    "delete": "हटाउनुहोस्",
+    "save": "बचत गर्नुहोस्",
+    "cancel": "रद्द गर्नुहोस्",
+    "search": "खोज्नुहोस्",
+    "filter": "फिल्टर",
+    "view": "हेर्नुहोस्",
+    "loading": "लोड हुँदैछ...",
+    "success": "सफल",
+    "error": "त्रुटि",
+    "confirmDelete": "के तपाईं निश्चित रूपमा मेटाउन चाहनुहुन्छ?",
+    "noData": "कुनै डाटा उपलब्ध छैन"
+  },
+  "Students": {
+    "title": "विद्यार्थीहरू",
+    "subtitle": "विद्यार्थी, शुल्क र शैक्षिक रेकर्डहरू व्यवस्थापन गर्नुहोस्",
+    "addStudent": "विद्यार्थी थप्नुहोस्",
+    "editStudent": "विद्यार्थी सम्पादन गर्नुहोस्",
+    "studentList": "विद्यार्थी सूची",
+    "rollNo": "रोल नं",
+    "name": "नाम",
+    "email": "इमेल",
+    "phone": "फोन",
+    "program": "कार्यक्रम",
+    "semester": "सेमेस्टर",
+    "status": "स्थिति",
+    "address": "ठेगाना",
+    "joinedYear": "भर्ना वर्ष",
+    "scholarship": "छात्रवृत्ति",
+    "totalPaid": "कुल भुक्तानी",
+    "balance": "बाँकी रकम",
+    "actions": "कार्यहरू"
   }
 }

@@ -25,10 +25,11 @@ const Sidebar = ({
 
   const sidebarLinks = [
     { name: t('dashboard'), icon: LayoutDashboard, path: '/dashboard' },
-    { name: 'Programs', icon: GraduationCap, path: '/programs' },
+    { name: t('programs'), icon: GraduationCap, path: '/programs' },
     { name: t('students'), icon: Users, path: '/students' },
     { name: t('payments'), icon: Wallet, path: '/payments' },
-    { name: 'Reports', icon: FileText, path: '/reports' },
+    { name: t('reports'), icon: FileText, path: '/reports' },
+    
   ]
   return (
     <>
