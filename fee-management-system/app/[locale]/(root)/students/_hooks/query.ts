@@ -18,7 +18,7 @@ export const useGetStudentsQuery = (params?: {
     gcTime: 30 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,
-    placeholderData: previousData => previousData,
+    placeholderData: (previousData: PaginatedResponse<StudentResponse> | undefined) => previousData,
   })
 }
 
@@ -31,6 +31,6 @@ export const useGetStudentByIdQuery = (id: string) => {
     gcTime: 30 * 60 * 1000,
     retry: 2,
     refetchOnWindowFocus: false,
-    placeholderData: previousData => previousData,
+    placeholderData: (previousData: StudentResponse | undefined) => previousData,
   })
 }

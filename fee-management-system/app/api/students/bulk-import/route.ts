@@ -8,6 +8,7 @@ import {
   calculateJoinedYear,
   generateProgramPrefix,
 } from '@/lib/utils/utils'
+import { Prisma } from '@prisma/client'
 
 export async function POST(req: NextRequest) {
   try {
@@ -130,7 +131,7 @@ export async function POST(req: NextRequest) {
         const initialStatus = dueDate < now ? 'Overdue' : 'Pending'
 
         // Create student with fee
-        const studentData: any = {
+        const studentData: Prisma.StudentUncheckedCreateInput = {
           name: row.name,
           email: row.email,
           rollNo,

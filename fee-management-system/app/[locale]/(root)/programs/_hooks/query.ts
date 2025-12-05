@@ -11,7 +11,7 @@ export const useGetProgramsQuery = () => {
     gcTime: 60 * 60 * 1000, // 1 hour
     retry: 2,
     refetchOnWindowFocus: false,
-    placeholderData: previousData => previousData,
+    placeholderData: (previousData: Program[] | undefined) => previousData,
   })
 }
 
@@ -24,6 +24,6 @@ export const useGetProgramQuery = (id: string) => {
     gcTime: 60 * 60 * 1000, // 1 hour
     retry: 2,
     refetchOnWindowFocus: false,
-    placeholderData: previousData => previousData,
+    placeholderData: (previousData: Program | undefined) => previousData,
   })
 }

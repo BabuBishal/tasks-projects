@@ -22,6 +22,17 @@ export interface ParseResult {
   valid: boolean
 }
 
+// Type for raw CSV record from parser
+interface CSVRecord {
+  name?: string
+  email?: string
+  program?: string
+  semester?: string
+  phone?: string
+  address?: string
+  scholarship?: string
+}
+
 /**
  * Parse CSV file content into student data
  */
@@ -36,7 +47,7 @@ export function parseCSV(fileContent: string): ParseResult {
     const errors: ValidationError[] = []
     const data: StudentCSVRow[] = []
 
-    records.forEach((record: any, index: number) => {
+    ;(records as CSVRecord[]).forEach((record, index) => {
       const rowNumber = index + 2 // +2 because index is 0-based and row 1 is header
 
       // Validate required fields
@@ -134,10 +145,26 @@ export function generateCSVTemplate(): string {
   return `${headers.join(',')}\n${example.join(',')}`
 }
 
+// Type for student with fees for CSV export
+interface StudentForExport {
+  rollNo: string
+  name: string
+  email: string
+  program?: { name: string }
+  semester: number
+  phone?: string
+  address?: string
+  fees?: {
+    balance: number
+    status: string
+    createdAt: Date | string
+  }[]
+}
+
 /**
  * Export students to CSV format
  */
-export function exportToCSV(students: any[]): string {
+export function exportToCSV(students: StudentForExport[]): string {
   const headers = [
     'Roll No',
     'Name',
@@ -151,11 +178,11 @@ export function exportToCSV(students: any[]): string {
   ]
 
   const rows = students.map(student => {
-    const totalBalance = student.fees?.reduce((sum: number, fee: any) => sum + fee.balance, 0) || 0
+    const totalBalance = student.fees?.reduce((sum, fee) => sum + fee.balance, 0) || 0
 
     const latestFee =
-      student.fees?.length > 0
-        ? student.fees.reduce((latest: any, fee: any) =>
+      student.fees && student.fees.length > 0
+        ? student.fees.reduce((latest, fee) =>
             new Date(fee.createdAt) > new Date(latest.createdAt) ? fee : latest
           )
         : null

@@ -7,7 +7,7 @@ export const useProfileQuery = () => {
   return useQuery<UserWithProfile>({
     queryKey: [API_ROUTES.profile],
     queryFn: getProfile,
-    placeholderData: previousData => previousData,
+    placeholderData: (previousData: UserWithProfile | undefined) => previousData,
     refetchOnWindowFocus: false,
     gcTime: 60 * 60 * 1000,
     retry: 2,
