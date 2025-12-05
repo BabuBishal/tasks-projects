@@ -7,6 +7,7 @@ export * from '@/app/[locale]/(root)/profile/_types'
 export * from '@/app/[locale]/(root)/dashboard/_types/schema'
 export * from '@/app/[locale]/(root)/reports/_types/schema'
 export * from '@/lib/schemas/auth.schema'
+export * from '@/lib/schemas/scholarship.schema'
 
 // Generic API response wrapper
 export type ApiResponse<T = unknown> = {

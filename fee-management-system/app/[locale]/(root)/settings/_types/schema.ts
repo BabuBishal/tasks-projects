@@ -19,3 +19,4 @@ export const updateSettingsSchema = settingsSchema
 export type Settings = z.infer<typeof settingsSchema>
 export type SettingsUpdateInput = z.infer<typeof updateSettingsSchema>
 export type SettingsResponse = Settings
+export type UpdateSettingsResponse = Settings

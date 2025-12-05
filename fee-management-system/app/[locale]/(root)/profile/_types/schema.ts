@@ -28,3 +28,6 @@ export const updateProfileSchema = z.object({
 export type UserProfile = z.infer<typeof userProfileSchema>
 export type UserWithProfile = z.infer<typeof userSchema>
 export type ProfileUpdateInput = z.infer<typeof updateProfileSchema>
+
+export type ProfileResponse = UserWithProfile
+export type UpdateProfileResponse = UserWithProfile

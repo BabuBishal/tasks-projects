@@ -42,3 +42,14 @@ export type UpdateProgramInput = z.infer<typeof updateProgramSchema>
 export type ProgramResponse = z.infer<typeof programResponseSchema>
 
 export type ProgramSemester = z.infer<typeof programSemesterSchema>
+
+export type ProgramsListResponse = ProgramResponse[]
+export type CreateProgramResponse = ProgramResponse
+export type UpdateProgramResponse = ProgramResponse
+export type DeleteProgramResponse = {
+  message: string
+  program: {
+    id: string
+    name: string
+  }
+}
