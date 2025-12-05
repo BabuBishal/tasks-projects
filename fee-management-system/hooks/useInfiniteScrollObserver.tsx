@@ -1,42 +1,44 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useRef } from 'react'
 
 type InfiniteScrollObserverOptions = {
-  enabled?: boolean;
-  rootMargin?: string;
-  onIntersect: () => void; // callback when the last element appears
-};
+  enabled?: boolean
+  rootMargin?: string
+  root?: Element | null // The scrollable container element
+  onIntersect: () => void // callback when the last element appears
+}
 
 export function useInfiniteScrollObserver({
   enabled = true,
-  rootMargin = "200px",
+  rootMargin = '200px',
+  root = null,
   onIntersect,
 }: InfiniteScrollObserverOptions) {
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null)
 
   const lastElementRef = useCallback(
     (node: HTMLElement | null) => {
-      if (!enabled) return;
+      if (!enabled) return
 
       // Disconnect previous observer
       if (observerRef.current) {
-        observerRef.current.disconnect();
+        observerRef.current.disconnect()
       }
 
       // Create new observer
       observerRef.current = new IntersectionObserver(
-        (entries) => {
+        entries => {
           if (entries[0]?.isIntersecting && enabled) {
-            onIntersect();
+            onIntersect()
           }
         },
-        { rootMargin }
-      );
+        { rootMargin, root }
+      )
 
       // Observe the new last node
-      if (node) observerRef.current.observe(node);
+      if (node) observerRef.current.observe(node)
     },
-    [enabled, rootMargin, onIntersect]
-  );
+    [enabled, rootMargin, root, onIntersect]
+  )
 
-  return lastElementRef;
+  return lastElementRef
 }

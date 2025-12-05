@@ -1,0 +1,88 @@
+$select-label-color: #3f3f46;
+$select-input-color: #1f2937;
+$select-input-bg: #fafafa;
+$select-input-border: #e4e4e7;
+$select-input-border-focus: #71717a;
+$select-error-color: #dc2626;
+$select-disabled-color: #ccc;
+$select-disabled-text: #a1a1aa;
+$select-disabled-bg: #e4e4e7;
+
+$select-dark-label-color: #f4f4f5;
+$select-dark-input-color: #fff;
+$select-dark-input-bg: #27272a;
+$select-dark-input-border: #3f3f46;
+$select-dark-input-border-focus: #a1a1aa;
+$select-dark-error-color: #f87171;
+$select-dark-disabled-color: #ccc;
+$select-dark-disabled-text: #71717a;
+$select-dark-disabled-bg: #3f3f46;
+
+.selectInputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .selectLabel {
+    font-size: 0.875rem;
+    color: $select-label-color;
+  }
+
+  .selectInput {
+    padding: 0.5rem;
+    border: 1px solid $select-input-border;
+    color: $select-input-color;
+    background-color: $select-input-bg;
+    border-radius: 0.5rem;
+    outline: none;
+  }
+
+  .selectInput:focus {
+    outline: none;
+    border-color: $select-input-border-focus;
+  }
+
+  .selectInput:disabled {
+    background-color: $select-disabled-bg;
+    color: $select-disabled-text;
+    cursor: not-allowed;
+  }
+
+  .selectOption {
+    color: $select-input-color;
+  }
+
+  .textError {
+    color: $select-error-color;
+  }
+}
+
+.dark .selectInputWrapper {
+  .selectLabel {
+    color: $select-dark-label-color;
+  }
+
+  .selectInput {
+    border-color: $select-dark-input-border;
+    color: $select-dark-input-color;
+    background-color: $select-dark-input-bg;
+  }
+
+  .selectInput:focus {
+    border-color: $select-dark-input-border-focus;
+  }
+
+  .selectInput:disabled {
+    background-color: $select-dark-disabled-bg;
+    color: $select-dark-disabled-text;
+    cursor: not-allowed;
+  }
+
+  .selectOption {
+    color: $select-dark-input-color;
+  }
+
+  .textError {
+    color: $select-dark-error-color;
+  }
+}

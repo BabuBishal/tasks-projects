@@ -7,6 +7,89 @@
     "dashboard": "Dashboard",
     "students": "Students",
     "payments": "Payments",
-    "settings": "Settings"
+    "settings": "Settings",
+    "reports": "Reports",
+    "programs": "Programs",
+    "fees": "Fees",
+    "users": "Users"
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Welcome to Fee Management System",
+    "stats": {
+      "totalStudents": "Total Students",
+      "totalStudentsDesc": "Total students enrolled",
+      "totalRevenue": "Total Revenue",
+      "totalRevenueDesc": "Total fees collected",
+      "pendingCollections": "Pending Collections",
+      "pendingCollectionsDesc": "Awaiting payments",
+      "collectionRate": "Collection Rate",
+      "collectionRateDesc": "Payment success rate"
+    },
+    "paymentStatus": {
+      "title": "Payment Status",
+      "paid": "Paid",
+      "pending": "Pending",
+      "overdue": "Overdue"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "subtitle": "Frequently used actions",
+      "makePayment": "Make Payment",
+      "generateReport": "Generate Report",
+      "viewStudents": "View all Students"
+    },
+    "quickStats": {
+      "title": "Quick Stats Overview",
+      "collectionRateMonth": "Collection Rate (This Month)",
+      "studentsPending": "Students with Pending Fees",
+      "upcomingDeadlines": "Upcoming Deadlines (7 days)",
+      "programDistribution": "Program Distribution"
+    },
+    "alerts": {
+      "title": "Alerts & Notifications",
+      "empty": "No critical alerts at the moment",
+      "viewAll": "View All Alerts",
+      "view": "View",
+      "daysOverdue": "days overdue",
+      "noPayment": "No payment received yet",
+      "criticalOverdue": "Critical: {days} days overdue"
+    }
+  },
+  "Common": {
+    "actions": "Actions",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "search": "Search",
+    "filter": "Filter",
+    "view": "View",
+    "loading": "Loading...",
+    "success": "Success",
+    "error": "Error",
+    "confirmDelete": "Are you sure you want to delete?",
+    "noData": "No data available"
+  },
+  "Students": {
+    "title": "Students",
+    "subtitle": "Manage students, fees, and academic records",
+    "addStudent": "Add Student",
+    "editStudent": "Edit Student",
+    "studentList": "Student List",
+    "rollNo": "Roll No",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "program": "Program",
+    "semester": "Semester",
+    "status": "Status",
+    "address": "Address",
+    "joinedYear": "Joined Year",
+    "scholarship": "Scholarship",
+    "totalPaid": "Total Paid",
+    "balance": "Balance",
+    "actions": "Actions"
   }
 }

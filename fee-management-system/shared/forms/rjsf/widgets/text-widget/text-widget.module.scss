@@ -1,0 +1,89 @@
+$text-label-color: #3f3f46;
+$text-input-color: #1f2937;
+$text-input-bg: #fafafa;
+$text-input-border: #e4e4e7;
+$text-input-border-focus: #71717a;
+$text-error-color: #dc2626;
+$text-disabled-color: #ccc;
+$text-placeholder-color: #a1a1aa;
+$text-disabled-text: #a1a1aa;
+$text-disabled-bg: #e4e4e7;
+
+$text-dark-label-color: #f4f4f5;
+$text-dark-input-color: #fff;
+$text-dark-input-bg: #27272a;
+$text-dark-input-border: #3f3f46;
+$text-dark-input-border-focus: #a1a1aa;
+$text-dark-error-color: #f87171;
+$text-dark-disabled-color: #ccc;
+$text-dark-disabled-text: #71717a;
+$text-dark-disabled-bg: #3f3f46;
+$text-dark-placeholder-color: #71717a;
+
+.textInputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .textLabel {
+    font-size: 0.875rem;
+    color: $text-label-color;
+  }
+
+  .textInput {
+    padding: 0.5rem;
+    border: 1px solid $text-input-border;
+    color: $text-input-color;
+    border-radius: 0.5rem;
+
+    &::placeholder {
+      color: $text-placeholder-color;
+    }
+  }
+
+  .textError {
+    color: $text-error-color;
+  }
+
+  .textInput:focus {
+    outline: none;
+    border-color: $text-input-border-focus;
+  }
+
+  .textInput:disabled,
+  .textInput:read-only {
+    background-color: $text-disabled-bg;
+    color: $text-disabled-text;
+    cursor: not-allowed;
+  }
+}
+
+.dark .textInputWrapper {
+  .textLabel {
+    color: $text-dark-label-color;
+  }
+
+  .textInput {
+    border-color: $text-dark-input-border;
+    color: $text-dark-input-color;
+
+    &::placeholder {
+      color: $text-dark-placeholder-color;
+    }
+  }
+
+  .textInput:focus {
+    border-color: $text-dark-input-border-focus;
+  }
+
+  .textInput:disabled,
+  .textInput:read-only {
+    background-color: $text-dark-disabled-bg;
+    color: $text-dark-disabled-text;
+    cursor: not-allowed;
+  }
+
+  .textError {
+    color: $text-dark-error-color;
+  }
+}

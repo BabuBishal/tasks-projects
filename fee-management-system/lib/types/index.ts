@@ -1,19 +1,14 @@
-// ============================================
-// Central Type Exports
-// Import and re-export all types from organized files
-// ============================================
-
 // Prisma types
-export * from "./prisma";
+export * from './prisma'
 
 // API response types
-export * from "./api";
+// export * from "./api";
 
 // Form types
-export * from "./forms";
+export * from './forms'
 
 // Component props types
-export * from "./components";
+export * from './components'
 
 // Profile and settings types
-export * from "./profile";
+export * from './profile'
