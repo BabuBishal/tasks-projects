@@ -1,67 +1,65 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { NextIntlClientProvider } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
-import { hasLocale } from "next-intl";
-import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
-import { ThemeProvider } from "@/providers/ThemeContextProvider";
-import { ToastProvider } from "@/components/ui/toast";
-import React from "react";
-import ReactQueryProvider from "@/providers/ReactQueryProviders";
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono } from 'next/font/google'
+import './globals.css'
+import { NextIntlClientProvider } from 'next-intl'
+import { setRequestLocale } from 'next-intl/server'
+import { hasLocale } from 'next-intl'
+import { notFound } from 'next/navigation'
+import { routing } from '@/i18n/routing'
+import { ThemeProvider } from '@/providers/ThemeContextProvider'
+import { ToastProvider } from '@/shared/ui/toast'
+import React from 'react'
+import ReactQueryProvider from '@/providers/ReactQueryProviders'
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+})
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
 
 export const metadata: Metadata = {
-  title: "Fee Payment System",
-  description: "Next Js App to manage fee payments of students",
+  title: 'Fee Payment System',
+  description: 'Next Js App to manage fee payments of students',
   icons: {
-    icon: "/favicon.svg",
+    icon: '/favicon.svg',
   },
-};
+}
 
 export async function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+  return routing.locales.map(locale => ({ locale }))
 }
 
 export default async function RootLayout({
   children,
   params,
 }: Readonly<{
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
 }>) {
-  const { locale } = await params;
+  const { locale } = await params
 
   if (!hasLocale(routing.locales, locale)) {
-    notFound();
+    notFound()
   }
 
-  let messages;
+  let messages
   try {
-    messages = (await import(`../../messages/${locale}.json`)).default;
+    messages = (await import(`../../messages/${locale}.json`)).default
   } catch (error) {
-    console.error(`Could not load messages for locale "${locale}"`, error);
-    notFound();
+    console.error(`Could not load messages for locale "${locale}"`, error)
+    notFound()
   }
 
   // Enable static rendering
-  setRequestLocale(locale);
+  setRequestLocale(locale)
 
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex `}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} flex antialiased`}>
         <ReactQueryProvider>
           <ThemeProvider>
             <ToastProvider>
@@ -74,5 +72,5 @@ export default async function RootLayout({
         </ReactQueryProvider>
       </body>
     </html>
-  );
+  )
 }

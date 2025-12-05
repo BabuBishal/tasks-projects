@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { FeeStructure } from "@prisma/client";
 
 export async function PUT(
   req: Request,
@@ -29,10 +30,11 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json(feeStructure);
-  } catch (error: any) {
+    return NextResponse.json<FeeStructure>(feeStructure, { status: 200 });
+  } catch (error: unknown) {
     console.error("Error updating fee structure:", error);
-    const errorMessage = error?.message || "Failed to update fee structure";
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to update fee structure";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
@@ -47,10 +49,14 @@ export async function DELETE(
       where: { id: params.id },
     });
 
-    return NextResponse.json({ message: "Fee structure deleted successfully" });
-  } catch (error: any) {
+    return NextResponse.json(
+      { message: "Fee structure deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error: unknown) {
     console.error("Error deleting fee structure:", error);
-    const errorMessage = error?.message || "Failed to delete fee structure";
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to delete fee structure";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
