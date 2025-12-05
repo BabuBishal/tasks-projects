@@ -1,5 +1,8 @@
+// app/api/auth/[...nextauth]/route.ts
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { compare } from "bcryptjs";
+import { prisma } from "@/lib/prisma";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -11,47 +14,72 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         const { email, password } = credentials ?? {};
-
-        const res = await fetch("http://localhost:4000/users");
-        const users = await res.json();
-        // console.log("user", users);
-        // Check for matching user
-        const user = users.find(
-          (u: any) => u.email === email && u.password === password
-        );
-
-        if (user) {
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-          };
+        if (!email || !password) {
+          throw new Error("Email and password are required");
         }
 
-        // If login fails
+        // Find user from Prisma
+        const user = await prisma.user.findUnique({
+          where: { email },
+        });
 
-        if (!res.ok || !user) {
-          throw new Error(user?.error || "Invalid credentials");
+        if (!user) {
+          throw new Error("Invalid email or password");
         }
-        return null;
 
-       
+        // Compare hashed password using bcrypt
+        const isValid = await compare(password, user.password);
+        if (!isValid) {
+          throw new Error("Invalid email or password");
+        }
+
+        // Return user with accessToken
+        // If you have a token stored in your database
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          // accessToken: user.accessToken,
+        };
+
+        // If you generate a JWT token yourself
+        // const accessToken = await generateAccessToken(user.id);
+        // return {
+        //   id: user.id,
+        //   email: user.email,
+        //   name: user.name,
+        //   accessToken,
+        // };
       },
     }),
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID as string,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    // }),
   ],
   secret: process.env.NEXTAUTH_SECRET as string,
   session: {
     strategy: "jwt",
   },
   pages: {
-    signIn: "en/login",
+    signIn: "/en/login",
+  },
+  callbacks: {
+    async jwt({ token, user, account }) {
+      if (user) {
+        token.id = user.id;
+        token.accessToken = user.accessToken;
+      }
+      if (account) {
+        token.accessToken = account.access_token;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+      }
+      session.accessToken = token.accessToken as string;
+      return session;
+    },
   },
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

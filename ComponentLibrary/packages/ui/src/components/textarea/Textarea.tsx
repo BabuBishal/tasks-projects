@@ -18,7 +18,6 @@ export const Textarea = ({
   initialValue = "",
   className,
   disabled = false,
-  ...props
 }: TextareaProps) => {
   const [value, setValue] = useState(initialValue);
 

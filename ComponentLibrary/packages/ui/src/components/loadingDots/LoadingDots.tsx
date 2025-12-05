@@ -1,30 +1,11 @@
-import {
-  createContext,
-  useContext,
-  type ReactNode,
-  type HTMLAttributes,
-} from "react";
+import { createContext, useContext, type ReactNode } from "react";
 import { cn } from "@/utils/cn";
 import "./loadingdots.css";
-
-export type LoadingDotsContextType = {
-  size: "sm" | "md" | "lg";
-  color?: string;
-  speed: number;
-  unstyled: boolean;
-};
+import { LoadingDotsContextType, LoadingDotsProps } from "./loadingDots.types";
 
 const LoadingDotsContext = createContext<LoadingDotsContextType | undefined>(
   undefined
 );
-
-export type LoadingDotsProps = HTMLAttributes<HTMLDivElement> & {
-  size?: "sm" | "md" | "lg";
-  color?: string;
-  speed?: number;
-  unstyled?: boolean;
-  children?: ReactNode;
-};
 
 export const LoadingDots = ({
   size = "md",
@@ -37,7 +18,7 @@ export const LoadingDots = ({
 }: LoadingDotsProps) => {
   return (
     <LoadingDotsContext.Provider value={{ size, color, speed, unstyled }}>
-      <div className={cn("loading-dots-wrapper", className)} {...props}>
+      <div className={cn("loading-dots-wrapper", size, className)} {...props}>
         {children ?? <LoadingDots.Dot />}
       </div>
     </LoadingDotsContext.Provider>
@@ -50,7 +31,7 @@ LoadingDots.Dot = () => {
   if (!context)
     throw new Error("LoadingDots.Dot must be used inside LoadingDots.");
 
-  const { size, color, speed, unstyled } = context;
+  const { color, speed, unstyled } = context;
 
   const dotStyle = !unstyled
     ? {

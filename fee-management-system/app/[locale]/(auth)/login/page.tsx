@@ -1,76 +1,63 @@
-"use client";
-import LoginForm from "@/components/forms/LoginForm";
-import useForm from "@/hooks/useForm";
-import { useParams, useRouter } from "next/navigation";
-import { validateForm } from "@/lib/validator";
-import { loginSchema } from "@/lib/constants";
-import { signIn } from "next-auth/react";
-import { LoginFormInputs } from "@/lib/@types/types";
-import { useState } from "react";
-import Toast, { ToastProps } from "@/components/ui/Toast/Toast";
+'use client'
+import LoginForm from '@/shared/forms/LoginForm'
+import { useParams, useRouter } from 'next/navigation'
+import { useToast } from '@/shared/ui/toast'
+import { useLoginMutation } from '@/app/[locale]/(auth)/_hooks/mutation'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { loginSchema, type LoginFormData } from '@/lib/schemas/auth.schema'
 
 const LoginPage = () => {
-  const router = useRouter();
-  const { locale } = useParams() as { locale: string };
+  const router = useRouter()
+  const { locale } = useParams() as { locale: string }
+  const { notify } = useToast()
 
-  const [error, setError] = useState("");
-  const [toast, setToast] = useState<ToastProps>({
-    message: "",
-    type: "info",
-    duration: 3000,
-  });
+  const { mutate: login, isPending, error } = useLoginMutation()
 
-  const { formData, formErrors, handleChange, handleSubmit } =
-    useForm<LoginFormInputs>({
-      initialValues: { email: "", password: "" },
-      validateForm,
-      schema: loginSchema,
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  })
 
-  const onSubmit = async (data: LoginFormInputs) => {
-    // console.log(data);
-    setError("");
-    try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-      });
+  const onSubmit = (data: LoginFormData) => {
+    login(data, {
+      onSuccess: () => {
+        notify({
+          title: 'Success',
+          description: 'Login Successful',
+          type: 'success',
+        })
+        router.push(`/${locale}/dashboard`)
+      },
+      onError: (error: Error) => {
+        notify({
+          title: 'Login Error',
+          description: error.message,
+          type: 'error',
+        })
+      },
+    })
+  }
 
-      if (result?.error) {
-        console.log("Login failed:", result.error);
-        setError(`Login failed: ${result.error}`);
-        setToast({ message: `Login failed: ${result.error}`, type: "error" });
-
-        return;
-      }
-      setToast({ message: "Login Successful.", type: "success" });
-      router.push(`/${locale}/dashboard`);
-    } catch (err) {
-      console.error("Error:", err);
-      setError(`Error: ${err}`);
-      setToast({ message: `Error: ${err}`, type: "error" });
-    }
-  };
-  console.log(toast);
   return (
-    <div className="absolute top-0 left-0 flex  flex-col gap-5 justify-center items-center p-20 w-screen h-screen">
-      <div className="text-2xl text-primary font-bold">Fee Payment system</div>
-      {toast && toast?.message?.length > 0 && (
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: "", type: "info", duration: 3000 })}
- />
-      )}
-
+    <div className="absolute top-0 left-0 flex h-screen w-screen flex-col items-center justify-center gap-5 p-20">
+      <div className="text-primary text-2xl font-bold">Fee Payment System</div>
       <LoginForm
-        onSubmit={onSubmit}
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-        formData={formData}
-        formErrors={formErrors}
-        error={error}
+        onSubmit={handleSubmit(onSubmit)}
+        register={register}
+        errors={errors}
+        error={error?.message || ''}
+        isLoading={isPending}
       />
     </div>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

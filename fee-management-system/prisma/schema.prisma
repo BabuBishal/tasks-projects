@@ -1,0 +1,238 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// -------------------------------------------------------
+// Prisma Schema: Robust Fee Management System
+// -------------------------------------------------------
+
+
+// -------------------------------------------------------
+// User (admin login or staff)
+// -------------------------------------------------------
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile       UserProfile?
+  activityLogs  ActivityLog[]
+  loginHistory  LoginHistory[]
+}
+
+// -------------------------------------------------------
+// Program (BSc CSIT, BBA, BIM, etc.)
+// -------------------------------------------------------
+model Program {
+  id        String             @id @default(cuid())
+  name      String             @unique
+  duration  Int                // total semesters in the program
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+
+  semesters ProgramSemester[]
+  students  Student[]
+}
+
+// -------------------------------------------------------
+// Semesters belonging to a program
+// Example: CSIT → Sem 1, Sem 2, …
+// -------------------------------------------------------
+model ProgramSemester {
+  id         String         @id @default(cuid())
+  programId  String
+  semesterNo Int
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  program       Program      @relation(fields: [programId], references: [id], onDelete: Cascade)
+  feeStructures FeeStructure[]
+}
+
+// -------------------------------------------------------
+// Fee Structure (Master fee for each program + semester + year)
+// This is where tuition fee, lab fee, etc. are defined
+// -------------------------------------------------------
+model FeeStructure {
+  id                String           @id @default(cuid())
+  programSemesterId String           @unique
+  tuitionFee        Int
+  labFee            Int
+  libraryFee        Int
+  sportsFee         Int
+  miscFee           Int
+  totalFee          Int
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  programSemester ProgramSemester @relation(fields: [programSemesterId], references: [id], onDelete: Cascade)
+  studentFees     StudentFee[]
+}
+
+// -------------------------------------------------------
+// Scholarships (percentage or fixed)
+// -------------------------------------------------------
+model Scholarship {
+  id        String   @id @default(cuid())
+  name      String
+  type      String   // "percentage" | "fixed"
+  value     Int      // 20% or 5000
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  studentScholarships StudentScholarship[]
+}
+
+// -------------------------------------------------------
+// Student -> Program relation + scholarships + fees
+// -------------------------------------------------------
+model Student {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  rollNo    String    @unique
+  programId String
+  semester  Int
+  phone     String
+  address   String
+  year      Int        // current academic year
+  joinedYear Int       @default(2025)  // year when student joined (e.g., 2025 for 2025/26)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  program     Program              @relation(fields: [programId], references: [id])
+  scholarships StudentScholarship[]
+  fees        StudentFee[]
+  status      String               @default("Active") // "Active", "Graduated", "Suspended"
+}
+
+// -------------------------------------------------------
+// Join table: Student <-> Scholarship (many-to-many)
+// -------------------------------------------------------
+model StudentScholarship {
+  id            String        @id @default(cuid())
+  studentId     String
+  scholarshipId String
+
+  student     Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  scholarship Scholarship @relation(fields: [scholarshipId], references: [id], onDelete: Cascade)
+}
+
+// -------------------------------------------------------
+// Student Fee (final computed fee for that semester)
+// Includes discounts, payable, balance, status
+// -------------------------------------------------------
+model StudentFee {
+  id             String     @id @default(cuid())
+  studentId      String
+  feeStructureId String
+  academicYear   String
+  originalFee    Int
+  discount       Int
+  payableFee     Int
+  paid           Int         @default(0)
+  balance        Int
+  status         String       // "Pending", "Partial", "Paid", "Overdue"
+  dueDate        DateTime
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  student        Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  feeStructure   FeeStructure @relation(fields: [feeStructureId], references: [id], onDelete: Cascade)
+  payments       Payment[]
+}
+
+// -------------------------------------------------------
+// Payments (installments) linked to StudentFee
+// -------------------------------------------------------
+model Payment {
+  id           String   @id @default(cuid())
+  studentFeeId String
+  method       String   // Cash, Online, Bank Transfer, etc.
+  amount       Int
+  date         DateTime @default(now())
+  receiptNo    String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  studentFee   StudentFee @relation(fields: [studentFeeId], references: [id], onDelete: Cascade)
+}
+
+// -------------------------------------------------------
+// User Profile (extended user information)
+// -------------------------------------------------------
+model UserProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  role           String   @default("Staff") // Admin, Accountant, Staff, Viewer
+  profilePicture String?
+  phone          String?
+  position       String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// -------------------------------------------------------
+// System Settings (institution configuration)
+// -------------------------------------------------------
+model SystemSettings {
+  id                  String   @id @default(cuid())
+  institutionName     String   @default("Institution Name")
+  institutionLogo     String?
+  institutionAddress  String?
+  institutionPhone    String?
+  institutionEmail    String?
+  currency            String   @default("Rs.")
+  dateFormat          String   @default("DD/MM/YYYY")
+  timezone            String   @default("Asia/Kathmandu")
+  receiptPrefix       String   @default("RCP")
+  lateFeePercentage   Int      @default(0)
+  gracePeriodDays     Int      @default(7)
+  reminderDaysBefore  Int      @default(3)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// -------------------------------------------------------
+// Activity Log (track user actions)
+// -------------------------------------------------------
+model ActivityLog {
+  id          String   @id @default(cuid())
+  userId      String
+  action      String   // "LOGIN", "STUDENT_CREATED", "PAYMENT_PROCESSED", etc.
+  description String
+  metadata    Json?    // Additional data about the action
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// -------------------------------------------------------
+// Login History (track user logins)
+// -------------------------------------------------------
+model LoginHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  ipAddress String
+  userAgent String
+  loginAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

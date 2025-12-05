@@ -1,86 +1,76 @@
-"use client";
-import useForm from "@/hooks/useForm";
-import { useParams, useRouter } from "next/navigation";
-import { validateForm } from "@/lib/validator";
-import { registerSchema } from "@/lib/constants";
-import { FormInputs } from "@/lib/@types/types";
-import RegisterForm from "@/components/forms/RegisterForm";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import Toast, { ToastProps } from "@/components/ui/Toast/Toast";
+'use client'
+import { useParams, useRouter } from 'next/navigation'
+import { type RegisterFormData } from '@/lib/schemas/auth.schema'
+import RegisterForm from '@/shared/forms/RegisterForm'
+import { useToast } from '@/shared/ui/toast'
+import { useRegisterMutation } from '@/app/[locale]/(auth)/_hooks/mutation'
+import { useForm } from 'react-hook-form'
+import { loginUser } from '@/app/[locale]/(auth)/_api/auth'
 
 const RegisterPage = () => {
-  const router = useRouter();
-  const { locale } = useParams() as { locale: string };
-  const [error, setError] = useState("");
-  const [toast, setToast] = useState<ToastProps>({
-    message: "",
-    type: "info",
-    duration: 3000,
-  });
+  const router = useRouter()
+  const { locale } = useParams() as { locale: string }
+  const { notify } = useToast()
 
-  const { formData, formErrors, handleChange, handleSubmit } =
-    useForm<FormInputs>({
-      initialValues: { name: "", email: "", password: "" },
-      validateForm,
-      schema: registerSchema,
-    });
+  const { mutate: registerUser, isPending, error } = useRegisterMutation()
 
-  const onSubmit = async (form_data: FormInputs) => {
-    // console.log(data);
-    setError("");
-    try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: new Date(),
-          name: form_data.name,
-          email: form_data.email,
-          password: form_data.password,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Registration failed");
-        setToast({ message: `Error: ${data.error}`, type: "error" });
-      } else {
-        setToast({ message: `Registration Successful.`, type: "success" });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    defaultValues: { name: '', email: '', password: '' },
+  })
 
-        await signIn("credentials", {
-          redirect: false,
-          email: form_data.email,
-          password: form_data.password,
-        });
-        router.push(`/${locale}/dashboard`);
-      }
-    } catch (err) {
-      console.error("Error:", err);
-      setToast({ message: `Error: ${err}`, type: "error" });
-    }
-  };
+  const onSubmit = (data: RegisterFormData) => {
+    registerUser(data, {
+      onSuccess: async () => {
+        notify({
+          title: 'Success',
+          description: 'Registration Successful.',
+          type: 'success',
+        })
+
+        // Auto-login after registration
+        try {
+          await loginUser({
+            email: data.email,
+            password: data.password,
+          })
+          router.push(`/${locale}/dashboard`)
+        } catch (error) {
+          console.error('Auto-login failed:', error)
+          notify({
+            title: 'Redirect Error',
+            description: 'Auto-login failed.',
+            type: 'error',
+          })
+          // Redirect to login page if auto-login fails
+          router.push(`/${locale}/login`)
+        }
+      },
+      onError: (error: Error) => {
+        notify({
+          title: 'Registration Error',
+          description: error.message,
+          type: 'error',
+        })
+      },
+    })
+  }
+
   return (
-    <div className="absolute top-0 left-0 flex  flex-col gap-5 justify-center items-center p-20 w-screen h-screen">
-      <div className="text-2xl text-primary font-bold">Fee Payment system</div>
-      {toast && toast?.message?.length > 0 && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() =>
-            setToast({ message: "", type: "info", duration: 3000 })
-          }
-        />
-      )}
+    <div className="absolute top-0 left-0 flex h-screen w-screen flex-col items-center justify-center gap-5 p-20">
+      <div className="text-primary text-2xl font-bold">Fee Payment System</div>
       <RegisterForm
-        onSubmit={onSubmit}
-        handleSubmit={handleSubmit}
-        handleChange={handleChange}
-        formData={formData}
-        formErrors={formErrors}
-        error={error}
+        onSubmit={handleSubmit(onSubmit)}
+        register={register}
+        errors={errors}
+        error={error?.message || ''}
+        isLoading={isPending}
       />
     </div>
-  );
-};
+  )
+}
 
-export default RegisterPage;
+export default RegisterPage

@@ -1,0 +1,100 @@
+.badge {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50rem;
+  font-weight: 400;
+  font-family: sans-serif;
+  text-align: center;
+  line-height: 1;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  /* background-color: var(--surface);
+  color: var(--text-secondary); */
+  box-shadow: var(--shadow);
+}
+
+/* Sizes */
+.badge.small {
+  font-size: 0.75rem;
+  padding: 2px 6px;
+}
+
+.badge.medium {
+  font-size: 0.875rem;
+  padding: 4px 8px;
+}
+
+.badge.large {
+  font-size: 1rem;
+  padding: 6px 12px;
+}
+
+/* variants */
+.badge.success {
+  background-color: var(--success-bg);
+  border: 1px solid var(--success-border);
+
+  color: var(--success-text);
+}
+
+.badge.warning {
+  border: 1px solid var(--warning-border);
+
+  background-color: var(--badge-bg);
+  color: var(--warning-text);
+}
+
+.badge.info {
+  border-color: var(--info-bg);
+  border: 1px solid var(--info-border);
+
+  color: var(--info-text);
+}
+
+.badge.danger {
+  background-color: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+
+  color: var(--danger-text);
+}
+
+/* .badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+} */
+
+/* .dark .badge {
+  background-color: var(--surface-dark, #1e1e1e);
+  border-color: var(--border-dark, #333);
+  color: var(--text-secondary-dark, #e5e5e5);
+  box-shadow: var(--shadow-dark, 0 0 0 1px #000);
+}
+
+.dark .badge.success {
+  background-color: #052e16;
+  border-color: var(--success-dark, #22c55e);
+  color: var(--success-dark, #22c55e);
+}
+
+.dark .badge.warning {
+  background-color: #422006;
+  border-color: var(--warning-dark, #facc15);
+  color: var(--warning-dark, #facc15);
+}
+
+.dark .badge.info {
+  background-color: #082f49;
+  border-color: var(--info-dark, #0ea5e9);
+  color: var(--info-dark, #0ea5e9);
+}
+
+.dark .badge.danger {
+  background-color: #450a0a;
+  border-color: var(--error-dark, #ef4444);
+  color: var(--error-dark, #ef4444);
+} */
