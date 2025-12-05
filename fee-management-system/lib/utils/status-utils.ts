@@ -1,4 +1,3 @@
-
 /**
  * Valid fee status values as defined in the Prisma schema
  */
@@ -103,28 +102,4 @@ export function calculateStudentStatus(
 
   // If none of the above, all must be paid
   return STUDENT_STATUS.PAID;
-}
-
-/**
- * Normalize status string to match the canonical format
- * Handles case variations and returns the proper capitalized version
- *
- * @param status - Status string in any case
- * @returns Normalized status or null if invalid
- */
-export function normalizeStatus(status: string): FeeStatus | null {
-  const normalized = status.toLowerCase();
-
-  switch (normalized) {
-    case "paid":
-      return FEE_STATUS.PAID;
-    case "partial":
-      return FEE_STATUS.PARTIAL;
-    case "pending":
-      return FEE_STATUS.PENDING;
-    case "overdue":
-      return FEE_STATUS.OVERDUE;
-    default:
-      return null;
-  }
 }
