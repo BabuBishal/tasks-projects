@@ -1,5 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation'
+import { useMemo, useCallback } from 'react'
 import { Pencil, Trash2, CreditCard, Award, ArrowRight, Download } from 'lucide-react'
 import { formatCurrency, formatDate } from '@/lib/utils/utils'
 
@@ -7,7 +8,7 @@ import { Button } from '@/shared/ui/button/Button'
 import StatsCard from '@/shared/ui/stats-card/StatsCard'
 import StudentInfo from '../../_components/StudentInfo'
 import Badge from '@/shared/ui/badges/Badges'
-import { Modal } from '@/shared/ui/modal'
+import { Modal } from '@/shared/ui/modal/Modal'
 import { useToast } from '@/shared/ui/toast'
 import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import { StudentDetailsSkeleton } from './StudentDetailsSkeleton'
@@ -30,7 +31,7 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
   const { mutateAsync: promoteMutation, isPending: promoteLoading } = usePromoteSemesterMutation()
   const { data: student, isLoading, error } = useGetStudentByIdQuery(id)
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     try {
       await deleteStudent(id)
       notify({ description: 'Student deleted successfully', type: 'success' })
@@ -42,14 +43,12 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
       })
       router.push(`/students/${id}`)
     }
-  }
+  }, [deleteStudent, id, notify, router])
 
-  const handlePromote = async () => {
+  const handlePromote = useCallback(async () => {
     if (!student) return
     try {
-      const { message } = await promoteMutation({
-        studentIds: [student.id],
-      })
+      const { message } = await promoteMutation([student.id])
 
       notify({
         description: message || 'Student graduated successfully!',
@@ -61,7 +60,28 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
         type: 'error',
       })
     }
-  }
+  }, [student, promoteMutation, notify])
+
+  const financialSummary = useMemo(
+    () => ({
+      totalPaid: student?.totalPaid || 0,
+      totalDue: student?.totalBalance || 0,
+      totalScholarships: student?.totalScholarshipAmount || 0,
+      totalPayable: student?.totalPayableFee || 0,
+    }),
+    [student]
+  )
+
+  const downloadFeeRecords = useCallback(() => {
+    if (!student) return
+    handleDownloadFeeRecord({
+      student,
+      totalDue: financialSummary.totalDue,
+      totalPaid: financialSummary.totalPaid,
+      totalScholarships: financialSummary.totalScholarships,
+      totalPayable: financialSummary.totalPayable,
+    })
+  }, [student, financialSummary])
 
   if (isLoading) {
     return <StudentDetailsSkeleton />
@@ -79,17 +99,6 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
         </Button>
       </div>
     )
-  }
-
-  const totalPaid = student?.totalPaid || 0
-  const totalDue = student?.totalBalance || 0
-  const totalScholarships = student?.totalScholarshipAmount || 0
-  const totalPayable = student?.totalPayableFee || 0
-
-  const downloadFeeRecords = () => {
-    // console.log('student')
-    if (!student) return
-    handleDownloadFeeRecord({ student, totalDue, totalPaid, totalScholarships, totalPayable })
   }
 
   return (
@@ -153,26 +162,26 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
       <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title={'Total Payable'}
-          value={formatCurrency(totalPayable)}
+          value={formatCurrency(financialSummary.totalPayable)}
           description={`After ${formatCurrency(student?.totalDiscount || 0)} discount`}
           icon={CreditCard}
           variant="primary"
         />
         <StatsCard
           title={'Total Paid'}
-          value={formatCurrency(totalPaid)}
+          value={formatCurrency(financialSummary.totalPaid)}
           icon={CreditCard}
           variant="success"
         />
         <StatsCard
           title={'Balance Due'}
-          value={formatCurrency(totalDue)}
+          value={formatCurrency(financialSummary.totalDue)}
           icon={CreditCard}
           variant="danger"
         />
         <StatsCard
           title={'Scholarship'}
-          value={formatCurrency(totalScholarships)}
+          value={formatCurrency(financialSummary.totalScholarships)}
           icon={Award}
           variant="warning"
         />
@@ -306,13 +315,13 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
                         </div>
 
                         {/* Payment History */}
-                        {fee.payments.length > 0 && (
+                        {(fee.payments || []).length > 0 && (
                           <div className="border-border mt-4 border-t pt-4">
                             <h4 className="text-secondary mb-2 text-sm font-semibold">
                               Payment History
                             </h4>
                             <div className="space-y-2">
-                              {fee.payments.map(payment => (
+                              {(fee.payments || []).map(payment => (
                                 <div
                                   key={payment.id}
                                   className="flex items-center justify-between rounded bg-zinc-100 p-3 text-sm dark:bg-zinc-800"

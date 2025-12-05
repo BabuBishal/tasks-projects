@@ -1,20 +1,22 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Modal } from '@/shared/ui/modal/Modal'
 import { Button } from '@/shared/ui/button/Button'
 import { useToast } from '@/shared/ui/toast/Toast'
 import { useUpdateStudentMutation } from '@/app/[locale]/(root)/students/_hooks'
 import { StudentResponse } from '@/lib/types/api'
 import { useGetProgramsQuery } from '@/app/[locale]/(root)/programs/_hooks'
-import { Pencil } from 'lucide-react'
 
 interface EditStudentModalProps {
   student: StudentResponse
+  isOpen: boolean
+  onClose: () => void
 }
 
-export default function EditStudentModal({ student }: EditStudentModalProps) {
+export default function EditStudentModal({ student, isOpen, onClose }: EditStudentModalProps) {
   const [isLoading, setIsLoading] = useState(false)
+  // Initialize state directly from props - no useEffect needed!
   const [formData, setFormData] = useState({
     name: student.name,
     email: student.email,
@@ -28,18 +30,6 @@ export default function EditStudentModal({ student }: EditStudentModalProps) {
   const { notify } = useToast()
   const updateStudentMutation = useUpdateStudentMutation()
   const { data: programs } = useGetProgramsQuery()
-
-  useEffect(() => {
-    setFormData({
-      name: student.name,
-      email: student.email,
-      programId: student.programId,
-      semester: student.semester,
-      phone: student.phone,
-      address: student.address,
-      graduated: student.status === 'Graduated',
-    })
-  }, [student])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,7 +55,7 @@ export default function EditStudentModal({ student }: EditStudentModalProps) {
         description: 'Student updated successfully',
         type: 'success',
       })
-      // onClose() // This will be handled by the Modal.Close component
+      onClose()
     } catch (error) {
       notify({
         title: 'Error',
@@ -77,13 +67,10 @@ export default function EditStudentModal({ student }: EditStudentModalProps) {
     }
   }
 
+  if (!isOpen) return null
+
   return (
-    <Modal>
-      <Modal.Trigger asChild>
-        <button className="text-green-600 hover:text-green-800">
-          <Pencil className="h-4 w-4" />
-        </button>
-      </Modal.Trigger>
+    <Modal open={isOpen} onOpenChange={onClose}>
       <Modal.Content>
         <Modal.CloseIcon />
         <Modal.Header>
@@ -173,7 +160,9 @@ export default function EditStudentModal({ student }: EditStudentModalProps) {
         </Modal.Body>
         <Modal.Footer>
           <div className="flex justify-end gap-2">
-            <Modal.Close>Cancel</Modal.Close>
+            <Button onClick={onClose} variant="secondary">
+              Cancel
+            </Button>
             <Button onClick={handleSubmit} disabled={isLoading} variant="primary">
               {isLoading ? 'Saving...' : 'Save Changes'}
             </Button>

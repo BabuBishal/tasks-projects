@@ -1,7 +1,7 @@
 'use client'
 import { useDebounce } from '@/hooks/useDebounce'
 import { Search } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const PaymentSearch = ({
   searchQuery,
@@ -19,7 +19,6 @@ const PaymentSearch = ({
   setMethodFilter: (filter: string) => void
 }) => {
   const [searchText, setSearchText] = useState(searchQuery)
-
   const debouncedSearchText = useDebounce(searchText, 400)
 
   useEffect(() => {
@@ -35,9 +34,7 @@ const PaymentSearch = ({
           placeholder="Search by student name, ID..."
           className="border-border bg-background w-full rounded-lg border py-2 pr-4 pl-10 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           value={searchText}
-          onChange={e => {
-            setSearchText(e.target.value)
-          }}
+          onChange={e => setSearchText(e.target.value)}
         />
       </div>
       <div className="flex gap-2">

@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { Table } from '@/shared/ui/table/Table'
 import Link from 'next/link'
 import { Button } from '@/shared/ui/button/Button'
@@ -13,10 +14,11 @@ import { Modal } from '@/shared/ui/modal'
 import { useGetPaymentsQuery } from '@/app/[locale]/(root)/payments/_hooks'
 import { TableSkeleton } from '../../_components/skeletons/TableSkeleton'
 import { handleDownloadReceipt } from '@/lib/utils/payment-receipt-download'
+import { PaymentHistoryItem } from '@/lib/types/api'
 
 const RecentPayments = () => {
   const { data: paymentsData, isLoading: recentPaymentsLoading } = useGetPaymentsQuery({})
-  console.log(paymentsData)
+  const [selectedPayment, setSelectedPayment] = useState<PaymentHistoryItem | null>(null)
   const recentPayments = paymentsData?.data?.slice(0, 5)
 
   if (recentPaymentsLoading) {
@@ -50,7 +52,7 @@ const RecentPayments = () => {
           <Table.Body>
             {recentPayments &&
               recentPayments.length > 0 &&
-              recentPayments.map(payment => (
+              recentPayments.map((payment: PaymentHistoryItem) => (
                 <Table.Row key={payment.id}>
                   <Table.Cell>
                     <div className="font-medium">{payment.studentName ?? '-'}</div>
@@ -61,69 +63,72 @@ const RecentPayments = () => {
                   <Table.Cell>{formatCurrency(payment.amount ?? 0)}</Table.Cell>
                   <Table.Cell>{new Date(payment.date ?? '-').toLocaleDateString()}</Table.Cell>
                   <Table.Cell>
-                    <Modal>
-                      <Modal.Trigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <Download className="h-4 w-4 text-blue-500" />
-                        </Button>
-                      </Modal.Trigger>
-                      <Modal.Content className="max-w-2xl">
-                        <Modal.CloseIcon />
-                        <Modal.Header>
-                          <h2 className="text-primary text-xl font-bold">Payment Receipt</h2>
-                        </Modal.Header>
-                        <Modal.Body>
-                          <div className="space-y-3">
-                            <div className="border-border flex justify-between border-b py-2">
-                              <span className="text-muted font-medium">Receipt No:</span>
-                              <span className="text-primary font-semibold">
-                                {payment.receiptNo || payment.id}
-                              </span>
-                            </div>
-                            <div className="border-border flex justify-between border-b py-2">
-                              <span className="text-muted font-medium">Date:</span>
-                              <span className="text-primary">{formatDate(payment.date ?? '')}</span>
-                            </div>
-                            <div className="border-border flex justify-between border-b py-2">
-                              <span className="text-muted font-medium">Student Name:</span>
-                              <span className="text-primary">{payment.studentName}</span>
-                            </div>
-                            <div className="border-border flex justify-between border-b py-2">
-                              <span className="text-muted font-medium">Year:</span>
-                              <span className="text-primary">{payment?.academicYear}</span>
-                            </div>
-                            <div className="flex justify-between py-2">
-                              <span className="text-muted font-medium">Payment Method:</span>
-                              <span className="text-primary capitalize">{payment.method}</span>
-                            </div>
-                            <div className="border-primary mt-4 flex justify-between border-t-2 py-3">
-                              <span className="text-primary text-lg font-bold">Amount Paid:</span>
-                              <span className="text-primary text-lg font-bold">
-                                {formatCurrency(payment.amount ?? 0)}
-                              </span>
-                            </div>
-                          </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                          <div className="flex gap-3">
-                            <Modal.Close>Close</Modal.Close>
-                            <Button
-                              variant="primary"
-                              className="flex-1"
-                              onClick={() => handleDownloadReceipt(payment)}
-                            >
-                              <Download className="mr-2 h-4 w-4" />
-                              Download
-                            </Button>
-                          </div>
-                        </Modal.Footer>
-                      </Modal.Content>
-                    </Modal>
+                    <Button variant="ghost" size="sm" onClick={() => setSelectedPayment(payment)}>
+                      <Download className="h-4 w-4 text-blue-500" />
+                    </Button>
                   </Table.Cell>
                 </Table.Row>
               ))}
           </Table.Body>
         </Table>
+
+        {selectedPayment && (
+          <Modal open={!!selectedPayment} onOpenChange={() => setSelectedPayment(null)}>
+            <Modal.Content className="max-w-2xl">
+              <Modal.CloseIcon />
+              <Modal.Header>
+                <h2 className="text-primary text-xl font-bold">Payment Receipt</h2>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="space-y-3">
+                  <div className="border-border flex justify-between border-b py-2">
+                    <span className="text-muted font-medium">Receipt No:</span>
+                    <span className="text-primary font-semibold">
+                      {selectedPayment.receiptNo || selectedPayment.id}
+                    </span>
+                  </div>
+                  <div className="border-border flex justify-between border-b py-2">
+                    <span className="text-muted font-medium">Date:</span>
+                    <span className="text-primary">{formatDate(selectedPayment.date ?? '')}</span>
+                  </div>
+                  <div className="border-border flex justify-between border-b py-2">
+                    <span className="text-muted font-medium">Student Name:</span>
+                    <span className="text-primary">{selectedPayment.studentName}</span>
+                  </div>
+                  <div className="border-border flex justify-between border-b py-2">
+                    <span className="text-muted font-medium">Year:</span>
+                    <span className="text-primary">{selectedPayment?.academicYear}</span>
+                  </div>
+                  <div className="flex justify-between py-2">
+                    <span className="text-muted font-medium">Payment Method:</span>
+                    <span className="text-primary capitalize">{selectedPayment.method}</span>
+                  </div>
+                  <div className="border-primary mt-4 flex justify-between border-t-2 py-3">
+                    <span className="text-primary text-lg font-bold">Amount Paid:</span>
+                    <span className="text-primary text-lg font-bold">
+                      {formatCurrency(selectedPayment.amount ?? 0)}
+                    </span>
+                  </div>
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <div className="flex gap-3">
+                  <Button variant="secondary" onClick={() => setSelectedPayment(null)}>
+                    Close
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="flex-1"
+                    onClick={() => handleDownloadReceipt(selectedPayment)}
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Download
+                  </Button>
+                </div>
+              </Modal.Footer>
+            </Modal.Content>
+          </Modal>
+        )}
       </CardContent>
     </Card>
   )

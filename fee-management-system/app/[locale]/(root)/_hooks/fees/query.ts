@@ -11,6 +11,7 @@ export const useGetFeeStructuresQuery = () => {
     gcTime: 30 * 60 * 1000, // 30 minutes
     retry: 2,
     refetchOnWindowFocus: false,
+    placeholderData: previousData => previousData,
   })
 }
 
@@ -22,5 +23,6 @@ export const useGetOverdueFeesQuery = () => {
     gcTime: 30 * 60 * 1000, // 30 minutes
     retry: 2,
     refetchOnWindowFocus: false,
+    placeholderData: previousData => previousData,
   })
 }

@@ -2,44 +2,38 @@
 //   return classes.filter(Boolean).join(" ");
 // }
 
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 export function calculateJoinedYear(semester: number) {
   if (semester < 1 || semester > 8) {
-    throw new Error("Semester must be between 1 and 8");
+    throw new Error('Semester must be between 1 and 8')
   }
 
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
 
-  const yearsPassed = Math.ceil(semester / 2) - 1;
+  const yearsPassed = Math.ceil(semester / 2) - 1
 
-  const joinedYear = currentYear - yearsPassed;
+  const joinedYear = currentYear - yearsPassed
 
-  return joinedYear;
+  return joinedYear
 }
 
 export const generateReceiptNumber = (): string => {
-  return `RCPT-${Date.now()}-${Math.random()
-    .toString(36)
-    .substr(2, 9)
-    .toUpperCase()}`;
-};
+  return `RCPT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
+}
 
 /**
  * Calculate which academic year a semester falls into
  */
-export function getAcademicYearForSemester(
-  joinedYear: number,
-  semesterNo: number
-): string {
-  const yearsPassed = Math.floor((semesterNo - 1) / 2);
-  const baseYear = joinedYear + yearsPassed;
-  return `${baseYear}/${String(baseYear + 1).slice(2)}`;
+export function getAcademicYearForSemester(joinedYear: number, semesterNo: number): string {
+  const yearsPassed = Math.floor((semesterNo - 1) / 2)
+  const baseYear = joinedYear + yearsPassed
+  return `${baseYear}/${String(baseYear + 1).slice(2)}`
 }
 
 /**
@@ -47,18 +41,15 @@ export function getAcademicYearForSemester(
  * Odd semesters (1,3,5,7) start July 1st
  * Even semesters (2,4,6,8) start January 1st
  */
-export function getSemesterStartDate(
-  joinedYear: number,
-  semesterNo: number
-): Date {
-  const isOddSemester = semesterNo % 2 === 1;
-  const yearsPassed = Math.floor((semesterNo - 1) / 2);
-  const baseYear = joinedYear + yearsPassed;
+export function getSemesterStartDate(joinedYear: number, semesterNo: number): Date {
+  const isOddSemester = semesterNo % 2 === 1
+  const yearsPassed = Math.floor((semesterNo - 1) / 2)
+  const baseYear = joinedYear + yearsPassed
 
   if (isOddSemester) {
-    return new Date(baseYear, 6, 1); // July 1st
+    return new Date(baseYear, 6, 1) // July 1st
   } else {
-    return new Date(baseYear + 1, 0, 1); // January 1st (next year)
+    return new Date(baseYear + 1, 0, 1) // January 1st (next year)
   }
 }
 
@@ -66,41 +57,42 @@ export function getSemesterStartDate(
  * Calculate due date (3 months after semester start)
  */
 export function getDueDate(startDate: Date): Date {
-  const dueDate = new Date(startDate);
-  dueDate.setMonth(dueDate.getMonth() + 3);
-  return dueDate;
+  const dueDate = new Date(startDate)
+  dueDate.setMonth(dueDate.getMonth() + 3)
+  return dueDate
 }
 
 export const generateProgramPrefix = (name: string) =>
   name
-    .replace(/[^A-Za-z ]/g, "")
-    .split(" ")
-    .map((word) => word.toUpperCase().substring(0, 4))
-    .join("");
+    .replace(/[^A-Za-z ]/g, '')
+    .split(' ')
+    .map(word => word.toUpperCase().substring(0, 4))
+    .join('')
 
-export const formatDate = (date: string | Date) => {
-  return new Date(date)?.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
+export const formatDate = (date: string | Date | null | undefined) => {
+  if (!date) return 'N/A'
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
 
 export const formatCurrency = (amount: number) => {
-  return `Rs ${amount?.toFixed(2).toLocaleString()}`;
-};
+  return `Rs ${amount?.toFixed(2).toLocaleString()}`
+}
 
 export const getStatusColor = (status: string) => {
   switch (status?.toLowerCase()) {
-    case "paid":
-      return "bg-green-100 text-green-800";
-    case "pending":
-      return "bg-yellow-100 text-yellow-800";
-    case "overdue":
-      return "bg-red-100 text-red-800";
-    case "partial":
-      return "bg-orange-100 text-orange-800";
+    case 'paid':
+      return 'bg-green-100 text-green-800'
+    case 'pending':
+      return 'bg-yellow-100 text-yellow-800'
+    case 'overdue':
+      return 'bg-red-100 text-red-800'
+    case 'partial':
+      return 'bg-orange-100 text-orange-800'
     default:
-      return "bg-gray-100 text-gray-800";
+      return 'bg-gray-100 text-gray-800'
   }
-};
+}

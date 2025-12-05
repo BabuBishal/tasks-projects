@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card/Card'
 import { AlertTriangle, UserX, FileWarning } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils/utils'
@@ -9,24 +10,68 @@ import Badge from '@/shared/ui/badges/Badges'
 import { useGetOverdueFeesQuery } from '@/app/[locale]/(root)/_hooks/fees'
 import { AlertSkeleton } from './skeletons/AlertSkeleton'
 
+import { useTranslations } from 'next-intl'
+
 export default function AlertsNotifications() {
   const { data, isLoading, isError } = useGetOverdueFeesQuery()
+  const t = useTranslations('Dashboard.alerts')
 
-  const alerts = data
-    ?.filter(fee => fee.daysOverdue > 30 || fee.paidAmount === 0)
-    .slice(0, 10)
-    .map(fee => ({
-      id: fee.id,
-      type: fee.daysOverdue > 30 ? ('critical_overdue' as const) : ('zero_payment' as const),
-      studentId: fee.studentId,
-      studentName: fee.studentName,
-      message:
-        fee.daysOverdue > 30
-          ? `Critical: ${fee.daysOverdue} days overdue`
-          : 'No payment received yet',
-      amount: fee.balance,
-      daysOverdue: fee.daysOverdue,
-    }))
+  const alerts = useMemo(
+    () =>
+      data
+        ?.filter(fee => fee.daysOverdue > 30 || fee.paidAmount === 0)
+        .slice(0, 10)
+        .map(fee => ({
+          id: fee.id,
+          type: fee.daysOverdue > 30 ? ('critical_overdue' as const) : ('zero_payment' as const),
+          studentId: fee.studentId,
+          studentName: fee.studentName,
+          message:
+            fee.daysOverdue > 30 ? t('criticalOverdue', { days: fee.daysOverdue }) : t('noPayment'),
+          amount: fee.balance,
+          daysOverdue: fee.daysOverdue,
+        })),
+    [data, t]
+  )
+
+  const getIcon = useCallback((type: string) => {
+    switch (type) {
+      case 'critical_overdue':
+        return <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
+      case 'zero_payment':
+        return <UserX className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+      case 'scholarship_pending':
+        return <FileWarning className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+      default:
+        return <AlertTriangle className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+    }
+  }, [])
+
+  const getBackgroundColor = useCallback((type: string) => {
+    switch (type) {
+      case 'critical_overdue':
+        return 'bg-red-100 dark:bg-red-950'
+      case 'zero_payment':
+        return 'bg-orange-100 dark:bg-orange-950'
+      case 'scholarship_pending':
+        return 'bg-yellow-100 dark:bg-yellow-950'
+      default:
+        return 'bg-gray-100 dark:bg-gray-950'
+    }
+  }, [])
+
+  const getBadgeVariant = useCallback((type: string) => {
+    switch (type) {
+      case 'critical_overdue':
+        return 'danger'
+      case 'zero_payment':
+        return 'warning'
+      case 'scholarship_pending':
+        return 'info'
+      default:
+        return 'info'
+    }
+  }, [])
 
   if (isLoading) {
     return <AlertSkeleton />
@@ -39,51 +84,13 @@ export default function AlertsNotifications() {
       </div>
     )
   }
-  const getIcon = (type: string) => {
-    switch (type) {
-      case 'critical_overdue':
-        return <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
-      case 'zero_payment':
-        return <UserX className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-      case 'scholarship_pending':
-        return <FileWarning className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
-      default:
-        return <AlertTriangle className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-    }
-  }
-
-  const getBackgroundColor = (type: string) => {
-    switch (type) {
-      case 'critical_overdue':
-        return 'bg-red-100 dark:bg-red-950'
-      case 'zero_payment':
-        return 'bg-orange-100 dark:bg-orange-950'
-      case 'scholarship_pending':
-        return 'bg-yellow-100 dark:bg-yellow-950'
-      default:
-        return 'bg-gray-100 dark:bg-gray-950'
-    }
-  }
-
-  const getBadgeVariant = (type: string) => {
-    switch (type) {
-      case 'critical_overdue':
-        return 'danger'
-      case 'zero_payment':
-        return 'warning'
-      case 'scholarship_pending':
-        return 'info'
-      default:
-        return 'info'
-    }
-  }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
-          Alerts & Notifications
+          {t('title')}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -92,7 +99,7 @@ export default function AlertsNotifications() {
             <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-950">
               <AlertTriangle className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
-            <p className="text-muted">No critical alerts at the moment</p>
+            <p className="text-muted">{t('empty')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -110,7 +117,7 @@ export default function AlertsNotifications() {
                       <p className="text-primary text-sm font-semibold">{alert.studentName}</p>
                       {alert.daysOverdue && alert.daysOverdue > 30 && (
                         <Badge variant={getBadgeVariant(alert.type)} size="small">
-                          {alert.daysOverdue} days overdue
+                          {alert.daysOverdue} {t('daysOverdue')}
                         </Badge>
                       )}
                     </div>
@@ -123,7 +130,7 @@ export default function AlertsNotifications() {
                   </div>
                   <Link href={`/students/${alert.studentId}`}>
                     <Button variant="ghost" size="sm" className="shadow-sm">
-                      View
+                      {t('view')}
                     </Button>
                   </Link>
                 </div>
@@ -131,7 +138,7 @@ export default function AlertsNotifications() {
             {alerts && alerts.length > 5 && (
               <Link href="/overdue" className="block">
                 <Button variant="secondary" className="mt-2 w-full">
-                  View All Alerts ({alerts.length})
+                  {t('viewAll')} ({alerts.length})
                 </Button>
               </Link>
             )}

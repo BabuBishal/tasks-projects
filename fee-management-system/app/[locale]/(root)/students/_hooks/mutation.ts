@@ -8,12 +8,13 @@ import {
   bulkImportStudents,
   promoteSemester,
 } from '@/app/[locale]/(root)/students/_api/students'
+import { CreateStudentInput, UpdateStudentInput } from '@/lib/types/api'
 
 export const useCreateStudentMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: createStudent,
+    mutationFn: (data: CreateStudentInput) => createStudent(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.students] })
       queryClient.invalidateQueries({ queryKey: [API_ROUTES.dashboardStats] })
@@ -25,7 +26,8 @@ export const useUpdateStudentMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: updateStudent,
+    mutationFn: ({ id, data }: { id: string; data: UpdateStudentInput }) =>
+      updateStudent({ id, data }),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
         queryKey: [API_ROUTES.students, variables.id],

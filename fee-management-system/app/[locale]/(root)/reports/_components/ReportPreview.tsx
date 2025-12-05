@@ -1,3 +1,4 @@
+import React, { useMemo, useCallback } from 'react'
 import { Button } from '@/shared/ui/button/Button'
 import { BarChart3, Download } from 'lucide-react'
 import { PaymentsByProgram } from './PaymentsByProgram'
@@ -20,17 +21,25 @@ export function ReportPreview({ dateRange, selectedPeriod }: ReportPreviewProps)
     endDate: dateRange.end.toISOString(),
   })
 
-  const totalTransactions =
-    paymentStats?.byProgram.reduce((sum, item) => sum + item.totalPayments, 0) || 0
+  const totalTransactions = useMemo(
+    () => paymentStats?.byProgram.reduce((sum, item) => sum + item.totalPayments, 0) || 0,
+    [paymentStats?.byProgram]
+  )
 
-  const totalRevenue = paymentStats?.byProgram.reduce((sum, item) => sum + item.totalAmount, 0) || 0
+  const totalRevenue = useMemo(
+    () => paymentStats?.byProgram.reduce((sum, item) => sum + item.totalAmount, 0) || 0,
+    [paymentStats?.byProgram]
+  )
 
-  const avgTransaction = Math.round(totalRevenue / (totalTransactions || 1))
+  const avgTransaction = useMemo(
+    () => Math.round(totalRevenue / (totalTransactions || 1)),
+    [totalRevenue, totalTransactions]
+  )
 
-  const handleGenerateReport = () => {
+  const handleGenerateReport = useCallback(async () => {
     if (!paymentStats) return
-    generatePaymentStatusReport(paymentStats, dateRange, selectedPeriod)
-  }
+    await generatePaymentStatusReport(paymentStats, dateRange, selectedPeriod)
+  }, [paymentStats, dateRange, selectedPeriod])
 
   if (isLoading || !paymentStats) {
     return <ReportsSkeleton />

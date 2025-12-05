@@ -104,6 +104,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 }
 
+import { updateStudentSchema } from '@/app/[locale]/(root)/students/_types/schema'
+
 // UPDATE student
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -116,6 +118,21 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   try {
     const body = await req.json()
 
+    // Validate request body using Zod
+    const validationResult = updateStudentSchema.safeParse(body)
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: validationResult.error.flatten().fieldErrors,
+        },
+        { status: 400 }
+      )
+    }
+
+    const validatedData = validationResult.data
+
     // Check if student exists
     const existingStudent = await prisma.student.findUnique({
       where: { id },
@@ -126,9 +143,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 
     // Check for duplicate email (if changing)
-    if (body.email && body.email !== existingStudent.email) {
+    if (validatedData.email && validatedData.email !== existingStudent.email) {
       const emailExists = await prisma.student.findUnique({
-        where: { email: body.email },
+        where: { email: validatedData.email },
       })
 
       if (emailExists) {
@@ -137,9 +154,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 
     // Check for duplicate roll number (if changing)
-    if (body.rollNo && body.rollNo !== existingStudent.rollNo) {
+    if (validatedData.rollNo && validatedData.rollNo !== existingStudent.rollNo) {
       const rollNoExists = await prisma.student.findUnique({
-        where: { rollNo: body.rollNo },
+        where: { rollNo: validatedData.rollNo },
       })
 
       if (rollNoExists) {
@@ -148,9 +165,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 
     // Verify program exists (if changing)
-    if (body.programId) {
+    if (validatedData.programId) {
       const program = await prisma.program.findUnique({
-        where: { id: body.programId },
+        where: { id: validatedData.programId },
       })
 
       if (!program) {
@@ -158,18 +175,11 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       }
     }
 
-    // Validate semester if provided
-    if (body.semester !== undefined && body.semester !== null) {
-      const semesterNum = Number(body.semester)
-      if (isNaN(semesterNum) || semesterNum < 1 || semesterNum > 12) {
-        return NextResponse.json(
-          { error: 'Semester must be a number between 1 and 12' },
-          { status: 400 }
-        )
-      }
-    }
-
-    if (body.semester !== undefined && body.semester !== existingStudent.semester) {
+    // Validate semester if provided (Zod handles number check, but business logic check remains)
+    if (
+      validatedData.semester !== undefined &&
+      validatedData.semester !== existingStudent.semester
+    ) {
       const feeCount = await prisma.studentFee.count({
         where: { studentId: id },
       })
@@ -188,14 +198,15 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const updatedStudent = await prisma.student.update({
       where: { id },
       data: {
-        ...(body.name && { name: body.name }),
-        ...(body.email && { email: body.email }),
-        ...(body.rollNo && { rollNo: body.rollNo }),
-        ...(body.programId && { programId: body.programId }),
-        ...(body.semester !== undefined && { semester: body.semester }),
-        ...(body.phone !== undefined && { phone: body.phone }),
-        ...(body.address !== undefined && { address: body.address }),
-        ...(body.year !== undefined && { year: body.year }),
+        ...(validatedData.name && { name: validatedData.name }),
+        ...(validatedData.email && { email: validatedData.email }),
+        ...(validatedData.rollNo && { rollNo: validatedData.rollNo }),
+        ...(validatedData.programId && { programId: validatedData.programId }),
+        ...(validatedData.semester !== undefined && { semester: validatedData.semester }),
+        ...(validatedData.phone !== undefined && { phone: validatedData.phone }),
+        ...(validatedData.address !== undefined && { address: validatedData.address }),
+        ...(validatedData.year !== undefined && { year: validatedData.year }),
+        ...(validatedData.status && { status: validatedData.status }),
       },
       include: {
         program: true,

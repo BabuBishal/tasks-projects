@@ -1,63 +1,43 @@
-import { createContext, useContext, useState, ReactNode } from "react";
-import "./select.css";
-import { cn } from "@/utils/cn";
-import { SelectContextType, SelectRootProps } from "./select.types";
+import { createContext, useContext, useState, ReactNode } from 'react'
+import './select.css'
+import { cn } from '@/lib/utils/utils'
+import { SelectContextType, SelectRootProps } from './select.types'
 
-const SelectContext = createContext<SelectContextType | undefined>(undefined);
+const SelectContext = createContext<SelectContextType | undefined>(undefined)
 
 function useSelectContext() {
-  const context = useContext(SelectContext);
+  const context = useContext(SelectContext)
   if (!context) {
-    throw new Error(
-      "Select compound components must be used within Select.Root"
-    );
+    throw new Error('Select compound components must be used within Select.Root')
   }
-  return context;
+  return context
 }
 
 export const Select = {
-  Root: ({
-    value: valueProp,
-    onChange,
-    children,
-    className,
-    unstyled,
-  }: SelectRootProps) => {
-    const [value, setValue] = useState<string | null>(valueProp || null);
+  Root: ({ value: valueProp, onChange, children, className, unstyled }: SelectRootProps) => {
+    const [value, setValue] = useState<string | null>(valueProp || null)
 
     const handleChange = (val: string) => {
-      setValue(val);
-      onChange?.(val);
-    };
+      setValue(val)
+      onChange?.(val)
+    }
 
     return (
       <SelectContext.Provider value={{ value, setValue: handleChange }}>
-        <div
-          className={cn(
-            "ui-select-root",
-            className,
-            unstyled && "ui-select--unstyled"
-          )}
-        >
+        <div className={cn('ui-select-root', className, unstyled && 'ui-select--unstyled')}>
           {children}
         </div>
       </SelectContext.Provider>
-    );
+    )
   },
 
-  Trigger: ({
-    children,
-    className,
-  }: {
-    children: ReactNode;
-    className?: string;
-  }) => {
-    const { value } = useSelectContext();
+  Trigger: ({ children, className }: { children: ReactNode; className?: string }) => {
+    const { value } = useSelectContext()
     return (
-      <button className={cn("ui-select-trigger", className)} type="button">
+      <button className={cn('ui-select-trigger', className)} type="button">
         {value || children}
       </button>
-    );
+    )
   },
 
   Option: ({
@@ -65,28 +45,19 @@ export const Select = {
     value,
     className,
   }: {
-    children: ReactNode;
-    value: string;
-    className?: string;
+    children: ReactNode
+    value: string
+    className?: string
   }) => {
-    const { setValue } = useSelectContext();
+    const { setValue } = useSelectContext()
     return (
-      <div
-        className={cn("ui-select-option", className)}
-        onClick={() => setValue(value)}
-      >
+      <div className={cn('ui-select-option', className)} onClick={() => setValue(value)}>
         {children}
       </div>
-    );
+    )
   },
 
-  List: ({
-    children,
-    className,
-  }: {
-    children: ReactNode;
-    className?: string;
-  }) => {
-    return <div className={cn("ui-select-list", className)}>{children}</div>;
+  List: ({ children, className }: { children: ReactNode; className?: string }) => {
+    return <div className={cn('ui-select-list', className)}>{children}</div>
   },
-};
+}

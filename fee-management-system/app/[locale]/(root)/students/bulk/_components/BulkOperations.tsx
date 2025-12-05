@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Upload, Download } from 'lucide-react'
 import { Button } from '@/shared/ui/button/Button'
 import { useToast } from '@/shared/ui/toast'
@@ -15,9 +15,9 @@ import { BulkImportResult } from '@/lib/types/api'
 export default function BulkOperations() {
   const searchParams = useSearchParams()
   const tabParam = searchParams.get('tab')
-  const [activeTab, setActiveTab] = useState<'import' | 'export'>(
-    tabParam === 'export' ? 'export' : 'import'
-  )
+  // Derive activeTab from URL param - no useEffect needed!
+  const activeTab: 'import' | 'export' = tabParam === 'export' ? 'export' : 'import'
+
   const [csvContent, setCsvContent] = useState('')
   const [parseResult, setParseResult] = useState<ParseResult | null>(null)
   const [importing, setImporting] = useState(false)
@@ -26,15 +26,8 @@ export default function BulkOperations() {
   const router = useRouter()
 
   const bulkImportMutation = useBulkImportStudentsMutation()
-  const { data: allStudents } = useGetStudentsQuery()
-
-  useEffect(() => {
-    if (tabParam === 'export') {
-      setActiveTab('export')
-    } else if (tabParam === 'import') {
-      setActiveTab('import')
-    }
-  }, [tabParam])
+  const { data } = useGetStudentsQuery()
+  const allStudents = data?.data ?? []
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -133,7 +126,7 @@ export default function BulkOperations() {
     <div className="flex h-full w-full flex-col gap-6">
       <div className="border-border flex gap-2 border-b">
         <button
-          onClick={() => setActiveTab('import')}
+          onClick={() => router.push('/students/bulk?tab=import')}
           className={`px-4 py-2 font-medium transition-colors ${
             activeTab === 'import'
               ? 'text-primary border-primary border-b-2'
@@ -144,7 +137,7 @@ export default function BulkOperations() {
           Import Students
         </button>
         <button
-          onClick={() => setActiveTab('export')}
+          onClick={() => router.push('/students/bulk?tab=export')}
           className={`px-4 py-2 font-medium transition-colors ${
             activeTab === 'export'
               ? 'text-primary border-primary border-b-2'

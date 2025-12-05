@@ -1,5 +1,6 @@
 import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import BulkOperations from './_components/BulkOperations'
+import { Suspense } from 'react'
 
 const BulkOperationsPage = () => {
   return (
@@ -16,7 +17,9 @@ const BulkOperationsPage = () => {
         <p className="text-muted text-sm">Import and export student data</p>
       </div>
 
-      <BulkOperations />
+      <Suspense fallback={<div>Loading...</div>}>
+        <BulkOperations />
+      </Suspense>
     </div>
   )
 }
