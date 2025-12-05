@@ -1,6 +1,6 @@
-import { JSONSchema7 } from 'json-schema'
+import { RJSFSchema } from '@rjsf/utils'
 
-const changePasswordSchema: JSONSchema7 = {
+const changePasswordSchema: RJSFSchema = {
   type: 'object',
   required: ['currentPassword', 'newPassword', 'confirmPassword'],
   properties: {
