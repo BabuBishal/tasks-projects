@@ -7,7 +7,7 @@ import { AlertCircle, Users, Wallet } from 'lucide-react'
 import { StatsSkeleton } from '../../_components/skeletons/StatsSkeleton'
 
 export default function StudentStats() {
-  const { data, isLoading } = useGetStudentsQuery()
+  const { data, isLoading } = useGetStudentsQuery({})
 
   const stats = useMemo(() => {
     const allStudents = data?.data || []
@@ -26,7 +26,7 @@ export default function StudentStats() {
 
     const overdueStudents =
       allStudents?.filter(s => {
-        const latestFee = 
+        const latestFee =
           (s.fees || []).length > 0
             ? (s.fees || []).reduce((latest, fee) =>
                 new Date(fee.createdAt) > new Date(latest.createdAt) ? fee : latest

@@ -14,7 +14,7 @@ import { ProgramDetailsSkeleton } from './_components/ProgramDetailsSkeleton'
 import { FeeStructureResponse } from '@/lib/types/api'
 import FeeStructureList from '../_components/fees/FeeStructureList'
 import FeeDetailsModal from '../_components/fees/FeeDetailsModal'
-
+import { ViewTransition } from 'react'
 import FeeStructureModal from './_components/FeeStructureModal'
 
 export interface FeeStructure {
@@ -96,49 +96,51 @@ export default function ProgramDetailsPage({ params }: { params: Promise<{ id: s
   }
 
   return (
-    <div className="flex h-full w-full flex-col gap-6">
-      <Breadcrumb
-        items={[
-          { label: 'Programs', href: '/programs' },
-          { label: program.name, href: `/programs/${program.id}` },
-        ]}
-      />
-      <div className="flex items-end justify-between gap-5">
-        <div>
-          <h1 className="text-foreground text-2xl font-bold">{program.name}</h1>
-          <p className="text-muted-foreground">
-            {program.duration} Semesters • Manage Fee Structures
-          </p>
+    <ViewTransition>
+      <div className="flex h-full w-full flex-col gap-6">
+        <Breadcrumb
+          items={[
+            { label: 'Programs', href: '/programs' },
+            { label: program.name, href: `/programs/${program.id}` },
+          ]}
+        />
+        <div className="flex items-end justify-between gap-5">
+          <div>
+            <h1 className="text-foreground text-2xl font-bold">{program.name}</h1>
+            <p className="text-muted-foreground">
+              {program.duration} Semesters • Manage Fee Structures
+            </p>
+          </div>
+          <Button variant="primary" onClick={openCreateModal}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Fee Structure
+          </Button>
         </div>
-        <Button variant="primary" onClick={openCreateModal}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Fee Structure
-        </Button>
+
+        {isFeesLoading ? (
+          <div className="flex justify-center py-8">
+            <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
+          </div>
+        ) : (
+          <FeeStructureList feeStructures={feeStructures || []} onSelect={handleSelectFee} />
+        )}
+
+        <FeeStructureModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          editingFee={editingFee}
+          setEditingFee={setEditingFee}
+          program={program}
+        />
+
+        <FeeDetailsModal
+          isOpen={isDetailsOpen}
+          onClose={() => setIsDetailsOpen(false)}
+          feeStructure={selectedFee}
+          onEdit={openEditModal}
+          onDelete={handleDelete}
+        />
       </div>
-
-      {isFeesLoading ? (
-        <div className="flex justify-center py-8">
-          <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2"></div>
-        </div>
-      ) : (
-        <FeeStructureList feeStructures={feeStructures || []} onSelect={handleSelectFee} />
-      )}
-
-      <FeeStructureModal
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        editingFee={editingFee}
-        setEditingFee={setEditingFee}
-        program={program}
-      />
-
-      <FeeDetailsModal
-        isOpen={isDetailsOpen}
-        onClose={() => setIsDetailsOpen(false)}
-        feeStructure={selectedFee}
-        onEdit={openEditModal}
-        onDelete={handleDelete}
-      />
-    </div>
+    </ViewTransition>
   )
 }

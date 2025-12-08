@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import type { StudentFull } from '@/lib/types/prisma'
+import { updateStudentSchema } from '@/app/[locale]/(root)/students/_types/schema'
+import { syncFeesForSemesterChange } from '@/app/[locale]/(root)/_services/SyncFeesForSemesterChange'
 
 // GET single student by ID
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -104,8 +106,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 }
 
-import { updateStudentSchema } from '@/app/[locale]/(root)/students/_types/schema'
-
 // UPDATE student
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -175,25 +175,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       }
     }
 
-    // Validate semester if provided (Zod handles number check, but business logic check remains)
-    if (
-      validatedData.semester !== undefined &&
-      validatedData.semester !== existingStudent.semester
-    ) {
-      const feeCount = await prisma.studentFee.count({
-        where: { studentId: id },
-      })
-
-      if (feeCount > 0) {
-        return NextResponse.json(
-          {
-            error: 'Cannot change semester because this student already has associated fees.',
-          },
-          { status: 400 }
-        )
-      }
-    }
-
     // Update student
     const updatedStudent = await prisma.student.update({
       where: { id },
@@ -213,7 +194,35 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       },
     })
 
-    return NextResponse.json(updatedStudent)
+    // Handle fee sync when semester changes
+    let feeSyncResult = null
+    if (
+      validatedData.semester !== undefined &&
+      validatedData.semester !== existingStudent.semester
+    ) {
+      feeSyncResult = await syncFeesForSemesterChange(
+        id,
+        existingStudent.semester,
+        validatedData.semester
+      )
+
+      if (!feeSyncResult.success) {
+        // Rollback student update if fee sync fails
+        await prisma.student.update({
+          where: { id },
+          data: { semester: existingStudent.semester },
+        })
+        return NextResponse.json(
+          { error: feeSyncResult.error || 'Failed to sync fees for semester change' },
+          { status: 400 }
+        )
+      }
+    }
+
+    return NextResponse.json({
+      ...updatedStudent,
+      feeSync: feeSyncResult,
+    })
   } catch (error) {
     console.error('Error updating student:', error)
     return NextResponse.json({ error: error || 'Failed to update student' }, { status: 500 })

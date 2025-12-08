@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/shared/ui/button/Button'
 import { Plus } from 'lucide-react'
 import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
+import { ViewTransition } from 'react'
 
 import ProgramContent from './_components/ProgramContent'
 
@@ -35,12 +36,14 @@ export default function ProgramsPage() {
           Add Program
         </Button>
       </div>
-      <ProgramContent
-        editingProgram={editingProgram}
-        setEditingProgram={setEditingProgram}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-      />
+      <ViewTransition>
+        <ProgramContent
+          editingProgram={editingProgram}
+          setEditingProgram={setEditingProgram}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
+      </ViewTransition>
     </div>
   )
 }

@@ -49,7 +49,7 @@ export default function EditStudentPage() {
     try {
       await updateStudentMutation.mutateAsync({
         id: studentId,
-        data: data,
+        data: { ...data, semester: Number(data.semester) },
       })
 
       setError('')

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { FeeStructure } from "@prisma/client";
+import { FeeStructure } from "@/lib/types/api";
+
 
 export async function PUT(
   req: Request,

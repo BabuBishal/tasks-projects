@@ -8,13 +8,19 @@ import {
   PaginatedResponse,
 } from '@/lib/types/api'
 
-export const getStudents = async (params?: {
+export type StudentQueryParams = {
   search?: string
   programId?: string
   semester?: string
   status?: string
   page?: number
   limit?: number
+}
+
+export const getStudents = async ({
+  params,
+}: {
+  params: StudentQueryParams
 }): Promise<PaginatedResponse<StudentResponse>> => {
   const queryParams = new URLSearchParams()
 
@@ -61,13 +67,11 @@ export const bulkDeleteStudents = async (studentIds: string[]): Promise<BulkDele
 }
 
 export const bulkImportStudents = async (file: File): Promise<BulkImportResult> => {
-  const formData = new FormData()
-  formData.append('file', file)
+  // Read file content and send as JSON
+  const csvContent = await file.text()
 
-  return await httpClient.post<BulkImportResult>(API_ROUTES.studentBulkImport, formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
+  return await httpClient.post<BulkImportResult>(API_ROUTES.studentBulkImport, {
+    csvContent,
   })
 }
 

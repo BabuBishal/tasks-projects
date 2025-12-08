@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useCallback, useMemo, memo } from 'react'
+import React, { useState, useCallback, useMemo, memo, useRef, useEffect } from 'react'
 import { Table } from '@/shared/ui/table/Table'
 import Badge from '@/shared/ui/badges/Badges'
 import { Eye, Trash2, X, ArrowRight, Pencil } from 'lucide-react'
@@ -16,6 +16,9 @@ import BulkDeleteModal from './modals/BulkDeleteModal'
 import DeleteStudentModal from './modals/DeleteStudentModal'
 import { StudentResponse } from '@/lib/types/api'
 import StudentSearch from './StudentSearch'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import getInfiniteStudentsQueryOptions from '../_hooks/query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 
 // Memoized Student Row Component
 const StudentRow = memo(
@@ -99,6 +102,86 @@ const StudentRow = memo(
 
 StudentRow.displayName = 'StudentRow'
 
+// Memoized Virtualized Row Component
+const VirtualizedStudentRow = memo(
+  ({
+    student,
+    virtualItem,
+    measureElement,
+    onEdit,
+    onDelete,
+  }: {
+    student: StudentResponse
+    virtualItem: { key: React.Key; index: number; start: number }
+    measureElement: (node: HTMLTableRowElement | null) => void
+    onEdit: (student: StudentResponse) => void
+    onDelete: (student: StudentResponse) => void
+  }) => {
+    // Memoize status badge computation
+    const statusBadge = useMemo(() => {
+      const isGraduated = student.status === 'Graduated'
+      return {
+        variant: isGraduated ? 'info' : 'success',
+        label: isGraduated ? 'Graduated' : 'Active',
+      } as const
+    }, [student.status])
+
+    // Memoize fee status badge computation
+    const feeStatusBadge = useMemo(() => {
+      const feeStatus = calculateStudentStatus(student.fees || [])
+      const variant =
+        feeStatus === 'Paid' ? 'success' : feeStatus === 'Overdue' ? 'danger' : 'warning'
+      return { variant, label: feeStatus } as const
+    }, [student.fees])
+
+    return (
+      <tr
+        key={virtualItem.key}
+        data-index={virtualItem.index}
+        ref={measureElement}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          transform: `translateY(${virtualItem.start}px)`,
+        }}
+        className="flex h-16 shadow-xs hover:bg-gray-50"
+      >
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+          {student.rollNo}
+        </td>
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-900">{student.name}</td>
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+          {student.program?.name || 'N/A'}
+        </td>
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+          {student.semester}
+        </td>
+        <td className="flex-1 px-6 py-4 whitespace-nowrap">
+          <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
+        </td>
+        <td className="flex-1 px-6 py-4 whitespace-nowrap">
+          <Badge variant={feeStatusBadge.variant}>{feeStatusBadge.label}</Badge>
+        </td>
+        <td className="flex flex-1 items-center space-x-3 px-6 py-4 text-sm font-medium whitespace-nowrap">
+          <Link href={`/students/${student.id}`}>
+            <Eye className="h-4 w-4 text-blue-600 hover:text-blue-800" />
+          </Link>
+          <button onClick={() => onEdit(student)} className="text-green-600 hover:text-green-800">
+            <Pencil className="h-4 w-4" />
+          </button>
+          <button onClick={() => onDelete(student)} className="text-red-600 hover:text-red-800">
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </td>
+      </tr>
+    )
+  }
+)
+
+VirtualizedStudentRow.displayName = 'VirtualizedStudentRow'
+
 const StudentList: React.FC = React.memo(() => {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('All')
@@ -112,7 +195,9 @@ const StudentList: React.FC = React.memo(() => {
   const [studentToEdit, setStudentToEdit] = useState<StudentResponse | null>(null)
 
   const debouncedSearch = useDebounce(searchQuery, 300)
-  const itemsPerPage = 10
+  const itemsPerPage = 20
+
+  const parentRef = useRef<HTMLTableElement>(null)
 
   const params = useMemo(
     () => ({
@@ -126,11 +211,40 @@ const StudentList: React.FC = React.memo(() => {
     [debouncedSearch, programFilter, semesterFilter, statusFilter, currentPage]
   )
 
-  const { data: response, isLoading } = useGetStudentsQuery(params)
+  // const { data: response, isLoading } = useGetStudentsQuery({ params: { ...params, limit: 100 } })
+  const {
+    data: response,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useInfiniteQuery(getInfiniteStudentsQueryOptions({ params: params }))
+
   const { data: programsData } = useGetProgramsQuery()
   const programs = programsData || []
-  const students = useMemo(() => response?.data || [], [response?.data])
-  const meta = response?.meta
+  const students = useMemo(
+    () => response?.pages?.flatMap(page => page.data) || [],
+    [response?.pages]
+  )
+  const meta = response?.pages?.[0]?.meta
+
+  const virtualizer = useVirtualizer({
+    count: students.length,
+    estimateSize: () => 65,
+    overscan: 6,
+    getScrollElement: () => parentRef.current,
+  })
+
+  const virtualItems = virtualizer.getVirtualItems()
+  const totalSize = virtualizer.getTotalSize()
+
+  useEffect(() => {
+    const lastItem = virtualItems[virtualItems.length - 1]
+    if (!hasNextPage || isFetchingNextPage || !lastItem) return
+    if (lastItem && lastItem.index >= students.length - 1 && hasNextPage) {
+      fetchNextPage()
+    }
+  }, [hasNextPage, isFetchingNextPage, virtualItems])
 
   const handleSelectStudent = useCallback((studentId: string) => {
     setSelectedStudentIds(prev =>
@@ -158,10 +272,6 @@ const StudentList: React.FC = React.memo(() => {
     setStudentToEdit(student)
   }, [])
 
-  if (isLoading && !response) {
-    return <TableSkeleton columnCount={6} rowCount={10} />
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <div className="border-border bg-card flex flex-col gap-4 rounded-lg border p-6">
@@ -169,7 +279,9 @@ const StudentList: React.FC = React.memo(() => {
           <div className="flex flex-col">
             <span className="text-secondary text-sm">Student List</span>
             <span className="text-muted text-xs">
-              Showing {students.length} of {meta?.total || 0} students
+              {isLoading
+                ? 'Loading...'
+                : `Showing ${students.length} of ${meta?.total || 0} students`}
             </span>
           </div>
         </div>
@@ -220,56 +332,130 @@ const StudentList: React.FC = React.memo(() => {
           </div>
         )}
 
-        {students.length === 0 ? (
+        {isLoading && !response ? (
+          <TableSkeleton columnCount={7} rowCount={10} />
+        ) : students.length === 0 ? (
           <div className="text-muted py-10 text-center">
             <p>No students found matching your criteria.</p>
           </div>
         ) : (
-          <Table
-            key={`${searchQuery}-${statusFilter}`}
-            className="text-secondary rounded-md text-xs"
-            pagination={{
-              pageSize: itemsPerPage,
-              total: meta?.total || 0,
-              onPageChange: setCurrentPage,
-            }}
-          >
-            <Table.Header>
-              <Table.Row>
-                <Table.Head>
-                  <input
-                    type="checkbox"
-                    checked={selectedStudentIds.length === students.length}
-                    onChange={handleSelectAll}
-                    className="cursor-pointer"
-                  />
-                </Table.Head>
-                <Table.Head>Roll No</Table.Head>
-                <Table.Head>Name</Table.Head>
-                <Table.Head>Program</Table.Head>
-                <Table.Head>Semester</Table.Head>
-                <Table.Head>Status</Table.Head>
-                <Table.Head>Total Paid</Table.Head>
-                <Table.Head>Actions</Table.Head>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {students.map((student: StudentResponse) => (
-                <StudentRow
-                  key={student.id}
-                  student={student}
-                  isSelected={selectedStudentIds.includes(student.id)}
-                  onSelect={handleSelectStudent}
-                  onEdit={handleEditClick}
-                  onDelete={handleDeleteClick}
-                />
-              ))}
-            </Table.Body>
-          </Table>
+          // <Table
+          //   key={`${searchQuery}-${statusFilter}`}
+          //   className="text-secondary rounded-md text-xs"
+          //   pagination={{
+          //     pageSize: itemsPerPage,
+          //     total: meta?.total || 0,
+          //     onPageChange: setCurrentPage,
+          //   }}
+          // >
+          //   <Table.Header>
+          //     <Table.Row>
+          //       <Table.Head>
+          //         <input
+          //           type="checkbox"
+          //           checked={selectedStudentIds.length === students.length}
+          //           onChange={handleSelectAll}
+          //           className="cursor-pointer"
+          //         />
+          //       </Table.Head>
+          //       <Table.Head>Roll No</Table.Head>
+          //       <Table.Head>Name</Table.Head>
+          //       <Table.Head>Program</Table.Head>
+          //       <Table.Head>Semester</Table.Head>
+          //       <Table.Head>Status</Table.Head>
+          //       <Table.Head>Total Paid</Table.Head>
+          //       <Table.Head>Actions</Table.Head>
+          //     </Table.Row>
+          //   </Table.Header>
+          //   <Table.Body>
+          //     {students.map((student: StudentResponse) => (
+          //       <StudentRow
+          //         key={student.id}
+          //         student={student}
+          //         isSelected={selectedStudentIds.includes(student.id)}
+          //         onSelect={handleSelectStudent}
+          //         onEdit={handleEditClick}
+          //         onDelete={handleDeleteClick}
+          //       />
+          //     ))}
+          //   </Table.Body>
+          // </Table>
+          <div className="relative overflow-hidden rounded-lg border">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="sticky top-0 z-10 bg-gray-50">
+                  <tr className="flex h-16">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                      Roll No
+                    </th>
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                      Name
+                    </th>
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                      Program
+                    </th>
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                      Semester
+                    </th>
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                      Status
+                    </th>
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                      Fee Status
+                    </th>
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+
+            <div
+              ref={parentRef}
+              className="overflow-auto"
+              style={{ height: '600px' }} // Set fixed height for scrolling
+            >
+              <table className="min-w-full divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {/* Spacer for virtual scroll */}
+                  <tr style={{ height: `${totalSize}px` }}>
+                    <td style={{ position: 'relative' }}>
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                        }}
+                      >
+                        <table className="min-w-full">
+                          <tbody>
+                            {virtualItems.map(virtualItem => {
+                              const student = students[virtualItem.index]
+                              return (
+                                <VirtualizedStudentRow
+                                  key={virtualItem.key}
+                                  student={student}
+                                  virtualItem={virtualItem}
+                                  measureElement={virtualizer.measureElement}
+                                  onEdit={handleEditClick}
+                                  onDelete={handleDeleteClick}
+                                />
+                              )
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* Modals moved outside the loop */}
       <PromoteSemesterModal
         isOpen={isPromoteModalOpen}
         onClose={() => setIsPromoteModalOpen(false)}

@@ -136,7 +136,7 @@ export default function AlertsNotifications() {
                 </div>
               ))}
             {alerts && alerts.length > 5 && (
-              <Link href="/overdue" className="block">
+              <Link href="/payments/overdue" className="block">
                 <Button variant="secondary" className="mt-2 w-full">
                   {t('viewAll')} ({alerts.length})
                 </Button>

@@ -76,7 +76,7 @@ const QuickStats = ({
               </div>
               <p className="text-muted text-sm font-medium">{t('programDistribution')}</p>
             </div>
-            {/* <div className="h-[200px] w-full">
+            <div className="h-[200px] w-full">
               {programDistribution.length > 0 ? (
                 <Piechart programDistribution={programDistribution} />
               ) : (
@@ -84,7 +84,7 @@ const QuickStats = ({
                   No data
                 </div>
               )}
-            </div> */}
+            </div>
             {/* Legend */}
             <div className="flex flex-wrap gap-2 text-xs">
               {programDistribution.slice(0, 4).map((prog, idx) => (
