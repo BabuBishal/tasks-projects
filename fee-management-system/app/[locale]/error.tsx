@@ -12,27 +12,23 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error('Application error:', error)
   }, [error])
 
   return (
     <div className="bg-background flex min-h-screen flex-col items-center justify-center px-4">
       <div className="text-center">
-        {/* Error Icon */}
         <div className="mb-6 flex justify-center">
           <div className="bg-danger-bg rounded-full p-4">
             <AlertTriangle className="text-danger-text h-12 w-12" />
           </div>
         </div>
 
-        {/* Message */}
         <h1 className="text-secondary mb-3 text-3xl font-bold">Something went wrong!</h1>
         <p className="text-muted mb-2 max-w-md text-lg">
           An unexpected error occurred. We&apos;ve been notified and are working to fix it.
         </p>
 
-        {/* Error Details (Development Only) */}
         {process.env.NODE_ENV === 'development' && (
           <details className="mb-6 max-w-lg text-left">
             <summary className="text-muted hover:text-secondary cursor-pointer text-sm">
@@ -45,7 +41,6 @@ export default function Error({
           </details>
         )}
 
-        {/* Action Buttons */}
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <button
             onClick={reset}
@@ -63,7 +58,6 @@ export default function Error({
           </Link>
         </div>
 
-        {/* Error Digest */}
         {error.digest && (
           <p className="text-muted mt-6 text-xs">
             Error ID: <code className="bg-accent rounded px-1 py-0.5">{error.digest}</code>

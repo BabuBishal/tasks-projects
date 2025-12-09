@@ -7,21 +7,18 @@ export default function NotFound() {
   return (
     <div className="bg-background flex min-h-screen flex-col items-center justify-center px-4">
       <div className="text-center">
-        {/* 404 Number */}
         <div className="relative mb-8">
-          <span className="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-[10rem] leading-none font-bold text-transparent">
+          <span className="bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-[10rem] leading-none font-bold text-transparent">
             404
           </span>
-          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-30 blur-3xl" />
+          <div className="absolute inset-0 bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 opacity-30 blur-3xl" />
         </div>
 
-        {/* Message */}
         <h1 className="text-secondary mb-3 text-3xl font-bold">Page Not Found</h1>
         <p className="text-muted mb-8 max-w-md text-lg">
           Oops! The page you&apos;re looking for doesn&apos;t exist or has been moved.
         </p>
 
-        {/* Action Buttons */}
         <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
           <button
             onClick={() => window.history.back()}
@@ -40,10 +37,9 @@ export default function NotFound() {
         </div>
       </div>
 
-      {/* Decorative Elements */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-1/2 -left-1/2 h-full w-full rounded-full bg-gradient-to-br from-indigo-500/10 to-transparent blur-3xl" />
-        <div className="absolute -right-1/2 -bottom-1/2 h-full w-full rounded-full bg-gradient-to-tl from-purple-500/10 to-transparent blur-3xl" />
+        <div className="absolute -top-1/2 -left-1/2 h-full w-full rounded-full bg-linear-to-br from-indigo-500/10 to-transparent blur-3xl" />
+        <div className="absolute -right-1/2 -bottom-1/2 h-full w-full rounded-full bg-linear-to-tl from-purple-500/10 to-transparent blur-3xl" />
       </div>
     </div>
   )

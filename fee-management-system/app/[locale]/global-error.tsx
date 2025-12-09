@@ -10,7 +10,6 @@ export default function GlobalError({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error('Global application error:', error)
   }, [error])
 
@@ -31,7 +30,6 @@ export default function GlobalError({
           margin: 0,
         }}
       >
-        {/* Error Icon */}
         <div
           style={{
             width: '80px',
