@@ -14,93 +14,96 @@ import PromoteSemesterModal from './modals/PromoteSemesterModal'
 import EditStudentModal from './modals/EditStudentModal'
 import BulkDeleteModal from './modals/BulkDeleteModal'
 import DeleteStudentModal from './modals/DeleteStudentModal'
-import { StudentResponse } from '@/lib/types/api'
+import { StudentResponse, UserProfile } from '@/lib/types/api'
 import StudentSearch from './StudentSearch'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import getInfiniteStudentsQueryOptions from '../_hooks/query'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { useProfileQuery } from '../../profile/_hooks'
+import { checkPermissions } from '@/permissions/authorization'
+import { usePermission } from '@/hooks/usePermission'
 
 // Memoized Student Row Component
-const StudentRow = memo(
-  ({
-    student,
-    isSelected,
-    onSelect,
-    onEdit,
-    onDelete,
-  }: {
-    student: StudentResponse
-    isSelected: boolean
-    onSelect: (id: string) => void
-    onEdit: (student: StudentResponse) => void
-    onDelete: (student: StudentResponse) => void
-  }) => {
-    // Memoize expensive calculations
-    const feeStatus = useMemo(
-      () =>
-        student.status === 'Graduated' ? 'Graduated' : calculateStudentStatus(student.fees || []),
-      [student.status, student.fees]
-    )
+// const StudentRow = memo(
+//   ({
+//     student,
+//     isSelected,
+//     onSelect,
+//     onEdit,
+//     onDelete,
+//   }: {
+//     student: StudentResponse
+//     isSelected: boolean
+//     onSelect: (id: string) => void
+//     onEdit: (student: StudentResponse) => void
+//     onDelete: (student: StudentResponse) => void
+//   }) => {
+//     // Memoize expensive calculations
+//     const feeStatus = useMemo(
+//       () =>
+//         student.status === 'Graduated' ? 'Graduated' : calculateStudentStatus(student.fees || []),
+//       [student.status, student.fees]
+//     )
 
-    const totalPaid = useMemo(
-      () =>
-        student.totalPaid ?? (student.fees || []).reduce((sum: number, fee) => sum + fee.paid, 0),
-      [student.totalPaid, student.fees]
-    )
+//     const totalPaid = useMemo(
+//       () =>
+//         student.totalPaid ?? (student.fees || []).reduce((sum: number, fee) => sum + fee.paid, 0),
+//       [student.totalPaid, student.fees]
+//     )
 
-    const badgeVariant = useMemo(() => {
-      if (feeStatus === 'Paid') return 'success'
-      if (feeStatus === 'Overdue') return 'danger'
-      return 'warning'
-    }, [feeStatus])
+//     const badgeVariant = useMemo(() => {
+//       if (feeStatus === 'Paid') return 'success'
+//       if (feeStatus === 'Overdue') return 'danger'
+//       return 'warning'
+//     }, [feeStatus])
 
-    return (
-      <Table.Row>
-        <Table.Cell data-label="">
-          <input
-            type="checkbox"
-            checked={isSelected}
-            onChange={() => onSelect(student.id)}
-            className="cursor-pointer"
-          />
-        </Table.Cell>
-        <Table.Cell data-label="Roll No">{student.rollNo}</Table.Cell>
-        <Table.Cell data-label="Name">{student.name}</Table.Cell>
-        <Table.Cell data-label="Program">{student.program?.name || 'N/A'}</Table.Cell>
-        <Table.Cell data-label="Semester">{student.semester}</Table.Cell>
-        <Table.Cell data-label="Status">
-          <Badge variant={badgeVariant}>{feeStatus}</Badge>
-        </Table.Cell>
-        <Table.Cell data-label="Total Paid">Rs. {totalPaid?.toLocaleString()}</Table.Cell>
-        <Table.Cell data-label="Actions">
-          <div className="flex items-center gap-2">
-            <Link href={`/students/${student.id}`}>
-              <Eye className="h-4 w-4 text-blue-600 hover:text-blue-800" />
-            </Link>
+//     return (
+//       <Table.Row>
+//         <Table.Cell data-label="">
+//           <input
+//             type="checkbox"
+//             checked={isSelected}
+//             onChange={() => onSelect(student.id)}
+//             className="cursor-pointer"
+//           />
+//         </Table.Cell>
+//         <Table.Cell data-label="Roll No">{student.rollNo}</Table.Cell>
+//         <Table.Cell data-label="Name">{student.name}</Table.Cell>
+//         <Table.Cell data-label="Program">{student.program?.name || 'N/A'}</Table.Cell>
+//         <Table.Cell data-label="Semester">{student.semester}</Table.Cell>
+//         <Table.Cell data-label="Status">
+//           <Badge variant={badgeVariant}>{feeStatus}</Badge>
+//         </Table.Cell>
+//         <Table.Cell data-label="Total Paid">Rs. {totalPaid?.toLocaleString()}</Table.Cell>
+//         <Table.Cell data-label="Actions">
+//           <div className="flex items-center gap-2">
+//             <Link href={`/students/${student.id}`}>
+//               <Eye className="h-4 w-4 text-blue-600 hover:text-blue-800" />
+//             </Link>
 
-            {/* Edit Button */}
-            <button
-              onClick={() => onEdit(student)}
-              className="cursor-pointer text-green-600 hover:text-green-800"
-            >
-              <Pencil className="h-4 w-4" />
-            </button>
+//             {/* Edit Button */}
+//             <button
+//               onClick={() => onEdit(student)}
+//               className="cursor-pointer text-green-600 hover:text-green-800"
+//             >
+//               <Pencil className="h-4 w-4" />
+//             </button>
 
-            {/* Delete Button */}
-            <button
-              onClick={() => onDelete(student)}
-              className="cursor-pointer text-red-600 hover:text-red-800"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          </div>
-        </Table.Cell>
-      </Table.Row>
-    )
-  }
-)
+//             {/* Delete Button */}
+//             <button
+//               onClick={() => onDelete(student)}
+//               className="cursor-pointer text-red-600 hover:text-red-800"
+//             >
+//               <Trash2 className="h-4 w-4" />
+//             </button>
+//           </div>
+//         </Table.Cell>
+//       </Table.Row>
+//     )
+//   }
+// )
 
-StudentRow.displayName = 'StudentRow'
+// StudentRow.displayName = 'StudentRow'
 
 // Memoized Virtualized Row Component
 const VirtualizedStudentRow = memo(
@@ -110,12 +113,14 @@ const VirtualizedStudentRow = memo(
     measureElement,
     onEdit,
     onDelete,
+    canUserDelete,
   }: {
     student: StudentResponse
     virtualItem: { key: React.Key; index: number; start: number }
     measureElement: (node: HTMLTableRowElement | null) => void
     onEdit: (student: StudentResponse) => void
     onDelete: (student: StudentResponse) => void
+    canUserDelete: boolean
   }) => {
     // Memoize status badge computation
     const statusBadge = useMemo(() => {
@@ -171,9 +176,11 @@ const VirtualizedStudentRow = memo(
           <button onClick={() => onEdit(student)} className="text-green-600 hover:text-green-800">
             <Pencil className="h-4 w-4" />
           </button>
-          <button onClick={() => onDelete(student)} className="text-red-600 hover:text-red-800">
-            <Trash2 className="h-4 w-4" />
-          </button>
+          {canUserDelete && (
+            <button onClick={() => onDelete(student)} className="text-red-600 hover:text-red-800">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </td>
       </tr>
     )
@@ -193,6 +200,8 @@ const StudentList: React.FC = React.memo(() => {
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false)
   const [studentToDelete, setStudentToDelete] = useState<StudentResponse | null>(null)
   const [studentToEdit, setStudentToEdit] = useState<StudentResponse | null>(null)
+
+  const canUserDelete = usePermission('delete', 'students')
 
   const debouncedSearch = useDebounce(searchQuery, 300)
   const itemsPerPage = 20
@@ -244,21 +253,21 @@ const StudentList: React.FC = React.memo(() => {
     if (lastItem && lastItem.index >= students.length - 1 && hasNextPage) {
       fetchNextPage()
     }
-  }, [hasNextPage, isFetchingNextPage, virtualItems])
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, virtualItems])
 
-  const handleSelectStudent = useCallback((studentId: string) => {
-    setSelectedStudentIds(prev =>
-      prev.includes(studentId) ? prev.filter(id => id !== studentId) : [...prev, studentId]
-    )
-  }, [])
+  // const handleSelectStudent = useCallback((studentId: string) => {
+  //   setSelectedStudentIds(prev =>
+  //     prev.includes(studentId) ? prev.filter(id => id !== studentId) : [...prev, studentId]
+  //   )
+  // }, [])
 
-  const handleSelectAll = useCallback(() => {
-    if (selectedStudentIds.length === students.length) {
-      setSelectedStudentIds([])
-    } else {
-      setSelectedStudentIds(students.map((s: StudentResponse) => s.id))
-    }
-  }, [selectedStudentIds.length, students])
+  // const handleSelectAll = useCallback(() => {
+  //   if (selectedStudentIds.length === students.length) {
+  //     setSelectedStudentIds([])
+  //   } else {
+  //     setSelectedStudentIds(students.map((s: StudentResponse) => s.id))
+  //   }
+  // }, [selectedStudentIds.length, students])
 
   const clearSelection = useCallback(() => {
     setSelectedStudentIds([])
@@ -441,6 +450,7 @@ const StudentList: React.FC = React.memo(() => {
                                   measureElement={virtualizer.measureElement}
                                   onEdit={handleEditClick}
                                   onDelete={handleDeleteClick}
+                                  canUserDelete={canUserDelete}
                                 />
                               )
                             })}

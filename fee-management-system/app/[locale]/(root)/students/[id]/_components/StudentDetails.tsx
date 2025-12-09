@@ -18,6 +18,7 @@ import {
   usePromoteSemesterMutation,
 } from '@/app/[locale]/(root)/students/_hooks'
 import { handleDownloadFeeRecord } from '@/lib/utils/fee-records-download'
+import { usePermission } from '@/hooks/usePermission'
 
 interface StudentDetailsProps {
   id: string
@@ -31,6 +32,7 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
   const { mutateAsync: promoteMutation, isPending: promoteLoading } = usePromoteSemesterMutation()
   const { data: student, isLoading, error } = useGetStudentByIdQuery(id)
 
+  const canUserDelete = usePermission('delete', 'students')
   const handleDelete = useCallback(async () => {
     try {
       await deleteStudent(id)
@@ -136,25 +138,32 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
             <Pencil className="h-4 w-4" />
             Edit
           </Button>
-          <Modal>
-            <Modal.Trigger className="flex items-center justify-center gap-2 rounded-sm bg-red-600! p-2 text-white! transition-all hover:-translate-y-px hover:bg-red-500 dark:bg-red-400">
-              <Trash2 className="h-4 w-4" />
-              <span>Delete</span>
-            </Modal.Trigger>
-            <Modal.Content>
-              <Modal.Header>Confirm Deletion</Modal.Header>
-              <Modal.Body>
-                Are you sure you want to delete this student? This action cannot be undone.
-              </Modal.Body>
-              <Modal.Footer>
-                <Modal.Close className="w-fit! hover:-translate-y-px">Cancel</Modal.Close>
-                <Button variant="danger" size="md" onClick={handleDelete} disabled={deleteLoading}>
-                  <Trash2 className="h-4 w-4" />
-                  {deleteLoading ? 'Deleting...' : 'Delete'}
-                </Button>
-              </Modal.Footer>
-            </Modal.Content>
-          </Modal>
+          {canUserDelete && (
+            <Modal>
+              <Modal.Trigger className="flex items-center justify-center gap-2 rounded-sm bg-red-600! p-2 text-white! transition-all hover:-translate-y-px hover:bg-red-500 dark:bg-red-400">
+                <Trash2 className="h-4 w-4" />
+                <span>Delete</span>
+              </Modal.Trigger>
+              <Modal.Content>
+                <Modal.Header>Confirm Deletion</Modal.Header>
+                <Modal.Body>
+                  Are you sure you want to delete this student? This action cannot be undone.
+                </Modal.Body>
+                <Modal.Footer>
+                  <Modal.Close className="w-fit! hover:-translate-y-px">Cancel</Modal.Close>
+                  <Button
+                    variant="danger"
+                    size="md"
+                    onClick={handleDelete}
+                    disabled={deleteLoading}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    {deleteLoading ? 'Deleting...' : 'Delete'}
+                  </Button>
+                </Modal.Footer>
+              </Modal.Content>
+            </Modal>
+          )}
         </div>
       </div>
 

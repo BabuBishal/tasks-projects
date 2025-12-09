@@ -5,23 +5,26 @@ import { Button } from '@/shared/ui/button/Button'
 import { Breadcrumb } from '@/shared/ui/breadcrumb/Breadcrumb'
 import { SettingsSkeleton } from './_components/SettingsSkeleton'
 import { useSettingsQuery } from '@/app/[locale]/(root)/settings/_hooks'
-import { useProfileQuery } from '@/app/[locale]/(root)/profile/_hooks'
 import SettingsForm from './_components/SettingsForm'
+import { usePermission } from '@/hooks/usePermission'
 
 export default function SettingsPage() {
   const router = useRouter()
 
   const { data: settings, isLoading: settingsLoading } = useSettingsQuery()
-  const { data: profileData } = useProfileQuery()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isAdmin = (profileData as any)?.profile?.role === 'Admin'
+  // const isAdmin = (profileData as any)?.profile?.role === 'Admin'
+
+  // checking for permissions
+  const isUserAllowed = usePermission('view', 'settings')
+  console.log(isUserAllowed)
 
   if (settingsLoading) {
     return <SettingsSkeleton />
   }
 
-  if (!isAdmin) {
+  if (!isUserAllowed) {
     return (
       <div className="flex h-full w-full flex-col gap-6">
         <Breadcrumb items={[{ label: 'Settings', href: '/settings' }]} />

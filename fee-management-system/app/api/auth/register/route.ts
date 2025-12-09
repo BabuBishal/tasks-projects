@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         password: hashedPassword,
         profile: {
           create: {
-            role: 'Staff', // Default role for new registrations
+            role: 'staff', // Default role for new registrations
           },
         },
       },
