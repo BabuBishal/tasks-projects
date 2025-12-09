@@ -42,7 +42,7 @@ export async function GET() {
 
     // Pending amount (total balance from all student fees)
     const allFees = await prisma.studentFee.findMany();
-    const pendingAmount = allFees.reduce((sum, fee) => sum + fee.balance, 0);
+    const pendingAmount = allFees.reduce((sum: number, fee: (typeof allFees)[number]) => sum + fee.balance, 0);
 
     // Payment success rate (payments made before or on due date)
     const allPayments = await prisma.payment.findMany({

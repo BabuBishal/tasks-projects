@@ -88,7 +88,9 @@ export async function GET(req: NextRequest) {
 
     // Filter by status (client-side since it's calculated)
     const filteredPayments = status
-      ? paymentHistory.filter(p => p.status.toLowerCase() === status.toLowerCase())
+      ? paymentHistory.filter(
+          (p: (typeof paymentHistory)[number]) => p.status.toLowerCase() === status.toLowerCase()
+        )
       : paymentHistory
 
     // Calculate total before pagination
@@ -99,19 +101,22 @@ export async function GET(req: NextRequest) {
     const paginatedPayments = filteredPayments.slice(skip, skip + limit)
 
     // Calculate stats from paginated data
-    const totalAmount = paginatedPayments.reduce((sum, payment) => sum + payment.amount, 0)
+    const totalAmount = paginatedPayments.reduce(
+      (sum: number, payment: (typeof paginatedPayments)[number]) => sum + payment.amount,
+      0
+    )
     const totalPayments = paginatedPayments.length
 
     // Calculate today's payments
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const todayPayments = paginatedPayments
-      .filter(p => {
+      .filter((p: (typeof paginatedPayments)[number]) => {
         const paymentDate = new Date(p.date)
         paymentDate.setHours(0, 0, 0, 0)
         return paymentDate.getTime() === today.getTime()
       })
-      .reduce((sum, p) => sum + p.amount, 0)
+      .reduce((sum: number, p: (typeof paginatedPayments)[number]) => sum + p.amount, 0)
 
     return NextResponse.json({
       data: paginatedPayments,
