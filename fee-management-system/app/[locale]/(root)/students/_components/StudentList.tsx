@@ -339,7 +339,7 @@ const StudentList: React.FC = React.memo(() => {
             <p>No students found matching your criteria.</p>
           </div>
         ) : (
-          // <Table
+          // <Table4
           //   key={`${searchQuery}-${statusFilter}`}
           //   className="text-secondary rounded-md text-xs"
           //   pagination={{
@@ -379,7 +379,7 @@ const StudentList: React.FC = React.memo(() => {
           //       />
           //     ))}
           //   </Table.Body>
-          // </Table>
+          // </Table4>
           <div className="relative overflow-hidden rounded-lg border">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">

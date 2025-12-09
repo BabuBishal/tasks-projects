@@ -11,6 +11,7 @@ export const useGetDashboardStatsQuery = () => {
     gcTime: 20 * 60 * 1000, // 20 minutes
     retry: 2,
     refetchOnWindowFocus: false,
+
     placeholderData: (previousData: DashboardData | undefined) => previousData,
   })
 }

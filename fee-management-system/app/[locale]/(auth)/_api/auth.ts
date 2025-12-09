@@ -6,11 +6,23 @@ import { LoginFormData, RegisterFormData } from '@/lib/schemas/auth.schema'
 import { LoginResponse, RegisterResponse } from '../../../../lib/types/api'
 
 export const loginUser = async (data: LoginFormData): Promise<LoginResponse> => {
-  return (await signIn('credentials', {
+  const result = await signIn('credentials', {
     redirect: false,
     email: data.email,
     password: data.password,
-  })) as LoginResponse
+  })
+
+  if (result?.error) {
+    throw new Error(
+      result.error === 'CredentialsSignin' ? 'Invalid email or password' : result.error
+    )
+  }
+
+  if (!result?.ok) {
+    throw new Error('Login failed')
+  }
+
+  return result as unknown as LoginResponse
 }
 
 export const registerUser = async (data: RegisterFormData): Promise<RegisterResponse> => {

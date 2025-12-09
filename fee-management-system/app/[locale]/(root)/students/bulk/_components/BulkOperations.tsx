@@ -26,7 +26,7 @@ export default function BulkOperations() {
   const router = useRouter()
 
   const bulkImportMutation = useBulkImportStudentsMutation()
-  const { data } = useGetStudentsQuery()
+  const { data } = useGetStudentsQuery({})
   const allStudents = data?.data ?? []
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
