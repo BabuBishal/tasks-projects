@@ -1,6 +1,5 @@
 import { prisma } from '@/lib/prisma'
 import { assignFeeForSemester } from '@/lib/utils/fee-assignment'
-import { StudentFee } from '@prisma/client'
 
 export async function syncFeesForSemesterChange(
   studentId: string,
