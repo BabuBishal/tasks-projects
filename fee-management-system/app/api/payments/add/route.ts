@@ -1,27 +1,27 @@
 // app/api/payments/add/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { calculateFeeStatus } from "@/lib/utils/status-utils";
-import { generateReceiptNumber } from "@/lib/utils/utils";
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { calculateFeeStatus, FeeStatus } from '@/lib/utils/status-utils'
+import { generateReceiptNumber } from '@/lib/utils/utils'
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { studentId, amount, method, selectedFeeIds } = body;
+    const body = await req.json()
+    const { studentId, amount, method, selectedFeeIds } = body
 
     // Validation
     if (!studentId || !amount || !method) {
       return NextResponse.json(
-        { error: "Missing required fields: studentId, amount, method" },
+        { error: 'Missing required fields: studentId, amount, method' },
         { status: 400 }
-      );
+      )
     }
 
     if (!selectedFeeIds || selectedFeeIds.length === 0) {
       return NextResponse.json(
-        { error: "Please select at least one semester to pay" },
+        { error: 'Please select at least one semester to pay' },
         { status: 400 }
-      );
+      )
     }
 
     // Verify student exists
@@ -32,31 +32,27 @@ export async function POST(req: NextRequest) {
           where: {
             id: { in: selectedFeeIds },
           },
-          orderBy: [{ academicYear: "asc" }, { createdAt: "asc" }],
+          orderBy: [{ academicYear: 'asc' }, { createdAt: 'asc' }],
         },
       },
-    });
+    })
 
     if (!student) {
-      return NextResponse.json({ error: "Student not found" }, { status: 404 });
+      return NextResponse.json({ error: 'Student not found' }, { status: 404 })
     }
 
     if (student.fees.length === 0) {
       return NextResponse.json(
-        { error: "No valid fees found for the selected semesters" },
+        { error: 'No valid fees found for the selected semesters' },
         { status: 404 }
-      );
+      )
     }
 
     // Calculate total balance from selected fees
     const totalBalance = student.fees.reduce(
-      (sum, fee) => sum + fee.balance,
+      (sum: number, fee: (typeof student.fees)[number]) => sum + fee.balance,
       0
-    );
-    console.log("student", student);
-
-    console.log("totalBalance", totalBalance);
-    console.log("amount", amount);
+    )
 
     if (amount > totalBalance) {
       return NextResponse.json(
@@ -64,34 +60,34 @@ export async function POST(req: NextRequest) {
           error: `Payment amount (Rs. ${amount}) exceeds total balance (Rs. ${totalBalance})`,
         },
         { status: 400 }
-      );
+      )
     }
 
     // Generate unique receipt number using centralized function
-    const receiptNo = generateReceiptNumber();
+    const receiptNo = generateReceiptNumber()
 
     // Distribute payment across selected fees
-    let remainingAmount = amount;
-    const updatedFees = [];
-    const paymentRecords = [];
+    let remainingAmount = amount
+    const updatedFees = []
+    const paymentRecords = []
 
     for (const fee of student.fees) {
-      if (remainingAmount <= 0) break;
+      if (remainingAmount <= 0) break
 
       // Calculate how much to pay for this fee
-      const paymentForThisFee = Math.min(remainingAmount, fee.balance);
-      const newPaid = fee.paid + paymentForThisFee;
-      const newBalance = fee.balance - paymentForThisFee;
-      console.log("newBalance", newBalance);
+      const paymentForThisFee = Math.min(remainingAmount, fee.balance)
+      const newPaid = fee.paid + paymentForThisFee
+      const newBalance = fee.balance - paymentForThisFee
+      console.log('newBalance', newBalance)
 
       // Use centralized status calculation
-      const newStatus = calculateFeeStatus({
+      const newStatus: FeeStatus = calculateFeeStatus({
         balance: newBalance,
         paid: newPaid,
         payableFee: fee.payableFee,
         dueDate: fee.dueDate,
-      });
-      console.log("status", newStatus);
+      })
+      // console.log('status', newStatus)
 
       // Update the fee record
       const updatedFee = await prisma.studentFee.update({
@@ -108,9 +104,9 @@ export async function POST(req: NextRequest) {
             },
           },
         },
-      });
+      })
 
-      updatedFees.push(updatedFee);
+      updatedFees.push(updatedFee)
 
       // Create payment record for this fee
       const payment = await prisma.payment.create({
@@ -121,23 +117,23 @@ export async function POST(req: NextRequest) {
           receiptNo: `${receiptNo}-${updatedFees.length}`, // Unique receipt per fee
           date: new Date(),
         },
-      });
+      })
 
-      paymentRecords.push(payment);
+      paymentRecords.push(payment)
 
       // Reduce remaining amount
-      remainingAmount -= paymentForThisFee;
+      remainingAmount -= paymentForThisFee
     }
 
     // Return success response with details
     return NextResponse.json(
       {
-        message: "Payment processed successfully",
+        message: 'Payment processed successfully',
         receiptNo: receiptNo,
         totalPaid: amount,
         feesUpdated: updatedFees.length,
         payments: paymentRecords,
-        updatedFees: updatedFees.map((fee) => ({
+        updatedFees: updatedFees.map(fee => ({
           id: fee.id,
           academicYear: fee.academicYear,
           semesterNo: fee.feeStructure.programSemester.semesterNo,
@@ -147,13 +143,13 @@ export async function POST(req: NextRequest) {
         })),
       },
       { status: 201 }
-    );
+    )
   } catch (error) {
-    console.error("Error processing payment:", error);
-    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Error processing payment:', error)
+    const errorMessage = error instanceof Error ? error.message : String(error)
     return NextResponse.json(
-      { error: "Failed to process payment", details: errorMessage },
+      { error: 'Failed to process payment', details: errorMessage },
       { status: 500 }
-    );
+    )
   }
 }
