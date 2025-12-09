@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { assignFeeForSemester } from '@/lib/utils/fee-assignment'
+import { StudentFee } from '@prisma/client'
 
 export async function syncFeesForSemesterChange(
   studentId: string,
@@ -53,7 +54,9 @@ export async function syncFeesForSemesterChange(
       })
 
       // Check if any of these fees have payments
-      const feesWithPayments = feesToRemove.filter(fee => fee.payments.length > 0)
+      const feesWithPayments = feesToRemove.filter(
+        (fee: (typeof feesToRemove)[0]) => fee.payments.length > 0
+      )
 
       if (feesWithPayments.length > 0) {
         return {
