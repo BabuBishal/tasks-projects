@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "npx prisma db seed",
+    "postinstall": "prisma generate || true",
     "migrate:passwords": "tsx scripts/migrate-passwords.ts"
   },
   "prisma": {
