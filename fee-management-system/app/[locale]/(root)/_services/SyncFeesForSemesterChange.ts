@@ -68,7 +68,7 @@ export async function syncFeesForSemesterChange(
       const deleted = await prisma.studentFee.deleteMany({
         where: {
           id: {
-            in: feesToRemove.map(f => f.id),
+            in: feesToRemove.map((f: (typeof feesToRemove)[0]) => f.id),
           },
         },
       })
