@@ -1,9 +1,9 @@
 import { useSession } from 'next-auth/react'
-import { checkPermissions } from '@/permissions/authorization'
+import { checkPermissions } from '@/lib/utils/checkPermissions'
 
 export const usePermission = (action: string, resource: string) => {
-  const { data: session } = useSession()
-
+  const { data: session, status } = useSession()
+  if (status === 'loading') return undefined
   const user = session?.user
   if (!user) return false
 
