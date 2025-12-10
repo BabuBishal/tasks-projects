@@ -251,8 +251,6 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
       return NextResponse.json({ error: 'Student not found' }, { status: 404 })
     }
 
-    console.log(' std', student)
-
     // Check if student has any fees/payments
     if (student.fees[0].balance > 0) {
       return NextResponse.json(

@@ -7,7 +7,6 @@ import type { ProfileResponse, UpdateProfileResponse } from '@/lib/types/api'
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
-    console.log(session, 'session')
     if (!session || !session.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

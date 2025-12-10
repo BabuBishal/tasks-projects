@@ -256,10 +256,6 @@ export async function POST(req: NextRequest) {
       dueDate: dueDate,
     })
 
-    console.log(
-      `Creating student in Semester ${studentSemester} with ${studentFeesToCreate.length} fee records`
-    )
-
     // Validation: Ensure at least one fee was created
     if (studentFeesToCreate.length === 0) {
       return NextResponse.json(

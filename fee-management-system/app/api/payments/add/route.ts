@@ -78,7 +78,6 @@ export async function POST(req: NextRequest) {
       const paymentForThisFee = Math.min(remainingAmount, fee.balance)
       const newPaid = fee.paid + paymentForThisFee
       const newBalance = fee.balance - paymentForThisFee
-      console.log('newBalance', newBalance)
 
       // Use centralized status calculation
       const newStatus: FeeStatus = calculateFeeStatus({

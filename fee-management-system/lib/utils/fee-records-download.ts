@@ -17,7 +17,6 @@ export const handleDownloadFeeRecord = ({
   totalScholarships: number
 }) => {
   if (!student) return
-  console.log(student)
   const doc = new jsPDF()
 
   const pageWidth = doc.internal.pageSize.getWidth()

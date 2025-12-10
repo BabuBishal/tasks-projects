@@ -39,7 +39,6 @@ const StudentFormPage = () => {
 
   const onSubmit = async (data: StudentFormInputs) => {
     try {
-      console.log('data', data)
       await addStudentMutation.mutateAsync(
         { ...data, semester: Number(data.semester) },
         {

@@ -18,7 +18,6 @@ export default function SettingsPage() {
 
   // checking for permissions
   const isUserAllowed = usePermission('view', 'settings')
-  console.log(isUserAllowed)
 
   if (settingsLoading) {
     return <SettingsSkeleton />

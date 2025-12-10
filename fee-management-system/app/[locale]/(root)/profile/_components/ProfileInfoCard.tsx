@@ -8,7 +8,6 @@ interface ProfileInfoCardProps {
 }
 
 const ProfileInfoCard = React.memo(({ profile, userRole }: ProfileInfoCardProps) => {
-  console.log(userRole, 'userrole')
   return (
     <div className="bg-card border-border rounded-xl border p-8 shadow-sm">
       <h3 className="text-primary mb-8 text-xl font-semibold">Profile Information</h3>

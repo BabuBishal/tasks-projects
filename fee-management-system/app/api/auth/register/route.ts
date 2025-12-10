@@ -4,7 +4,6 @@ import { prisma } from '@/lib/prisma'
 import type { RegisterResponse } from '@/lib/types/api'
 import { Role } from '@prisma/client'
 
-console.log(prisma, 'prisma')
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
