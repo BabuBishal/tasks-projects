@@ -97,14 +97,24 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({
-      message: 'Semester promotion completed',
+      message:
+        results.failed.length > 0 && results.success.length > 0
+          ? `Semester promotion failed for ${results.failed.length} students and succeeded for ${results.success.length} students`
+          : results.success.length > 0 && results.failed.length === 0
+            ? `Semester promotion succeeded for ${results.success.length} students`
+            : 'Semester promotion failed',
       results,
     })
   } catch (error: unknown) {
     console.error('Promote semester error:', error)
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : 'Failed to promote students',
+        message: error instanceof Error ? error.message : 'Semester promotion failed',
+        results: {
+          success: [],
+          failed: [],
+          total: 0,
+        },
       },
       { status: 500 }
     )

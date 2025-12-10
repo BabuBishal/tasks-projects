@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { hash } from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
 import type { RegisterResponse } from '@/lib/types/api'
+import { Role } from '@prisma/client'
 
+console.log(prisma, 'prisma')
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
@@ -31,11 +33,7 @@ export async function POST(req: NextRequest) {
         name,
         email,
         password: hashedPassword,
-        profile: {
-          create: {
-            role: 'staff', // Default role for new registrations
-          },
-        },
+        role: Role.STAFF,
       },
     })
 
@@ -52,8 +50,11 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     )
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Registration error:', error)
-    return NextResponse.json({ error: 'An error occurred during registration' }, { status: 500 })
+    return NextResponse.json(
+      { error: (error as string) || 'An error occurred during registration' },
+      { status: 500 }
+    )
   }
 }

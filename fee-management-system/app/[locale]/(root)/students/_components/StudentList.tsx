@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useCallback, useMemo, memo, useRef, useEffect } from 'react'
-import { Table } from '@/shared/ui/table/Table'
 import Badge from '@/shared/ui/badges/Badges'
 import { Eye, Trash2, X, ArrowRight, Pencil } from 'lucide-react'
 import Link from 'next/link'
@@ -9,18 +8,16 @@ import { calculateStudentStatus } from '@/lib/utils/status-utils'
 import { useGetProgramsQuery } from '@/app/[locale]/(root)/programs/_hooks'
 import { useDebounce } from '@/hooks/useDebounce'
 import { TableSkeleton } from '@/app/[locale]/(root)/_components/skeletons/TableSkeleton'
-import { useGetStudentsQuery } from '@/app/[locale]/(root)/students/_hooks'
 import PromoteSemesterModal from './modals/PromoteSemesterModal'
 import EditStudentModal from './modals/EditStudentModal'
 import BulkDeleteModal from './modals/BulkDeleteModal'
 import DeleteStudentModal from './modals/DeleteStudentModal'
-import { StudentResponse, UserProfile } from '@/lib/types/api'
+import { StudentResponse } from '@/lib/types/api'
 import StudentSearch from './StudentSearch'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import getInfiniteStudentsQueryOptions from '../_hooks/query'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useProfileQuery } from '../../profile/_hooks'
-import { checkPermissions } from '@/permissions/authorization'
+
 import { usePermission } from '@/hooks/usePermission'
 
 // Memoized Student Row Component
@@ -151,16 +148,18 @@ const VirtualizedStudentRow = memo(
           width: '100%',
           transform: `translateY(${virtualItem.start}px)`,
         }}
-        className="flex h-16 shadow-xs hover:bg-gray-50"
+        className="flex h-14 items-center shadow-xs hover:bg-zinc-50 dark:hover:bg-zinc-800"
       >
-        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-zinc-900 dark:text-zinc-200">
           {student.rollNo}
         </td>
-        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-900">{student.name}</td>
-        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-zinc-900 dark:text-zinc-200">
+          {student.name}
+        </td>
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-zinc-500">
           {student.program?.name || 'N/A'}
         </td>
-        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-zinc-500">
           {student.semester}
         </td>
         <td className="flex-1 px-6 py-4 whitespace-nowrap">
@@ -239,7 +238,7 @@ const StudentList: React.FC = React.memo(() => {
 
   const virtualizer = useVirtualizer({
     count: students.length,
-    estimateSize: () => 65,
+    estimateSize: () => 60,
     overscan: 6,
     getScrollElement: () => parentRef.current,
   })
@@ -332,7 +331,7 @@ const StudentList: React.FC = React.memo(() => {
 
               <button
                 onClick={clearSelection}
-                className="rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200"
+                className="rounded bg-zinc-200 px-3 py-1 text-sm text-zinc-700 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200"
               >
                 <X className="mr-1 inline h-4 w-4" />
                 Clear
@@ -391,28 +390,28 @@ const StudentList: React.FC = React.memo(() => {
           // </Table4>
           <div className="relative overflow-hidden rounded-lg border">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="sticky top-0 z-10 bg-gray-50">
-                  <tr className="flex h-16">
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+              <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800">
+                <thead className="sticky top-0 z-10 bg-zinc-100 dark:bg-zinc-950">
+                  <tr className="flex h-14 items-center">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Roll No
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Name
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Program
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Semester
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Status
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Fee Status
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Actions
                     </th>
                   </tr>
@@ -425,8 +424,8 @@ const StudentList: React.FC = React.memo(() => {
               className="overflow-auto"
               style={{ height: '600px' }} // Set fixed height for scrolling
             >
-              <table className="min-w-full divide-y divide-gray-200">
-                <tbody className="divide-y divide-gray-200 bg-white">
+              <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800">
+                <tbody className="divide-y divide-zinc-200 bg-white dark:bg-zinc-900">
                   {/* Spacer for virtual scroll */}
                   <tr style={{ height: `${totalSize}px` }}>
                     <td style={{ position: 'relative' }}>

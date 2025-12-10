@@ -50,12 +50,30 @@ export default function StudentDetails({ id }: StudentDetailsProps) {
   const handlePromote = useCallback(async () => {
     if (!student) return
     try {
-      const { message } = await promoteMutation([student.id])
+      const { results } = await promoteMutation([student.id])
+      if (results.success.length > 0 && results.failed.length === 0) {
+        notify({
+          description: 'Student promoted successfully!',
+          type: 'success',
+        })
+      }
+      if (results.failed.length > 0 && results.success.length > 0) {
+        notify({
+          description: `${results.failed.length} students failed to promote.`,
+          type: 'error',
+        })
+        notify({
+          description: `${results.success.length} students promoted successfully.`,
+          type: 'success',
+        })
+      }
 
-      notify({
-        description: message || 'Student graduated successfully!',
-        type: 'success',
-      })
+      if (results.failed.length > 0 && results.success.length === 0) {
+        notify({
+          description: `${results.failed.length} students failed to promote.`,
+          type: 'error',
+        })
+      }
     } catch (err) {
       notify({
         description: err instanceof Error ? err.message : 'Failed to promote student',

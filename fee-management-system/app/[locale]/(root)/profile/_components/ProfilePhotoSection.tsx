@@ -12,10 +12,11 @@ interface ProfilePhotoSectionProps {
   profile: UserWithProfile
   onEditProfile: () => void
   onChangePassword: () => void
+  userRole: string
 }
 
 const ProfilePhotoSection = React.memo(
-  ({ profile, onEditProfile, onChangePassword }: ProfilePhotoSectionProps) => {
+  ({ profile, onEditProfile, onChangePassword, userRole }: ProfilePhotoSectionProps) => {
     const { notify } = useToast()
     const uploadPhotoMutation = useUploadProfilePhotoMutation()
 
@@ -124,7 +125,7 @@ const ProfilePhotoSection = React.memo(
               <Mail className="h-4 w-4" /> {profile?.email}
             </p>
             <p className="text-muted text-sm">
-              {profile?.profile?.role || 'Staff'} • Member since{' '}
+              <span className="text-primary font-semibold">{userRole}</span> • Member since{' '}
               {new Date(profile?.createdAt || '').toLocaleDateString()}
             </p>
 

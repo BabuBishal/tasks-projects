@@ -1,52 +1,11 @@
-import { UserProfile } from '@/lib/types/api'
+import { PERMISSIONS } from '@/lib/permissions/permissions'
+import type { Session } from 'next-auth'
 
-type Role = 'admin' | 'staff'
-
-const PERMISSIONS: Record<Role, string[]> = {
-  admin: [
-    'view:students',
-    'create:students',
-    'update:students',
-    'delete:students',
-    'view:fee',
-    'create:fee',
-    'update:fee',
-    'delete:fee',
-    'view:payments',
-    'create:payments',
-    'update:payments',
-    'delete:payments',
-    'view:users',
-    'create:users',
-    'update:users',
-    'delete:users',
-    'view:programs',
-    'create:programs',
-    'update:programs',
-    'delete:programs',
-    'view:settings',
-    'update:settings',
-  ],
-  staff: [
-    'view:students',
-    'create:students',
-    'update:students',
-    'view:fee',
-    'create:fee',
-    'update:fee',
-    'view:payments',
-    'create:payments',
-    'update:payments',
-    'view:programs',
-    'create:programs',
-    'update:programs',
-  ],
-}
-
-export const checkPermissions = (user: UserProfile, action: string, resources: string) => {
-  const role = user?.role as Role
+export const checkPermissions = (user: Session['user'], action: string, resources: string) => {
+  const role = user?.role
   const allowedPermissions = PERMISSIONS[role]
   if (!allowedPermissions) return false
+  if (allowedPermissions.includes('*')) return true
 
   return allowedPermissions.includes(`${action}:${resources}`)
 }

@@ -9,6 +9,7 @@ const protectedPages = ['/dashboard', '/students', '/payments', '/profile', '/se
 
 export default withAuth(
   function middleware(req: NextRequest) {
+    const authReq = req as NextRequestWithAuth
     const { pathname } = req.nextUrl
     const locale = pathname.split('/')[1] || 'en'
 
@@ -37,6 +38,14 @@ export default withAuth(
     // Redirect non-logged-in users away from protected pages
     if (!isLoggedIn && isProtectedPage) {
       return NextResponse.redirect(new URL(`/${locale}/login`, req.url))
+    }
+
+    if (normalizedPath.startsWith('/settings')) {
+      const userRole = authReq.nextauth?.token?.role as string | undefined
+
+      if (!userRole || userRole !== 'ADMIN') {
+        return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url))
+      }
     }
 
     return intlMiddleware(req)

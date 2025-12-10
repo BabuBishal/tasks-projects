@@ -3,7 +3,6 @@ import { z } from 'zod'
 export const userProfileSchema = z.object({
   id: z.string(),
   userId: z.string(),
-  role: z.string(),
   profilePicture: z.string().nullable().optional(),
   phone: z.string().nullable().optional(),
   position: z.string().nullable().optional(),
