@@ -7,7 +7,7 @@ import { AlertCircle, Users, Wallet } from 'lucide-react'
 import { StatsSkeleton } from '../../_components/skeletons/StatsSkeleton'
 
 export default function StudentStats() {
-  const { data, isLoading } = useGetStudentsQuery({})
+  const { data, isLoading } = useGetStudentsQuery({ params: { limit: 100 } })
 
   const stats = useMemo(() => {
     const allStudents = data?.data || []

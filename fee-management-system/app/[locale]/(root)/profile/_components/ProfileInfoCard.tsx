@@ -4,9 +4,11 @@ import { UserWithProfile } from '@/lib/types'
 
 interface ProfileInfoCardProps {
   profile: UserWithProfile
+  userRole: string
 }
 
-const ProfileInfoCard = React.memo(({ profile }: ProfileInfoCardProps) => {
+const ProfileInfoCard = React.memo(({ profile, userRole }: ProfileInfoCardProps) => {
+  console.log(userRole, 'userrole')
   return (
     <div className="bg-card border-border rounded-xl border p-8 shadow-sm">
       <h3 className="text-primary mb-8 text-xl font-semibold">Profile Information</h3>
@@ -64,9 +66,7 @@ const ProfileInfoCard = React.memo(({ profile }: ProfileInfoCardProps) => {
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-muted mb-1 text-sm font-medium">Role</p>
-            <p className="text-primary text-base font-semibold">
-              {profile?.profile?.role || 'Staff'}
-            </p>
+            <p className="text-primary text-base font-semibold">{userRole}</p>
           </div>
         </div>
 

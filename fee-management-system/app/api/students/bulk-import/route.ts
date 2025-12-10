@@ -193,15 +193,24 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       message: 'Bulk import completed',
-      results,
+      results: {
+        success: results?.success ?? [],
+        failed: results?.failed ?? [],
+        total: results?.total ?? 0,
+      },
     })
   } catch (error: unknown) {
     console.error('Bulk import error:', error)
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : 'Failed to import students',
+        message: 'CSV validation failed',
+        results: {
+          success: [],
+          failed: [],
+          total: 0,
+        },
       },
-      { status: 500 }
+      { status: 400 }
     )
   }
 }

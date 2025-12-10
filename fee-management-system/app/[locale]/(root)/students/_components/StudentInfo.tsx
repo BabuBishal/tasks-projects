@@ -63,7 +63,13 @@ const StudentInfo = ({ student }: { student: StudentResponse }) => {
                 <Award className="text-muted mt-0.5 h-5 w-5" />
                 <div>
                   <p className="text-secondary text-sm">Status</p>
-                  <p className="text-secondary text-xs font-semibold">{student.status}</p>
+                  {student.status === 'Graduated' ? (
+                    <p className="text-xs font-semibold text-green-500">{student.status}</p>
+                  ) : student.status === 'Suspended' ? (
+                    <p className="text-xs font-semibold text-red-500">{student.status}</p>
+                  ) : (
+                    <p className="text-secondary text-xs font-semibold">{student.status}</p>
+                  )}
                 </div>
               </div>
             )}
@@ -86,11 +92,7 @@ const StudentInfo = ({ student }: { student: StudentResponse }) => {
                     </h3>
                     <Award className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                  {/* <p className="text-sm text-secondary mb-2">
-                      {scholarship.scholarship.type === "fixed"
-                        ? "Fixed Amount"
-                        : `${scholarship.scholarship.value}% of Total Fee`}
-                    </p> */}
+
                   <p className="text-lg font-bold text-purple-600 dark:text-purple-400">
                     {formatCurrency(scholarship.actualAmount || 0)}
                   </p>

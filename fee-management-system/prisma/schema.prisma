@@ -18,7 +18,14 @@ datasource db {
 // Prisma Schema: Robust Fee Management System
 // -------------------------------------------------------
 
-
+//user roles
+// -------------------------------------------------------
+enum Role {
+  ADMIN
+  STAFF
+  ACCOUNTANT
+  STUDENT
+}
 // -------------------------------------------------------
 // User (admin login or staff)
 // -------------------------------------------------------
@@ -27,6 +34,7 @@ model User {
   email     String   @unique
   name      String
   password  String
+  role      Role      @default(STUDENT)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -179,7 +187,6 @@ model Payment {
 model UserProfile {
   id             String   @id @default(cuid())
   userId         String   @unique
-  role           String   @default("Staff") // Admin, Accountant, Staff, Viewer
   profilePicture String?
   phone          String?
   position       String?

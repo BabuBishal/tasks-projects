@@ -51,7 +51,7 @@ export default function PaymentPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const { data, isLoading: loadingStudents } = useGetStudentsQuery({})
+  const { data, isLoading: loadingStudents } = useGetStudentsQuery({ params: { limit: 100 } })
   const addPaymentMutation = useAddPaymentMutation()
   const studentsData = data?.data
   const [error, setError] = useState('')

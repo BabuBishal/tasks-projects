@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 
     // Pagination params
     const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
+    const limit = parseInt(searchParams.get('limit') || '20')
     const skip = (page - 1) * limit
 
     // Build where clause

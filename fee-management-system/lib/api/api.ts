@@ -12,8 +12,8 @@ http.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     // Only use client-side session (this file is bundled for the browser)
     const session = await getSession()
-    if (session?.accessToken) {
-      config.headers.Authorization = `Bearer ${session.accessToken}`
+    if (session?.user?.accessToken) {
+      config.headers.Authorization = `Bearer ${session.user.accessToken}`
     }
     return config
   },

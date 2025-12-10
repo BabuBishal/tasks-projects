@@ -26,7 +26,7 @@ export default function BulkOperations() {
   const router = useRouter()
 
   const bulkImportMutation = useBulkImportStudentsMutation()
-  const { data } = useGetStudentsQuery({})
+  const { data } = useGetStudentsQuery({ params: { limit: 100 } })
   const allStudents = data?.data ?? []
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -224,18 +224,18 @@ export default function BulkOperations() {
                     <div className="rounded bg-green-50 p-4 dark:bg-green-900/20">
                       <p className="text-muted text-sm">Success</p>
                       <p className="text-2xl font-bold text-green-600">
-                        {importResult.success.length}
+                        {importResult?.success?.length ?? 0}
                       </p>
                     </div>
                     <div className="rounded bg-red-50 p-4 dark:bg-red-900/20">
                       <p className="text-muted text-sm">Failed</p>
                       <p className="text-2xl font-bold text-red-600">
-                        {importResult.failed.length}
+                        {importResult?.failed?.length ?? 0}
                       </p>
                     </div>
                   </div>
 
-                  {importResult.failed.length > 0 && (
+                  {importResult?.failed?.length > 0 && (
                     <div>
                       <h4 className="mb-2 font-medium">Failed Rows:</h4>
                       <div className="max-h-60 overflow-y-auto">
@@ -248,7 +248,7 @@ export default function BulkOperations() {
                             </tr>
                           </thead>
                           <tbody>
-                            {importResult.failed.map((item, i) => (
+                            {importResult?.failed?.map((item, i) => (
                               <tr key={i} className="border-b">
                                 <td className="p-2">{item.row}</td>
                                 <td className="p-2">{item.data['name'] || '-'}</td>

@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useCallback, useMemo, memo, useRef, useEffect } from 'react'
-import { Table } from '@/shared/ui/table/Table'
 import Badge from '@/shared/ui/badges/Badges'
 import { Eye, Trash2, X, ArrowRight, Pencil } from 'lucide-react'
 import Link from 'next/link'
@@ -9,7 +8,6 @@ import { calculateStudentStatus } from '@/lib/utils/status-utils'
 import { useGetProgramsQuery } from '@/app/[locale]/(root)/programs/_hooks'
 import { useDebounce } from '@/hooks/useDebounce'
 import { TableSkeleton } from '@/app/[locale]/(root)/_components/skeletons/TableSkeleton'
-import { useGetStudentsQuery } from '@/app/[locale]/(root)/students/_hooks'
 import PromoteSemesterModal from './modals/PromoteSemesterModal'
 import EditStudentModal from './modals/EditStudentModal'
 import BulkDeleteModal from './modals/BulkDeleteModal'
@@ -20,87 +18,89 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import getInfiniteStudentsQueryOptions from '../_hooks/query'
 import { useInfiniteQuery } from '@tanstack/react-query'
 
+import { usePermission } from '@/hooks/usePermission'
+
 // Memoized Student Row Component
-const StudentRow = memo(
-  ({
-    student,
-    isSelected,
-    onSelect,
-    onEdit,
-    onDelete,
-  }: {
-    student: StudentResponse
-    isSelected: boolean
-    onSelect: (id: string) => void
-    onEdit: (student: StudentResponse) => void
-    onDelete: (student: StudentResponse) => void
-  }) => {
-    // Memoize expensive calculations
-    const feeStatus = useMemo(
-      () =>
-        student.status === 'Graduated' ? 'Graduated' : calculateStudentStatus(student.fees || []),
-      [student.status, student.fees]
-    )
+// const StudentRow = memo(
+//   ({
+//     student,
+//     isSelected,
+//     onSelect,
+//     onEdit,
+//     onDelete,
+//   }: {
+//     student: StudentResponse
+//     isSelected: boolean
+//     onSelect: (id: string) => void
+//     onEdit: (student: StudentResponse) => void
+//     onDelete: (student: StudentResponse) => void
+//   }) => {
+//     // Memoize expensive calculations
+//     const feeStatus = useMemo(
+//       () =>
+//         student.status === 'Graduated' ? 'Graduated' : calculateStudentStatus(student.fees || []),
+//       [student.status, student.fees]
+//     )
 
-    const totalPaid = useMemo(
-      () =>
-        student.totalPaid ?? (student.fees || []).reduce((sum: number, fee) => sum + fee.paid, 0),
-      [student.totalPaid, student.fees]
-    )
+//     const totalPaid = useMemo(
+//       () =>
+//         student.totalPaid ?? (student.fees || []).reduce((sum: number, fee) => sum + fee.paid, 0),
+//       [student.totalPaid, student.fees]
+//     )
 
-    const badgeVariant = useMemo(() => {
-      if (feeStatus === 'Paid') return 'success'
-      if (feeStatus === 'Overdue') return 'danger'
-      return 'warning'
-    }, [feeStatus])
+//     const badgeVariant = useMemo(() => {
+//       if (feeStatus === 'Paid') return 'success'
+//       if (feeStatus === 'Overdue') return 'danger'
+//       return 'warning'
+//     }, [feeStatus])
 
-    return (
-      <Table.Row>
-        <Table.Cell data-label="">
-          <input
-            type="checkbox"
-            checked={isSelected}
-            onChange={() => onSelect(student.id)}
-            className="cursor-pointer"
-          />
-        </Table.Cell>
-        <Table.Cell data-label="Roll No">{student.rollNo}</Table.Cell>
-        <Table.Cell data-label="Name">{student.name}</Table.Cell>
-        <Table.Cell data-label="Program">{student.program?.name || 'N/A'}</Table.Cell>
-        <Table.Cell data-label="Semester">{student.semester}</Table.Cell>
-        <Table.Cell data-label="Status">
-          <Badge variant={badgeVariant}>{feeStatus}</Badge>
-        </Table.Cell>
-        <Table.Cell data-label="Total Paid">Rs. {totalPaid?.toLocaleString()}</Table.Cell>
-        <Table.Cell data-label="Actions">
-          <div className="flex items-center gap-2">
-            <Link href={`/students/${student.id}`}>
-              <Eye className="h-4 w-4 text-blue-600 hover:text-blue-800" />
-            </Link>
+//     return (
+//       <Table.Row>
+//         <Table.Cell data-label="">
+//           <input
+//             type="checkbox"
+//             checked={isSelected}
+//             onChange={() => onSelect(student.id)}
+//             className="cursor-pointer"
+//           />
+//         </Table.Cell>
+//         <Table.Cell data-label="Roll No">{student.rollNo}</Table.Cell>
+//         <Table.Cell data-label="Name">{student.name}</Table.Cell>
+//         <Table.Cell data-label="Program">{student.program?.name || 'N/A'}</Table.Cell>
+//         <Table.Cell data-label="Semester">{student.semester}</Table.Cell>
+//         <Table.Cell data-label="Status">
+//           <Badge variant={badgeVariant}>{feeStatus}</Badge>
+//         </Table.Cell>
+//         <Table.Cell data-label="Total Paid">Rs. {totalPaid?.toLocaleString()}</Table.Cell>
+//         <Table.Cell data-label="Actions">
+//           <div className="flex items-center gap-2">
+//             <Link href={`/students/${student.id}`}>
+//               <Eye className="h-4 w-4 text-blue-600 hover:text-blue-800" />
+//             </Link>
 
-            {/* Edit Button */}
-            <button
-              onClick={() => onEdit(student)}
-              className="cursor-pointer text-green-600 hover:text-green-800"
-            >
-              <Pencil className="h-4 w-4" />
-            </button>
+//             {/* Edit Button */}
+//             <button
+//               onClick={() => onEdit(student)}
+//               className="cursor-pointer text-green-600 hover:text-green-800"
+//             >
+//               <Pencil className="h-4 w-4" />
+//             </button>
 
-            {/* Delete Button */}
-            <button
-              onClick={() => onDelete(student)}
-              className="cursor-pointer text-red-600 hover:text-red-800"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          </div>
-        </Table.Cell>
-      </Table.Row>
-    )
-  }
-)
+//             {/* Delete Button */}
+//             <button
+//               onClick={() => onDelete(student)}
+//               className="cursor-pointer text-red-600 hover:text-red-800"
+//             >
+//               <Trash2 className="h-4 w-4" />
+//             </button>
+//           </div>
+//         </Table.Cell>
+//       </Table.Row>
+//     )
+//   }
+// )
 
-StudentRow.displayName = 'StudentRow'
+// StudentRow.displayName = 'StudentRow'
 
 // Memoized Virtualized Row Component
 const VirtualizedStudentRow = memo(
@@ -110,12 +110,14 @@ const VirtualizedStudentRow = memo(
     measureElement,
     onEdit,
     onDelete,
+    canUserDelete,
   }: {
     student: StudentResponse
     virtualItem: { key: React.Key; index: number; start: number }
     measureElement: (node: HTMLTableRowElement | null) => void
     onEdit: (student: StudentResponse) => void
     onDelete: (student: StudentResponse) => void
+    canUserDelete: boolean
   }) => {
     // Memoize status badge computation
     const statusBadge = useMemo(() => {
@@ -146,16 +148,18 @@ const VirtualizedStudentRow = memo(
           width: '100%',
           transform: `translateY(${virtualItem.start}px)`,
         }}
-        className="flex h-16 shadow-xs hover:bg-gray-50"
+        className="flex h-14 items-center shadow-xs hover:bg-zinc-50 dark:hover:bg-zinc-800"
       >
-        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-zinc-900 dark:text-zinc-200">
           {student.rollNo}
         </td>
-        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-900">{student.name}</td>
-        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-zinc-900 dark:text-zinc-200">
+          {student.name}
+        </td>
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-zinc-500">
           {student.program?.name || 'N/A'}
         </td>
-        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+        <td className="flex-1 px-6 py-4 text-sm whitespace-nowrap text-zinc-500">
           {student.semester}
         </td>
         <td className="flex-1 px-6 py-4 whitespace-nowrap">
@@ -171,9 +175,11 @@ const VirtualizedStudentRow = memo(
           <button onClick={() => onEdit(student)} className="text-green-600 hover:text-green-800">
             <Pencil className="h-4 w-4" />
           </button>
-          <button onClick={() => onDelete(student)} className="text-red-600 hover:text-red-800">
-            <Trash2 className="h-4 w-4" />
-          </button>
+          {canUserDelete && (
+            <button onClick={() => onDelete(student)} className="text-red-600 hover:text-red-800">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </td>
       </tr>
     )
@@ -193,6 +199,8 @@ const StudentList: React.FC = React.memo(() => {
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false)
   const [studentToDelete, setStudentToDelete] = useState<StudentResponse | null>(null)
   const [studentToEdit, setStudentToEdit] = useState<StudentResponse | null>(null)
+
+  const canUserDelete = usePermission('delete', 'students')
 
   const debouncedSearch = useDebounce(searchQuery, 300)
   const itemsPerPage = 20
@@ -230,7 +238,7 @@ const StudentList: React.FC = React.memo(() => {
 
   const virtualizer = useVirtualizer({
     count: students.length,
-    estimateSize: () => 65,
+    estimateSize: () => 60,
     overscan: 6,
     getScrollElement: () => parentRef.current,
   })
@@ -244,21 +252,21 @@ const StudentList: React.FC = React.memo(() => {
     if (lastItem && lastItem.index >= students.length - 1 && hasNextPage) {
       fetchNextPage()
     }
-  }, [hasNextPage, isFetchingNextPage, virtualItems])
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, virtualItems])
 
-  const handleSelectStudent = useCallback((studentId: string) => {
-    setSelectedStudentIds(prev =>
-      prev.includes(studentId) ? prev.filter(id => id !== studentId) : [...prev, studentId]
-    )
-  }, [])
+  // const handleSelectStudent = useCallback((studentId: string) => {
+  //   setSelectedStudentIds(prev =>
+  //     prev.includes(studentId) ? prev.filter(id => id !== studentId) : [...prev, studentId]
+  //   )
+  // }, [])
 
-  const handleSelectAll = useCallback(() => {
-    if (selectedStudentIds.length === students.length) {
-      setSelectedStudentIds([])
-    } else {
-      setSelectedStudentIds(students.map((s: StudentResponse) => s.id))
-    }
-  }, [selectedStudentIds.length, students])
+  // const handleSelectAll = useCallback(() => {
+  //   if (selectedStudentIds.length === students.length) {
+  //     setSelectedStudentIds([])
+  //   } else {
+  //     setSelectedStudentIds(students.map((s: StudentResponse) => s.id))
+  //   }
+  // }, [selectedStudentIds.length, students])
 
   const clearSelection = useCallback(() => {
     setSelectedStudentIds([])
@@ -323,7 +331,7 @@ const StudentList: React.FC = React.memo(() => {
 
               <button
                 onClick={clearSelection}
-                className="rounded bg-gray-200 px-3 py-1 text-sm text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200"
+                className="rounded bg-zinc-200 px-3 py-1 text-sm text-zinc-700 hover:bg-zinc-300 dark:bg-zinc-700 dark:text-zinc-200"
               >
                 <X className="mr-1 inline h-4 w-4" />
                 Clear
@@ -382,28 +390,28 @@ const StudentList: React.FC = React.memo(() => {
           // </Table4>
           <div className="relative overflow-hidden rounded-lg border">
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="sticky top-0 z-10 bg-gray-50">
-                  <tr className="flex h-16">
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+              <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800">
+                <thead className="sticky top-0 z-10 bg-zinc-100 dark:bg-zinc-950">
+                  <tr className="flex h-14 items-center">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Roll No
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Name
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Program
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Semester
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Status
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Fee Status
                     </th>
-                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                    <th className="flex-1 px-6 py-3 text-left text-xs font-medium tracking-wider text-zinc-500 uppercase">
                       Actions
                     </th>
                   </tr>
@@ -416,8 +424,8 @@ const StudentList: React.FC = React.memo(() => {
               className="overflow-auto"
               style={{ height: '600px' }} // Set fixed height for scrolling
             >
-              <table className="min-w-full divide-y divide-gray-200">
-                <tbody className="divide-y divide-gray-200 bg-white">
+              <table className="min-w-full divide-y divide-zinc-200 dark:divide-zinc-800">
+                <tbody className="divide-y divide-zinc-200 bg-white dark:bg-zinc-900">
                   {/* Spacer for virtual scroll */}
                   <tr style={{ height: `${totalSize}px` }}>
                     <td style={{ position: 'relative' }}>
@@ -441,6 +449,7 @@ const StudentList: React.FC = React.memo(() => {
                                   measureElement={virtualizer.measureElement}
                                   onEdit={handleEditClick}
                                   onDelete={handleDeleteClick}
+                                  canUserDelete={canUserDelete}
                                 />
                               )
                             })}

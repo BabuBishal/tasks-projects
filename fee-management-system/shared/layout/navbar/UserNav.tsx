@@ -13,7 +13,7 @@ const UserNav = () => {
   const [openDropdown, setOpenDropdown] = useState(false)
   const dropdownRef = useRef<HTMLSpanElement>(null)
 
-  const userRole = profileData?.profile?.role || 'Staff'
+  const userRole = session?.user?.role ?? '-'
   const profilePicture = profileData?.profile?.profilePicture
 
   useEffect(() => {

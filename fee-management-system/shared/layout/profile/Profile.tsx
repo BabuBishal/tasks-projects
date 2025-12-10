@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { LogOut, Settings, User, Mail, Shield } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 import Image from 'next/image'
@@ -15,11 +16,13 @@ interface ProfileProps {
 
 const Profile = ({ user, role, profilePicture }: ProfileProps) => {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const handleLogout = async () => {
     await signOut({
       redirect: false,
     })
+    queryClient.invalidateQueries({ queryKey: ['/api/profile'] })
     router.push(`/login`)
   }
 
